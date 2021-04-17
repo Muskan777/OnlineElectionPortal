@@ -25,6 +25,11 @@ struct candidate {
 
     candidate[] public candidates;
 
+    // voted event
+    event votedEvent (
+        uint indexed _C_id
+    );
+
     // Store accounts that have voted
     mapping(address => bool) public voters;
 
@@ -87,11 +92,14 @@ struct candidate {
         }
         // Require that the _C_id is present in the candidates list
         require(
-            flag, 
+            flag == 1, 
             "Candidate not part of candidate list"
         );
         candidates[i].vote_count++;
         voters[msg.sender] = true;
+
+        // trigger voted event
+        emit votedEvent(_C_id);
 
     }
 
