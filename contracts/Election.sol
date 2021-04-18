@@ -24,6 +24,7 @@ contract Election {
 
     struct election {
         uint256 E_id;
+        string E_name;
         // time will be stored in milliseconds on blockchain, and JS will handle it accordingly.
         // Campaigning time will start just after time for candidate registration is over and 
         // will end 24 hrs prior to polling 
@@ -57,6 +58,7 @@ contract Election {
     // Add elections
     // Remember election_count is same as E_id for a particular election.
     function add_election(
+        string memory _E_name,
         uint256 _time_cand_register_end,
         uint256 _time_polling_starts,
         uint256 _time_polling_ends
@@ -65,6 +67,7 @@ contract Election {
         // i.e current_time < cand_time < poll_start < poll_end;
         election_count++;
         elections[election_count].E_id = election_count;
+        elections[election_count].E_name = _E_name;
         elections[election_count].time_cand_register_end = _time_cand_register_end;
         elections[election_count].time_polling_starts = _time_polling_starts;
         elections[election_count].time_polling_ends = _time_polling_ends;
@@ -138,27 +141,39 @@ contract Election {
     // Constructor
     constructor() public {
         // Add admin first
-        add_user(
-            0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
-            "admin",
-            0,
-            "admin@coep.ac.in",
-            2
+        // add_user(
+        //     0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
+        //     "admin",
+        //     0,
+        //     "admin@coep.ac.in",
+        //     2
+        // );
+        // add_user(
+        //     0x42263Ea939bd28d268499f1191F2F4CAA5294553,
+        //     "voter 1",
+        //     1,
+        //     "voter1@gmail.com",
+        //     0
+        // );
+        // add_user(
+        //     0xD85974B619F77067D9959ac4a92f9644f76C5899,
+        //     "candidate 1",
+        //     1,
+        //     "voter2@gmail.com",
+        //     0
+        // );
+        // add_candidate(3);
+        add_election(
+        "Gykhana",
+        5000,
+        6000,
+        7000
         );
-        add_user(
-            0x42263Ea939bd28d268499f1191F2F4CAA5294553,
-            "voter 1",
-            1,
-            "voter1@gmail.com",
-            0
+        add_election(
+        "Sec",
+        5000,
+        6000,
+        7000
         );
-        add_user(
-            0xD85974B619F77067D9959ac4a92f9644f76C5899,
-            "candidate 1",
-            1,
-            "voter2@gmail.com",
-            0
-        );
-        add_candidate(3);
     }
 }
