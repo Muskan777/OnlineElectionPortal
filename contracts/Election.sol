@@ -4,6 +4,7 @@ pragma solidity >=0.4.22 <0.9.0;
 contract Election {
     // Model a base USER
     struct user {
+        // Admin has the UserId 1
         uint256 id;
         address add;
         string name;
@@ -11,8 +12,9 @@ contract Election {
         uint256 E_id;
         // string profile_path;
         string email;
-        // Permissions:- 0: Voter, 1: Candidate, 2: Admin
+        // Permissions:- 0: Voter, 1: Candidate, 2: Admin, -1: Invalid
         uint256 permissions;
+        
     }
 
     struct candidate {
@@ -20,9 +22,24 @@ contract Election {
         uint256 vote_count;
     }
 
-    // Fetch Candidte
+    struct election {
+        uint256 E_id;
+        // time will be stored in milliseconds on blockchain, and JS will handle it accordingly.
+        // Campaigning time will start just after time for candidate registration is over and 
+        // will end 24 hrs prior to polling 
+        uint256 time_cand_register_end;
+        uint256 time_polling_starts;
+        uint256 time_polling_ends;
+
+    }
+
+    // Fetch Users
     mapping(uint256 => user) public users;
 
+    // store elections
+    mapping(uint256 => election) public elections;
+
+    // Array of candidate struct to store candidates
     candidate[] public candidates;
 
     // voted event
@@ -34,7 +51,27 @@ contract Election {
     // Store Candidates Count
     uint256 public user_count = 0;
 
+    // Store Eletions Count
+    uint256 public election_count = 0;
+
+    // Add elections
+    // Remember election_count is same as E_id for a particular election.
+    function add_election(
+        uint256 _time_cand_register_end,
+        uint256 _time_polling_starts,
+        uint256 _time_polling_ends
+    ) public {
+        // Check in JS that the time entered are accordingly after the current time. 
+        // i.e current_time < cand_time < poll_start < poll_end;
+        election_count++;
+        elections[election_count].E_id = election_count;
+        elections[election_count].time_cand_register_end = _time_cand_register_end;
+        elections[election_count].time_polling_starts = _time_polling_starts;
+        elections[election_count].time_polling_ends = _time_polling_ends;
+    }
+
     // Add users(Voters), but first add Admin
+    // Remember user_count is same as id
     function add_user(
         address _add,
         string memory _name,
@@ -43,7 +80,7 @@ contract Election {
         uint256 _permissions
     ) public {
         user_count++;
-        users[user_count].id = user_count; /* = users(user_count, _add, _name, _e_id, _email, _permissions); */
+        users[user_count].id = user_count; 
         users[user_count].add = _add;
         users[user_count].name = _name;
         users[user_count].E_id = _e_id;
@@ -55,7 +92,7 @@ contract Election {
     function add_candidate(uint256 _C_id) public {
         // Require that the user is not an Admin
         require(users[_C_id].id != 0, "The User is not an Admin");
-        // Require that the user is a voter
+        // Require that the user is a voter and also not invalid
         require(users[_C_id].permissions == 0, "The User is a voter initially");
 
         // Check if we can change the user struct value
@@ -65,7 +102,7 @@ contract Election {
 
     function vote(uint256 _C_id) public {
         // Require that the user is not the admin
-        require(users[0].add != msg.sender, "The User is not an Admin");
+        require(users[1].add != msg.sender, "The User is not an Admin");
         // Require to check that the voter hasn't voted before
         require(!voters[msg.sender], "The voter hasn't voted before");
 
