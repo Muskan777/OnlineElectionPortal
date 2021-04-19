@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Home</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            header {
+                background-color: #666;
+                padding: 30px;
+                text-align: center;
+                font-size: 35px;
+                color: white;
+            }
+
+            section::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            button {
+                float: left;
+                width: 30%;
+                height: 300px;
+                /* only for demonstration, should be removed */
+                background: #ccc;
+                padding: 20px;
+            }
+
+            form {
+                float: left;
+                padding: 20px;
+                width: 70%;
+                background-color: #f1f1f1;
+                height: 300px;
+                /* only for demonstration, should be removed */
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <header>
+            <h1>Admin Dashboard</h1>
+        </header>
+        <div id="loader">
+            <p id="text-center">Loading...</p>
+        </div>
+        <div>
+            <section id="content">
+                <div>
+                    <button type="button" name="create_election" class="admin_create_election">
+                        <a href="/create_election.html">Create Election</a>
+                    </button>
+
+                </div>
+                <div>
+                    <form onsubmit="App.manage_election_event" class="admin_manage_elections">
+                        <label for="manage_elections">Choose an Election</label>
+                        <select name="manage_elections" id="manage_elections">
+
+                        </select>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/web3.min.js"></script>
+        <script src="js/truffle-contract.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+
+</html>
