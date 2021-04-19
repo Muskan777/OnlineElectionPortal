@@ -59,60 +59,6 @@ App = {
     })
   },
 
-  // Call to the below function will be made when the admin creates a new election 
-  // by submitting the form
-  create_election_event : function() { 
-      var E_name = $("#E_name").val();
-      var date_cand_register_end = $("#date_cand_register_end").val();
-      var date_polling_starts = $("#date_polling_starts").val();
-      var date_polling_ends = $("#date_polling_ends").val();
-      var time_cand_register_end = $("#time_cand_register_end").val();
-      var time_polling_starts = $("#time_polling_starts").val();
-      var time_polling_ends = $("#time_polling_ends").val();
-
-      console.log(E_name);
-      console.log(date_cand_register_end);
-      console.log(date_polling_starts);
-      console.log(date_polling_ends);
-      console.log(time_cand_register_end);
-      console.log(time_polling_starts);
-      console.log(time_polling_ends);
-
-      // Make a string of the form: "yyyy-MM-ddTHH:mm:ss" and then use new Date(resultDateString) to convert to date
-      // and use date.getTime()/1000 to convert to time since Epoch in seconds.
-      var cand_register_end = date_cand_register_end + "T" + time_cand_register_end;
-      var polling_starts = date_polling_starts + "T" + time_polling_starts;
-      var polling_ends = date_polling_ends + "T" + time_polling_ends;
-
-      cand_register_end = new Date(cand_register_end);
-      polling_starts = new Date(polling_starts);
-      polling_ends = new Date(polling_ends);
-
-      // Use getTime() to get epoch time in milliseconds, dividing by 1000 to get seconds;
-      cand_register_end = cand_register_end.getTime()/1000;
-      polling_starts = polling_starts.getTime()/1000;
-      polling_ends = polling_ends.getTime()/1000;
-
-      var current_time = new Date();
-      current_time = current_time.getTime();
-      if (current_time > cand_register_end || cand_register_end > polling_starts || polling_starts > polling_ends) {
-        window.alert("Incorrect Time/Date entered");
-        throw new Error;
-      }
-      
-
-      App.contracts.Election.deployed().then(function (instance) {
-        var election_count = instance.election_count
-        instance.add_election(
-          E_name,
-          cand_register_end,
-          polling_starts, 
-          polling_ends
-        )
-      }
-      )
-    },
-
   render: function () {
     if (window.location.href === 'http://localhost:3000') {
       var electionInstance
@@ -281,6 +227,61 @@ App = {
       }
     })
   },
+
+  // Call to the below function will be made when the admin creates a new election 
+  // by submitting the form
+  create_election_event : function() { 
+    var E_name = $("#E_name").val();
+    var date_cand_register_end = $("#date_cand_register_end").val();
+    var date_polling_starts = $("#date_polling_starts").val();
+    var date_polling_ends = $("#date_polling_ends").val();
+    var time_cand_register_end = $("#time_cand_register_end").val();
+    var time_polling_starts = $("#time_polling_starts").val();
+    var time_polling_ends = $("#time_polling_ends").val();
+
+    console.log(E_name);
+    console.log(date_cand_register_end);
+    console.log(date_polling_starts);
+    console.log(date_polling_ends);
+    console.log(time_cand_register_end);
+    console.log(time_polling_starts);
+    console.log(time_polling_ends);
+
+    // Make a string of the form: "yyyy-MM-ddTHH:mm:ss" and then use new Date(resultDateString) to convert to date
+    // and use date.getTime()/1000 to convert to time since Epoch in seconds.
+    var cand_register_end = date_cand_register_end + "T" + time_cand_register_end;
+    var polling_starts = date_polling_starts + "T" + time_polling_starts;
+    var polling_ends = date_polling_ends + "T" + time_polling_ends;
+
+    cand_register_end = new Date(cand_register_end);
+    polling_starts = new Date(polling_starts);
+    polling_ends = new Date(polling_ends);
+
+    // Use getTime() to get epoch time in milliseconds, dividing by 1000 to get seconds;
+    cand_register_end = cand_register_end.getTime()/1000;
+    polling_starts = polling_starts.getTime()/1000;
+    polling_ends = polling_ends.getTime()/1000;
+
+    var current_time = new Date();
+    current_time = current_time.getTime();
+    if (current_time > cand_register_end || cand_register_end > polling_starts || polling_starts > polling_ends) {
+      window.alert("Incorrect Time/Date entered");
+      throw new Error;
+    }
+    
+
+    App.contracts.Election.deployed().then(function (instance) {
+      var election_count = instance.election_count
+      instance.add_election(
+        E_name,
+        cand_register_end,
+        polling_starts, 
+        polling_ends
+      )
+    }
+    )
+  },
+
 
   castVote: function () {
     var C_id = $('#candidatesSelect').val()

@@ -107,7 +107,6 @@ contract Election {
     uint256 public candidate_count = 0;
     uint256 i = 0;
     uint256 j = 0;
-    uint256 
 
     // user has applied for the candidature in a particular election
     function add_candidate(
@@ -131,17 +130,18 @@ contract Election {
             "require that user is voter in same election initially"
         );
 
-
-
         cflag = 0;
         //check if the candidate was not a candidate previously
-        for(i=0; i < candidate_count; i++) {
-            if(candidates[i].C_id == _C_id) {
+        for (i = 0; i < candidate_count; i++) {
+            if (candidates[i].C_id == _C_id) {
                 cflag = 1;
             }
         }
 
-        require(!cflag,"Require the candidate was not a candidate previously") 
+        require(
+            cflag != 1,
+            "Require the candidate was not a candidate previously"
+        );
 
         // Check if we can change the user struct value
         candidates.push(
@@ -173,7 +173,7 @@ contract Election {
         uint256 _id
     ) public {
         // Require that the user is not the admin
-        require(users[1].add != msg.sender, "The User is not an Admin");
+        //require(users[1].add != msg.sender, "The User is not an Admin");
 
         //Election id of candidate and voter are same
         uint256 uflag = 0;
@@ -200,17 +200,17 @@ contract Election {
             "Candidate is a part of candidate list"
         );
 
-        for(j=0; j < candidate_count; j++) {
-            if(candidates[j].C_id == _C_id) {
-                flag=1;
+        for (j = 0; j < candidate_count; j++) {
+            if (candidates[j].C_id == _C_id) {
+                flag = 1;
                 break;
             }
         }
-        if(flag) {
+        if (flag == 1) {
             candidates[j].vote_count++;
             voterlist[i].voted = true;
         }
-        
+
         // trigger voted event
         emit votedEvent(_C_id);
     }
@@ -236,10 +236,13 @@ contract Election {
             "voter2@gmail.com",
             0
         );
+        add_voter_by_admin(1, 2);
+        add_voter_by_admin(1, 3);
         add_election("Gykhana", 5000, 6000, 7000);
         add_election("Sec", 5000, 6000, 7000);
-        add_voter_by_admin(1, 2);
         add_candidate(3, "candidate 1", 1);
         add_candidate(2, "voter 1", 1);
+        candidate_approved_by_admin(2);
+        candidate_approved_by_admin(3);
     }
 }
