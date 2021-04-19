@@ -52,7 +52,7 @@ App = {
           },
         )
         .watch(function (error, event) {
-          console.log('event triggered', event)
+          //console.log('event triggered', event)
           // Reload when a new vote is recorded
           App.render()
         })
@@ -153,6 +153,58 @@ App = {
             })
           }
           //   return electionInstance.voters(App.account);
+        })
+    } else if (window.location.href === 'http://localhost:3000/voting.html') {
+      var electionInstance
+      var loader = $('#loader')
+      var voting = $('#voting')
+
+      loader.show()
+      voting.hide()
+      $('#done').hide()
+
+      // Load account data
+      web3.eth.getCoinbase(function (err, account) {
+        if (err === null) {
+          App.account = account
+          $('#accountAddress').html('Your Account: ' + account)
+        }
+      })
+
+      // Load contract data
+      App.contracts.Election.deployed()
+        .then(function (instance) {
+          electionInstance = instance
+          return electionInstance.candidate_count()
+        })
+        .then(function (candidatesCount) {
+          var candidatesSelect = $('#candidatesSelect')
+          candidatesSelect.empty()
+          $('#done').hide()
+          for (var i = 0; i < candidatesCount; i++) {
+            electionInstance.candidates(i).then(function (candidate) {
+              var C_id = candidate[0].toNumber()
+              var name = candidate[2].toString()
+              // Render candidate ballot option
+              var candidateOption =
+                "<option value='" + C_id + "' >" + name + '</ option>'
+              candidatesSelect.append(candidateOption)
+            })
+          }
+          return electionInstance.voters(App.account)
+        })
+        .then(function (hasVoted) {
+          //console.log(hasVoted)
+          // Do not allow a user to vote
+          if (hasVoted) {
+            $('form').hide()
+            $('#done').show()
+          }
+          loader.hide()
+          voting.show()
+        })
+        .catch(function (error) {
+          console.warn(error)
         })
     }
   },
