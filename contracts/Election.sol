@@ -9,7 +9,6 @@ contract Election {
         address add;
         string name;
         // string C_pwd;
-        uint256[] E_id;
         // string profile_path;
         string email;
         // Permissions:- 0: Voter, 1: Candidate, 2: Admin, -1: Invalid
@@ -26,7 +25,7 @@ contract Election {
     struct election {
         uint256 E_id;
         string E_name;
-        // time will be stored in milliseconds on blockchain, and JS will handle it accordingly.
+        // time will be stored in seconds on blockchain, and JS will handle it accordingly.
         // Campaigning time will start just after time for candidate registration is over and
         // will end 24 hrs prior to polling
         uint256 time_cand_register_end;
@@ -34,6 +33,11 @@ contract Election {
         uint256 time_polling_ends;
     }
 
+    struct voter {
+        uint256 id;
+        uint256 E_id;
+        bool voted;
+    }
     // Fetch Users
     mapping(uint256 => user) public users;
 
@@ -42,17 +46,17 @@ contract Election {
 
     mapping(uint256 => bool) public reports_recieved;
 
+    mapping(uint256 => voter) public voterlist;
+
     // Array of candidate struct to store candidates
     candidate[] public candidates;
 
     // voted event
     event votedEvent(uint256 indexed _C_id);
 
-    // Store accounts that have voted
-    mapping(address => bool) public voters;
-
     // Store Candidates Count
     uint256 public user_count = 0;
+    uint256 public voter_list_count = 0;
 
     // Store Eletions Count
     uint256 public election_count = 0;
@@ -102,8 +106,10 @@ contract Election {
 
     uint256 public candidate_count = 0;
     uint256 i = 0;
+    uint256 j = 0;
+    uint256 
 
-    // Add candidates after getting requests from voters and after the registration date has passed
+    // user has applied for the candidature in a particular election
     function add_candidate(
         uint256 _C_id,
         string memory _C_name,
@@ -111,11 +117,33 @@ contract Election {
     ) public {
         // Require that the user is not an Admin
         require(users[_C_id].id != 0, "The User is not an Admin");
-        // Require that the user is a voter and also not invalid
-        require(users[_C_id].permissions == 0, "The User is a voter initially");
+
+        uint256 cflag = 0;
+        //Require that user was voter for that particular election as well
+        for (i = 1; i <= voter_list_count; i++) {
+            if ((voterlist[i].id == _C_id) && (voterlist[i].E_id == _E_id)) {
+                cflag = 1;
+                break;
+            }
+        }
+        require(
+            cflag == 1,
+            "require that user is voter in same election initially"
+        );
+
+
+
+        cflag = 0;
+        //check if the candidate was not a candidate previously
+        for(i=0; i < candidate_count; i++) {
+            if(candidates[i].C_id == _C_id) {
+                cflag = 1;
+            }
+        }
+
+        require(!cflag,"Require the candidate was not a candidate previously") 
 
         // Check if we can change the user struct value
-        users[_C_id].permissions = 1;
         candidates.push(
             candidate({
                 C_id: _C_id,
@@ -127,59 +155,62 @@ contract Election {
         candidate_count++;
     }
 
-    function add_user_for_admin(uint256 _E_id, address u_addr) public {
-        for (i = 0; i <= user_count; i++) {
-            if (users[i].add == u_addr) {
-                users[i].E_id.push(_E_id);
-            }
-        }
+    //approves candidature after candidate applies for the election
+    function candidate_approved_by_admin(uint256 _C_id) public {
+        users[_C_id].permissions = 1;
     }
 
-    function vote(uint256 _C_id) public {
+    function add_voter_by_admin(uint256 _E_id, uint256 _id) public {
+        voter_list_count++;
+        voterlist[voter_list_count].E_id = _E_id;
+        voterlist[voter_list_count].id = _id;
+        voterlist[voter_list_count].voted = false;
+    }
+
+    function vote(
+        uint256 _C_id,
+        uint256 _E_id,
+        uint256 _id
+    ) public {
         // Require that the user is not the admin
         require(users[1].add != msg.sender, "The User is not an Admin");
-        // Require to check that the voter hasn't voted before
-        require(!voters[msg.sender], "The voter hasn't voted before");
 
         //Election id of candidate and voter are same
-        uint256 curElectionId;
-        uint256 j = 0;
         uint256 uflag = 0;
 
-        for (i = 0; i < candidate_count; i++) {
-            if (candidates[i].C_id == _C_id) {
-                curElectionId = candidates[i].E_id;
-                break;
-            }
-        }
-
-        for (i = 2; i <= user_count; i++) {
-            if (users[i].add == msg.sender) {
-                for (; j < (users[i].E_id.length); j++) {
-                    if (users[i].E_id[j] == curElectionId) {
-                        uflag = 1;
-                        break;
-                    }
-                }
+        for (i = 1; i <= voter_list_count; i++) {
+            if (voterlist[i].id == _id && voterlist[i].E_id == _E_id) {
+                uflag = 1;
                 break;
             }
         }
         require(uflag == 1, "User is a voter for this election");
 
+        // Require to check that the voter hasn't voted before
+        for (i = 1; i < voter_list_count; i++) {
+            if ((voterlist[i].id == _id) && (voterlist[i].E_id == _E_id)) {
+                require(!voterlist[i].voted, "The voter hasn't voted before");
+            }
+        }
+
         uint256 flag = 0;
-        i = 0;
-        for (; i < candidates.length; i++) {
-            if (candidates[i].C_id == _C_id) {
-                // candidates[i].vote_count++;
-                flag = 1;
+        // Require that the _C_id is present in the candidates list
+        require(
+            users[_C_id].permissions == 1,
+            "Candidate is a part of candidate list"
+        );
+
+        for(j=0; j < candidate_count; j++) {
+            if(candidates[j].C_id == _C_id) {
+                flag=1;
                 break;
             }
         }
-        // Require that the _C_id is present in the candidates list
-        require(flag == 1, "Candidate not part of candidate list");
-        candidates[i].vote_count++;
-        voters[msg.sender] = true;
-
+        if(flag) {
+            candidates[j].vote_count++;
+            voterlist[i].voted = true;
+        }
+        
         // trigger voted event
         emit votedEvent(_C_id);
     }
@@ -207,7 +238,7 @@ contract Election {
         );
         add_election("Gykhana", 5000, 6000, 7000);
         add_election("Sec", 5000, 6000, 7000);
-        add_user_for_admin(1, 0x42263Ea939bd28d268499f1191F2F4CAA5294553);
+        add_voter_by_admin(1, 2);
         add_candidate(3, "candidate 1", 1);
         add_candidate(2, "voter 1", 1);
     }
