@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Create Election</title>
+    </head>
+    <body>
+        <header>
+            <h1>Create Election</h1>
+        </header>
+        <div id="loader">
+            <p id="text-center">Loading...</p>
+        </div>
+        <div>
+           <form  id="create_election_form" onsubmit="create_election_event(); return false">
+               <label for="E_name">Election Name: </label>
+               <input type="text" id="E_name" name="E_name"><br><br>
+               <label for="date_cand_register_end">Date until which Candidates can register: </label>
+               <input type="date" id="date_cand_register_end" name="date_cand_register_end"><br><br>
+
+               <label for="time_cand_register_end">Time until which Candidates can register: </label>
+               <input type="time" id="time_cand_register_end" name="time_cand_register_end"><br><br>
+
+               <label for="date_polling_starts">Date when the polling will begin: </label>
+               <input type="date" id="date_polling_starts" name="date_polling_starts"><br><br>
+
+               <label for="time_polling_starts">Time when the polling will begin: </label>
+               <input type="time" id="time_polling_starts" name="time_polling_starts"><br><br>
+
+
+               <label for="date_polling_ends">Date when the polling will end: </label>
+               <input type="date" id="date_polling_ends" name="date_polling_ends"><br><br>
+
+               <label for="time_polling_ends">Time when the polling will end: </label>
+               <input type="time" id="time_polling_ends" name="time_polling_ends"><br><br>
+
+               <input type="submit" name="submit" id="submit">
+           </form>
+        </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/web3.min.js"></script>
+        <script src="js/truffle-contract.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>
