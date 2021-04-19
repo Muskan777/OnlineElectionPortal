@@ -8,11 +8,12 @@ contract Election {
         uint256 id;
         address add;
         string name;
+        // string C_pwd;
         uint256[] E_id;
         // string profile_path;
         string email;
         // Permissions:- 0: Voter, 1: Candidate, 2: Admin, -1: Invalid
-        uint256 permissions;
+        int256 permissions;
     }
 
     struct candidate {
@@ -38,6 +39,8 @@ contract Election {
 
     // store elections
     mapping(uint256 => election) public elections;
+
+    mapping(uint256 => bool) public reports_recieved;
 
     // Array of candidate struct to store candidates
     candidate[] public candidates;
@@ -73,18 +76,25 @@ contract Election {
         elections[election_count].time_polling_ends = _time_polling_ends;
     }
 
+    function report_by_user(uint256 _id) public {
+        reports_recieved[_id] = true;
+    }
+
+    function blacklist_by_admin(uint256 _id) public {
+        users[_id].permissions = -1;
+    }
+
     // Add users(Voters), but first add Admin
     // Remember user_count is same as id
     function add_user(
         address _add,
         string memory _name,
         string memory _email,
-        uint256 _permissions
+        int256 _permissions
     ) public {
         user_count++;
         users[user_count].id = user_count;
         users[user_count].add = _add;
-        users[user_count].E_id.push(0);
         users[user_count].name = _name;
         users[user_count].email = _email;
         users[user_count].permissions = _permissions;
