@@ -14,6 +14,7 @@ contract Election {
         // Permissions:- 0: Voter, 1: Candidate, 2: Admin, -1: Invalid
         int256 permissions;
         uint256 cand_index;
+        string pwd;
     }
 
     struct candidate {
@@ -108,6 +109,7 @@ contract Election {
         address _add,
         string memory _name,
         string memory _email,
+        string memory _pwd,
         int256 _permissions
     ) public {
         user_count++;
@@ -118,6 +120,7 @@ contract Election {
         users[user_count].cand_index = 5000;
         users[user_count].permissions = _permissions;
         addresses[_add] = user_count;
+        users[user_count].pwd = _pwd;
     }
 
     uint256 public candidate_count = 0;
@@ -247,18 +250,21 @@ contract Election {
             0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
             "admin",
             "admin@coep.ac.in",
+            "admin",
             2
         );
         add_user(
             0x42263Ea939bd28d268499f1191F2F4CAA5294553,
             "voter 1",
             "voter1@gmail.com",
+            "voter 1 password",
             0
         );
         add_user(
             0xD85974B619F77067D9959ac4a92f9644f76C5899,
             "candidate 1",
             "voter2@gmail.com",
+            "candidate 1 password",
             0
         );
         add_voter_by_admin(1, 2);
