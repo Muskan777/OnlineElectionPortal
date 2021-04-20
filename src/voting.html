@@ -21,8 +21,7 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="http://localhost:3000">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:3000/voting.html">Vote</a>
+                        <li class="nav-item" id="vote">
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Campaigning Portal</a>
@@ -30,11 +29,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Apply for candidacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Report</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Candidates</a>
+                        <li class="nav-item" id="report">
                         </li>
                     </ul>
                 </div>
@@ -44,26 +39,61 @@
             <header style="text-align: center;">
                 <h1>Cast Your Vote</h1>
             </header>
+            <br /><br />
         </div>
-        <div id="loader">
-            <p class="text-center">Loading...</p>
-        </div>
-        <div id="voting">
-            <div class="container">
-                <form onSubmit="App.castVote(); return false;">
-                    <div class="form-group">
-                        <label for="candidatesSelect">Select Candidate</label>
-                        <select class="form-control" id="candidatesSelect">
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Vote</button>
-                    <hr />
-                </form>
-                <p id="accountAddress" class="text-center"></p>
+        <div class="row">
+            <div class="col" id="content">
+                <h4 style="text-align: center;">
+                    List of Candidates
+                </h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="candidateList">
+                    </tbody>
+                </table>
             </div>
-        </div>
-        <div id="done">
-            <p class="text-center">Your Vote Already Recorded</p>
+            <div class="col" style="border-left: 1px solid black;">
+                <h4 style="text-align: center;">
+                    Voting
+                </h4>
+                <div>
+                    <div id="loader">
+                        <p class="text-center">Loading...</p>
+                    </div>
+                    <div id="voting">
+                        <div class="container">
+                            <form onSubmit="App.castVote(); return false;">
+                                <div class="form-group">
+                                    <label for="candidatesSelect">Select Candidate</label>
+                                    <select class="form-control" id="candidatesSelect">
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Vote</button>
+                                <hr />
+                            </form>
+                            <p id="accountAddress" class="text-center"></p>
+                        </div>
+                    </div>
+                    <div id="done">
+                        <p class="text-center">Your Vote Already Recorded</p>
+                    </div>
+                    <div id="timenotsuitable">
+                        <p class="text-center">Polls are Closed</p>
+                    </div>
+                    <div id="blocked">
+                        <p class="text-center">You are Not allow to vote in this election</p>
+                    </div>
+                </div>
+
+
+            </div>
+
         </div>
 
 

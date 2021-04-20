@@ -52,7 +52,7 @@ App = {
           },
         )
         .watch(function (error, event) {
-          //console.log('event triggered', event)
+          console.log('event triggered', event)
           // Reload when a new vote is recorded
           App.render()
         })
@@ -60,71 +60,13 @@ App = {
   },
 
   render: function () {
+    web3.eth.getCoinbase(function (err, account) {
+      if (err === null) {
+        App.account = account
+        $('#accountAddress').html('Your Account: ' + account)
+      }
+    })
     if (window.location.href === 'http://localhost:3000') {
-      var electionInstance
-      var loader = $('#loader')
-      var content = $('#content')
-
-      loader.show()
-      content.hide()
-
-      // Load account data
-      web3.eth.getCoinbase(function (err, account) {
-        if (err === null) {
-          App.account = account
-          $('#accountAddress').html('Your Account: ' + account)
-        }
-      })
-
-      // Load contract data
-      App.contracts.Election.deployed()
-        .then(function (instance) {
-          electionInstance = instance
-          // electionInstance.candidates(0).then(function (candidate) {
-          //   console.log('votecount: ', candidate[1], 'C_id:', candidate[0])
-          // })
-          return electionInstance.candidate_count()
-        })
-        .then(function (candidatesCount) {
-          var candidatesResults = $('#candidatesResults')
-          candidatesResults.empty()
-          var candidatesSelect = $('#candidatesSelect')
-          candidatesSelect.empty()
-          for (var i = 0; i < candidatesCount; i++) {
-            return electionInstance.candidates(i).then(function (candidate) {
-              var C_id = candidate[0].toNumber()
-              var name = candidate[2].toString()
-              var voteCount = candidate[1].toNumber()
-
-              // Render candidate Result
-              var candidateTemplate =
-                '<tr><th>' +
-                C_id +
-                '</th><td>' +
-                name +
-                '</td><td>' +
-                voteCount +
-                '</td></tr>'
-              candidatesResults.append(candidateTemplate)
-              // Render candidate ballot option
-              var candidateOption =
-                "<option value='" + C_id + "' >" + name + '</ option>'
-              candidatesSelect.append(candidateOption)
-            })
-          }
-          return electionInstance.voters(App.account)
-        })
-        .then(function (hasVoted) {
-          // Do not allow a user to vote
-          if (hasVoted) {
-            $('form').hide()
-          }
-          loader.hide()
-          content.show()
-        })
-        .catch(function (error) {
-          console.warn(error)
-        })
     } else if (
       window.location.href === 'http://localhost:3000/admin_home.html'
     ) {
@@ -157,16 +99,6 @@ App = {
     } else if (
       window.location.href === 'http://localhost:3000/voter_home.html'
     ) {
-      // Load account data
-      const sleep = (milliseconds) => {
-        return new Promise((resolve) => setTimeout(resolve, milliseconds))
-      }
-      web3.eth.getCoinbase(function (err, account) {
-        if (err === null) {
-          App.account = account
-          $('#accountAddress').html('Your Account: ' + account)
-        }
-      })
       var uid
 
       App.contracts.Election.deployed()
@@ -208,10 +140,194 @@ App = {
       window.location.href.includes('http://localhost:3000/Voter.html')
     ) {
       E_id = parseInt(window.location.hash.substr(-1))
+      $('#vote').html(
+        '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
+          E_id +
+          '">Vote</a>',
+      )
+      $('#report').html(
+        '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
+          E_id +
+          '">Report</a>',
+      )
     } else if (
       window.location.href.includes('http://localhost:3000/candidate.html')
     ) {
-      E_id = parseInt(window.location.hash.substri(-1))
+      E_id = parseInt(window.location.hash.substr(-1))
+      $('#vote').html(
+        '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
+          E_id +
+          '">Vote</a>',
+      )
+      $('#report').html(
+        '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
+          E_id +
+          '">Report</a>',
+      )
+    } else if (
+      window.location.href.includes('http://localhost:3000/voting.html')
+    ) {
+      E_id = parseInt(window.location.hash.substr(-1))
+      $('#vote').html(
+        '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
+          E_id +
+          '">Vote</a>',
+      )
+      $('#report').html(
+        '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
+          E_id +
+          '">Report</a>',
+      )
+      var electionInstance
+      var loader = $('#loader')
+      var currUid
+      var pollStart
+      var pollEnd
+      var currTime = new Date().getTime() / 1000
+      loader.show()
+      $('form').hide()
+      $('#done').hide()
+      $('#timenotsuitable').hide()
+      $('#blocked').hide()
+      // Load account data
+      web3.eth.getCoinbase(function (err, account) {
+        if (err === null) {
+          App.account = account
+          $('#accountAddress').html('Your Account: ' + account)
+        }
+      })
+
+      setTimeout(function () {
+        App.contracts.Election.deployed()
+          .then(function (instance) {
+            electionInstance = instance
+            return electionInstance.candidate_count()
+          })
+          .then(function (candidatesCount) {
+            for (var i = 0; i < candidatesCount.toNumber(); i++) {
+              electionInstance.candidates(i).then(function (candidate) {
+                if (candidate[3].toNumber() == E_id) {
+                  electionInstance
+                    .users(candidate[0].toNumber())
+                    .then(function (user) {
+                      if (user[4].toNumber() == 1) {
+                        var candidateTemplate =
+                          '<tr><th>' +
+                          candidate[0] +
+                          '</th><td>' +
+                          candidate[2] +
+                          '</td><td>' +
+                          user[3] +
+                          '</td></tr>'
+                        $('#candidateList').append(candidateTemplate)
+                        var candidateOption =
+                          "<option value='" +
+                          candidate[0] +
+                          "' >" +
+                          candidate[2] +
+                          '</ option>'
+                        $('#candidatesSelect').append(candidateOption)
+                      }
+                    })
+                }
+              })
+            }
+            return electionInstance.elections(E_id)
+          })
+          .then(function (election) {
+            pollStart = election[3]
+            pollEnd = election[4]
+            return electionInstance.addresses(App.account)
+          })
+          .then(function (id) {
+            currUid = id
+            return electionInstance.voter_list_count()
+          })
+          .then(function (totalvoters) {
+            for (var i = 1; i <= totalvoters.toNumber(); i++) {
+              electionInstance.voterlist(i).then(function (voter) {
+                if (
+                  voter[0].toNumber() == currUid.toNumber() &&
+                  voter[1] == E_id &&
+                  voter[2] == false &&
+                  voter[4] == false &&
+                  currTime >= pollStart &&
+                  currTime <= pollEnd
+                ) {
+                  loader.hide()
+                  $('form').show()
+                } else if (
+                  voter[0].toNumber() == currUid.toNumber() &&
+                  voter[1] == E_id &&
+                  voter[2] == true &&
+                  voter[4] == false &&
+                  currTime >= pollStart &&
+                  currTime <= pollEnd
+                ) {
+                  loader.hide()
+                  $('#content').hide()
+                  $('#done').show()
+                } else if (
+                  voter[0].toNumber() == currUid.toNumber() &&
+                  voter[1] == E_id &&
+                  voter[4] == true
+                ) {
+                  $('#content').hide()
+                  $('#blocked').show()
+                  loader.hide()
+                } else if (currTime < pollStart || currTime > pollEnd) {
+                  loader.hide()
+                  $('#content').hide()
+                  $('#timenotsuitable').show()
+                }
+              })
+            }
+          })
+      }, 40)
+    } else if (
+      window.location.href.includes('http://localhost:3000/report.html')
+    ) {
+      var electionInstance
+      E_id = parseInt(window.location.hash.substr(-1))
+      $('#vote').html(
+        '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
+          E_id +
+          '">Vote</a>',
+      )
+
+      $('#report').html(
+        '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
+          E_id +
+          '">Report</a>',
+      )
+
+      var electionInstance
+      setTimeout(function () {
+        App.contracts.Election.deployed()
+          .then(function (instance) {
+            electionInstance = instance
+            return electionInstance.voter_list_count()
+          })
+          .then(function (votersCount) {
+            for (var i = 1; i <= votersCount.toNumber(); i++) {
+              electionInstance.voterlist(i).then(function (voter) {
+                if (!voter[4] && voter[1] == E_id) {
+                  electionInstance
+                    .users(voter[0].toNumber())
+                    .then(function (user) {
+                      var voterOption =
+                        "<option value='" +
+                        user[0] +
+                        "' >" +
+                        user[2] +
+                        '</ option>'
+                      $('#UserSelect').append(voterOption)
+                    })
+                }
+              })
+            }
+          })
+      }, 40)
     }
   },
 
@@ -232,6 +348,22 @@ App = {
         manage_elections.append(manage_elections_template)
       }
     })
+  },
+
+  Report: function () {
+    var voter = parseInt($('#UserSelect').val())
+    var reason = $('#reason').val()
+    E_id = parseInt(window.location.hash.substr(-1))
+    App.contracts.Election.deployed()
+      .then(function (instance) {
+        console.log(App.account)
+        return instance.report_by_user(voter, E_id, reason, {
+          from: App.account,
+        })
+      })
+      .then(function () {
+        console.log('HERE')
+      })
   },
 
   // Call to the below function will be made when the admin creates a new election
@@ -293,17 +425,24 @@ App = {
 
   castVote: function () {
     var C_id = $('#candidatesSelect').val()
+    var electionInstance
+    E_id = parseInt(window.location.hash.substr(-1))
     App.contracts.Election.deployed()
       .then(function (instance) {
-        return instance.vote(C_id, { from: App.account })
+        electionInstance = instance
+        return electionInstance.addresses(App.account)
+      })
+      .then(function (id) {
+        uid = id.toNumber()
+        return electionInstance.vote(C_id, E_id, uid, { from: App.account })
       })
       .then(function (result) {
         // Wait for votes to update
         $('#content').hide()
         $('#loader').show()
       })
-      .catch(function (err) {
-        console.error(err)
+      .catch(function (error) {
+        console.log(error)
       })
   },
 
@@ -330,21 +469,17 @@ App = {
             electionInstance
               .candidates(user[5].toNumber())
               .then(function (candidate) {
-                console.log(candidate[3], ElectionIDForVoter)
                 if (candidate[3] == ElectionIDForVoter) {
-                  console.log('User is candidate')
                   window.location.href =
                     'http://localhost:3000/candidate.html#manage_elections=' +
                     ElectionIDForVoter
                 } else {
-                  console.log('user is voter')
                   window.location.href =
                     'http://localhost:3000/Voter.html#manage_elections=' +
                     ElectionIDForVoter
                 }
               })
           } else {
-            console.log('user is voter')
             window.location.href =
               'http://localhost:3000/Voter.html#manage_elections=' +
               ElectionIDForVoter
