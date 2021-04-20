@@ -13,6 +13,7 @@ contract Election {
         string email;
         // Permissions:- 0: Voter, 1: Candidate, 2: Admin, -1: Invalid
         int256 permissions;
+        uint256 cand_index;
     }
 
     struct candidate {
@@ -37,14 +38,17 @@ contract Election {
         uint256 id;
         uint256 E_id;
         bool voted;
+        bool reportedByUser;
+        bool blacklisted_by_admin;
     }
     // Fetch Users
     mapping(uint256 => user) public users;
 
+    //addresses mapping with ids
+    mapping(address => uint256) public addresses;
+
     // store elections
     mapping(uint256 => election) public elections;
-
-    mapping(uint256 => bool) public reports_recieved;
 
     mapping(uint256 => voter) public voterlist;
 
@@ -80,12 +84,22 @@ contract Election {
         elections[election_count].time_polling_ends = _time_polling_ends;
     }
 
-    function report_by_user(uint256 _id) public {
-        reports_recieved[_id] = true;
+    function report_by_user(uint256 _id, uint256 _E_id) public {
+        uint256 i;
+        for (i = 1; i < voter_list_count; i++) {
+            if (voterlist[i].id == _id && voterlist[i].E_id == _E_id) {
+                voterlist[i].reportedByUser = true;
+            }
+        }
     }
 
-    function blacklist_by_admin(uint256 _id) public {
-        users[_id].permissions = -1;
+    function blacklist_by_admin(uint256 _id, uint256 _E_id) public {
+        uint256 i;
+        for (i = 1; i < voter_list_count; i++) {
+            if (voterlist[i].id == _id && voterlist[i].E_id == _E_id) {
+                voterlist[i].blacklisted_by_admin = true;
+            }
+        }
     }
 
     // Add users(Voters), but first add Admin
@@ -101,7 +115,9 @@ contract Election {
         users[user_count].add = _add;
         users[user_count].name = _name;
         users[user_count].email = _email;
+        users[user_count].cand_index = 5000;
         users[user_count].permissions = _permissions;
+        addresses[_add] = user_count;
     }
 
     uint256 public candidate_count = 0;
@@ -158,6 +174,13 @@ contract Election {
     //approves candidature after candidate applies for the election
     function candidate_approved_by_admin(uint256 _C_id) public {
         users[_C_id].permissions = 1;
+        uint256 i = 0;
+        for (; i < candidate_count; i++) {
+            if (candidates[i].C_id == _C_id) {
+                users[_C_id].cand_index = i;
+                break;
+            }
+        }
     }
 
     function add_voter_by_admin(uint256 _E_id, uint256 _id) public {
@@ -165,6 +188,8 @@ contract Election {
         voterlist[voter_list_count].E_id = _E_id;
         voterlist[voter_list_count].id = _id;
         voterlist[voter_list_count].voted = false;
+        voterlist[voter_list_count].reportedByUser = false;
+        voterlist[voter_list_count].blacklisted_by_admin = false;
     }
 
     function vote(
@@ -238,6 +263,7 @@ contract Election {
         );
         add_voter_by_admin(1, 2);
         add_voter_by_admin(1, 3);
+        add_voter_by_admin(2, 3);
         add_election("Gykhana", 5000, 6000, 7000);
         add_election("Sec", 5000, 6000, 7000);
         add_candidate(3, "candidate 1", 1);

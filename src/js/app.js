@@ -154,58 +154,64 @@ App = {
           }
           //   return electionInstance.voters(App.account);
         })
-    } else if (window.location.href === 'http://localhost:3000/voting.html') {
-      var electionInstance
-      var loader = $('#loader')
-      var voting = $('#voting')
-
-      loader.show()
-      voting.hide()
-      $('#done').hide()
-
+    } else if (
+      window.location.href === 'http://localhost:3000/voter_home.html'
+    ) {
       // Load account data
+      const sleep = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds))
+      }
       web3.eth.getCoinbase(function (err, account) {
         if (err === null) {
           App.account = account
           $('#accountAddress').html('Your Account: ' + account)
         }
       })
+      var uid
 
-      // Load contract data
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
-          return electionInstance.candidate_count()
+          return electionInstance.addresses(App.account)
         })
-        .then(function (candidatesCount) {
-          var candidatesSelect = $('#candidatesSelect')
-          candidatesSelect.empty()
-          $('#done').hide()
-          for (var i = 0; i < candidatesCount; i++) {
-            electionInstance.candidates(i).then(function (candidate) {
-              var C_id = candidate[0].toNumber()
-              var name = candidate[2].toString()
-              // Render candidate ballot option
-              var candidateOption =
-                "<option value='" + C_id + "' >" + name + '</ option>'
-              candidatesSelect.append(candidateOption)
+        .then(function (index) {
+          return electionInstance.users(index.toNumber())
+        })
+        .then(function (user) {
+          $('#id').html(user[0].toNumber())
+          uid = user[0].toNumber()
+          $('#name').html(user[2])
+          $('#email').html(user[3])
+          $('#address').html(user[1])
+          return electionInstance.voter_list_count()
+        })
+        .then(function (votersCount) {
+          var ElectionSelect = $('#getElectionList')
+          ElectionSelect.empty()
+          for (var i = 1; i <= votersCount; i++) {
+            electionInstance.voterlist(i).then(function (voter) {
+              if (voter[0].toNumber() == uid) {
+                electionInstance
+                  .elections(voter[1].toNumber())
+                  .then(function (election) {
+                    var E_name = election[1]
+                    var E_id = election[0].toNumber()
+                    var ElectionOption =
+                      "<option value='" + E_id + "'>" + E_name + '</option>'
+                    ElectionSelect.append(ElectionOption)
+                  })
+              }
             })
           }
-          return electionInstance.voters(App.account)
         })
-        .then(function (hasVoted) {
-          //console.log(hasVoted)
-          // Do not allow a user to vote
-          if (hasVoted) {
-            $('form').hide()
-            $('#done').show()
-          }
-          loader.hide()
-          voting.show()
-        })
-        .catch(function (error) {
-          console.warn(error)
-        })
+    } else if (
+      window.location.href.includes('http://localhost:3000/Voter.html')
+    ) {
+      E_id = parseInt(window.location.hash.substr(-1))
+    } else if (
+      window.location.href.includes('http://localhost:3000/candidate.html')
+    ) {
+      E_id = parseInt(window.location.hash.substri(-1))
     }
   },
 
@@ -228,60 +234,62 @@ App = {
     })
   },
 
-  // Call to the below function will be made when the admin creates a new election 
+  // Call to the below function will be made when the admin creates a new election
   // by submitting the form
-  create_election_event : function() { 
-    var E_name = $("#E_name").val();
-    var date_cand_register_end = $("#date_cand_register_end").val();
-    var date_polling_starts = $("#date_polling_starts").val();
-    var date_polling_ends = $("#date_polling_ends").val();
-    var time_cand_register_end = $("#time_cand_register_end").val();
-    var time_polling_starts = $("#time_polling_starts").val();
-    var time_polling_ends = $("#time_polling_ends").val();
+  create_election_event: function () {
+    var E_name = $('#E_name').val()
+    var date_cand_register_end = $('#date_cand_register_end').val()
+    var date_polling_starts = $('#date_polling_starts').val()
+    var date_polling_ends = $('#date_polling_ends').val()
+    var time_cand_register_end = $('#time_cand_register_end').val()
+    var time_polling_starts = $('#time_polling_starts').val()
+    var time_polling_ends = $('#time_polling_ends').val()
 
-    console.log(E_name);
-    console.log(date_cand_register_end);
-    console.log(date_polling_starts);
-    console.log(date_polling_ends);
-    console.log(time_cand_register_end);
-    console.log(time_polling_starts);
-    console.log(time_polling_ends);
+    console.log(E_name)
+    console.log(date_cand_register_end)
+    console.log(date_polling_starts)
+    console.log(date_polling_ends)
+    console.log(time_cand_register_end)
+    console.log(time_polling_starts)
+    console.log(time_polling_ends)
 
     // Make a string of the form: "yyyy-MM-ddTHH:mm:ss" and then use new Date(resultDateString) to convert to date
     // and use date.getTime()/1000 to convert to time since Epoch in seconds.
-    var cand_register_end = date_cand_register_end + "T" + time_cand_register_end;
-    var polling_starts = date_polling_starts + "T" + time_polling_starts;
-    var polling_ends = date_polling_ends + "T" + time_polling_ends;
+    var cand_register_end =
+      date_cand_register_end + 'T' + time_cand_register_end
+    var polling_starts = date_polling_starts + 'T' + time_polling_starts
+    var polling_ends = date_polling_ends + 'T' + time_polling_ends
 
-    cand_register_end = new Date(cand_register_end);
-    polling_starts = new Date(polling_starts);
-    polling_ends = new Date(polling_ends);
+    cand_register_end = new Date(cand_register_end)
+    polling_starts = new Date(polling_starts)
+    polling_ends = new Date(polling_ends)
 
     // Use getTime() to get epoch time in milliseconds, dividing by 1000 to get seconds;
-    cand_register_end = cand_register_end.getTime()/1000;
-    polling_starts = polling_starts.getTime()/1000;
-    polling_ends = polling_ends.getTime()/1000;
+    cand_register_end = cand_register_end.getTime() / 1000
+    polling_starts = polling_starts.getTime() / 1000
+    polling_ends = polling_ends.getTime() / 1000
 
-    var current_time = new Date();
-    current_time = current_time.getTime();
-    if (current_time > cand_register_end || cand_register_end > polling_starts || polling_starts > polling_ends) {
-      window.alert("Incorrect Time/Date entered");
-      throw new Error;
+    var current_time = new Date()
+    current_time = current_time.getTime()
+    if (
+      current_time > cand_register_end ||
+      cand_register_end > polling_starts ||
+      polling_starts > polling_ends
+    ) {
+      window.alert('Incorrect Time/Date entered')
+      throw new Error()
     }
-    
 
     App.contracts.Election.deployed().then(function (instance) {
       var election_count = instance.election_count
       instance.add_election(
         E_name,
         cand_register_end,
-        polling_starts, 
-        polling_ends
+        polling_starts,
+        polling_ends,
       )
-    }
-    )
+    })
   },
-
 
   castVote: function () {
     var C_id = $('#candidatesSelect').val()
@@ -297,6 +305,52 @@ App = {
       .catch(function (err) {
         console.error(err)
       })
+  },
+
+  manage_election_for_user: function () {
+    var ElectionIDForVoter = $('#getElectionList').val()
+    var candidatesCount
+    var electionInstance
+    setTimeout(function () {
+      App.contracts.Election.deployed()
+        .then(function (instance) {
+          electionInstance = instance
+          return electionInstance.candidate_count()
+        })
+        .then(function (cnt) {
+          candidatesCount = cnt
+          return electionInstance.addresses(App.account)
+        })
+        .then(function (id) {
+          id_num = id.toNumber()
+          return electionInstance.users(id_num)
+        })
+        .then(function (user) {
+          if (user[4].toNumber() == 1 && user[5].toNumber() < 5000) {
+            electionInstance
+              .candidates(user[5].toNumber())
+              .then(function (candidate) {
+                console.log(candidate[3], ElectionIDForVoter)
+                if (candidate[3] == ElectionIDForVoter) {
+                  console.log('User is candidate')
+                  window.location.href =
+                    'http://localhost:3000/candidate.html#manage_elections=' +
+                    ElectionIDForVoter
+                } else {
+                  console.log('user is voter')
+                  window.location.href =
+                    'http://localhost:3000/Voter.html#manage_elections=' +
+                    ElectionIDForVoter
+                }
+              })
+          } else {
+            console.log('user is voter')
+            window.location.href =
+              'http://localhost:3000/Voter.html#manage_elections=' +
+              ElectionIDForVoter
+          }
+        })
+    }, 40)
   },
 }
 

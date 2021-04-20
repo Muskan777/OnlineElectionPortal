@@ -24,15 +24,6 @@
                 clear: both;
             }
 
-            button {
-                float: left;
-                width: 30%;
-                height: 300px;
-                /* only for demonstration, should be removed */
-                background: #ccc;
-                padding: 20px;
-            }
-
             form {
                 float: left;
                 padding: 20px;
@@ -46,60 +37,47 @@
     </head>
 
     <body>
-
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="http://localhost:3000">Online Election Portal</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page"
-                                href="http://localhost:3000/voter_home.html">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:3000/voting.html">Vote</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Campaigning Portal</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Apply for candidacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Report</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Candidates</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
         <div>
             <header style="text-align: center;">
                 <h1>User Dashboard</h1>
             </header>
-            <div>
-                <section id="content">
-                    <div>
-                        <button type="button" name="create_election" class="admin_create_election">
-                            <a href="/profile.html">Profile</a>
-                        </button>
-
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Profile</h5>
+                            <div>
+                                <label for="id"><b>User ID:</b></label>
+                                <span class="card-text" id="id"></span>
+                            </div>
+                            <div>
+                                <label for="name"><b>User Name:</b></label>
+                                <span class="card-text" id="name"></span>
+                            </div>
+                            <div>
+                                <label for="email"><b>Email:</b></label>
+                                <span class="card-text" id="email"></span>
+                            </div>
+                            <div>
+                                <label for="address"><b>Account:</b></label>
+                                <span class="card-text" id="address"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <form onsubmit="App.manage_election_event" class="admin_manage_elections">
+                </div>
+                <div class="col-lg-6">
+                    <form onSubmit="App.manage_election_for_user();return false;" class="admin_manage_elections">
+                        <div>
                             <label for="getElectionList">Choose an Election</label>
                             <select name="manage_elections" id="getElectionList">
-
+                                
                             </select>
-                        </form>
-                    </div>
-                </section>
+                        </div>
+                        <hr />
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
 
