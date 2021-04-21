@@ -49,6 +49,31 @@ contract Election {
         bool reportedByUser;
         bool blacklisted_by_admin;
     }
+
+    struct campaign{
+        uint256 id;
+        string hash;
+        // string description;
+        uint256 c_id; 
+        uint256 E_id;
+        string name;
+    }
+
+    event CampaignCreated(
+        uint id,
+        string hash,
+        // string description,
+        uint256 c_id,
+        uint256 E_id,
+        string name
+    );
+    
+    //Fetch Campaign Data
+    mapping(uint256 => campaign) public campaigns;
+
+    // Store Campaign Count
+    uint256 public campaign_count = 0;  
+
     // Fetch Users
     mapping(uint256 => user) public users;
 
@@ -250,6 +275,43 @@ contract Election {
         emit votedEvent(_C_id);
     }
 
+    function uploadImage(string memory _imgHash) public{
+
+    // Make sure the image hash exists
+    require(bytes(_imgHash).length > 0);
+    // Make sure image description exists
+    //require(bytes(_description).length > 0);
+    // Make sure uploader address exists
+    require(msg.sender!=address(0));
+
+
+    //Increment campaign count
+    campaign_count++;
+    uint256 i = 0;
+    uint256 u_id;
+    uint256 e_id;
+    string memory name;
+    uint256 cnd_index;
+    for (i = 2; i <= user_count; i++) {
+        if (users[i].add == msg.sender) {
+            u_id = users[i].id;
+            name = users[i].name;
+            cnd_index = users[i].cand_index;
+            break;    
+        }
+    }
+
+    //that user is a candidate in the election
+    require(users[u_id].permissions == 1);
+
+    //Add image to contract
+    //passing fifth argument 1 as of now, needs to be changed
+    campaigns[campaign_count] = campaign(campaign_count,_imgHash, u_id, e_id, name); 
+
+    //Triger the event
+    emit CampaignCreated(campaign_count, _imgHash, u_id, e_id, name);
+
+    }
     // Constructor
     constructor() public {
         // Add admin first

@@ -767,6 +767,53 @@ App = {
           '">Apply for Candidacy</a>',
       )
     }
+    else if(
+      window.location.href == "http://localhost:3000/campaign.html" ){
+        //add front-end for campaign 
+        var electionInstance
+        var loader = $('#loader')
+        var content = $('#content')
+        
+
+        loader.show()
+        content.hide()
+        
+        App.contracts.Election.deployed()
+        .then(function (instance) {
+          electionInstance = instance
+          return electionInstance.campaign_count()
+        })
+        .then(function (campaign_count) {
+          var display_campaign = $('display-campaign')
+          display_campaign.empty()
+          window.loca
+          for(var i = 1; i < campaign_count; i++){
+            return electionInstance.campaigns(i).then(function (campaign) {
+              var e_id = campaign[3]
+              //require(e_id == curr_e_id)
+              var hash = campaign[1]
+              var Cand_id = campaign[2]
+              var Cand_name = campaign[4]
+
+              var update_campaign = 
+                "<h2>" + Cand_id + " " + Cand_name + "</h2><br><br><img src={`https://ipfs.infura.io/ipfs/" + hash + "`} style={{ maxWidth: '420px'}}/>"
+
+              display_campaign.append(update_campaign)                  
+            })
+          }
+          return electionInstance.voters(App.account)
+        })
+        .then( function (iscandidate) {
+          if(iscandidate == false){
+            $('form').hide()
+          }
+          loader.hide()
+          content.show()
+        })
+        .catch(function (error) {
+          console.warn(error)
+        })
+    }
   },
 
   // Listen for events emitted from the contract
@@ -1116,7 +1163,40 @@ App = {
       })
       loader.hide()
       content.show()
-  }
+  },
+
+  captureFile: function(event) {
+
+    event.preventDefault()
+    const file = event.target.files[0]
+    const reader = new window.FileReader()
+    reader.readAsArrayBuffer(file)
+
+    reader.onloadend = () => {
+      this.setState({ buffer: Buffer(reader.result) })
+      console.log('buffer', this.state.buffer)
+    }
+  },
+
+  uploadImage: function()  {
+    console.log("Uploading to IPFS...")
+    const E_id = parseInt(window.location.hash.substr(-1));
+
+    //Adding to IPFS
+    ipfs.add(this.state.buffer, (error, result) => {
+      console.log('IPFS : ', result)
+      if(error) {
+        console.error(error)
+        return
+      }
+      
+      this.setState({ loading: true })
+      this.state.Election.methods.uploadImage(result[0].hash).send({ from: this.state.account }).on('transactionHash', (hash) => {
+        this.setState({ loading: false })
+      })
+    })
+    return App.render()
+  },
 }
 
 $(function () {
