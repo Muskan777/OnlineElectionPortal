@@ -247,34 +247,34 @@ contract Election {
     constructor() public {
         // Add admin first
         add_user(
-            0x22e9140a50BdB2659b9E473dAa645685C4f409E5,
+            0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
             "admin",
             "admin@coep.ac.in",
             "admin",
             2
         );
         add_user(
-            0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
+            0x2aeE3162bB87A4Ed18eE0abB27f6d2CE3F5A6720,
             "voter 1",
             "voter1@gmail.com",
             "voter 1 password",
             0
         );
         add_user(
-            0xCD56ad160221d01ea132F05D4057665A97C6934D,
+            0x145d98eBca32EC5C25e49D76D95cEc2E4cA2852E,
             "candidate 1",
             "voter2@gmail.com",
             "candidate 1 password",
             0
         );
         add_voter_by_admin(1, 2);
-        add_voter_by_admin(1, 3);
-        add_voter_by_admin(2, 3);
+        //add_voter_by_admin(1, 3);
+        //add_voter_by_admin(2, 3);
         add_election("Gykhana", 5000, 6000, 7000);
         add_election("Sec", 5000, 6000, 7000);
-        add_candidate(3, "candidate 1", 1);
+        //add_candidate(3, "candidate 1", 1);
         add_candidate(2, "voter 1", 1);
-        candidate_approved_by_admin(2);
-        // candidate_approved_by_admin(3);
+        // candidate_approved_by_admin(2);
+        //  candidate_approved_by_admin(3);
     }
 }
