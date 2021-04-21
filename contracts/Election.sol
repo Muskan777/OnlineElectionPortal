@@ -35,6 +35,13 @@ contract Election {
         uint256 time_polling_ends;
     }
 
+    struct report {
+        uint256 reportId;
+        uint256 E_id;
+        uint256 reported_user;
+        string reason;
+    }
+
     struct voter {
         uint256 id;
         uint256 E_id;
@@ -53,6 +60,8 @@ contract Election {
 
     mapping(uint256 => voter) public voterlist;
 
+    mapping(uint256 => report) public reports;
+
     // Array of candidate struct to store candidates
     candidate[] public candidates;
 
@@ -65,6 +74,7 @@ contract Election {
 
     // Store Eletions Count
     uint256 public election_count = 0;
+    uint256 public report_count = 0;
 
     // Add elections
     // Remember election_count is same as E_id for a particular election.
@@ -85,13 +95,24 @@ contract Election {
         elections[election_count].time_polling_ends = _time_polling_ends;
     }
 
-    function report_by_user(uint256 _id, uint256 _E_id) public {
+    function report_by_user(
+        uint256 _reportedUser,
+        uint256 _E_id,
+        string memory _reason
+    ) public {
         uint256 i;
         for (i = 1; i < voter_list_count; i++) {
-            if (voterlist[i].id == _id && voterlist[i].E_id == _E_id) {
+            if (
+                voterlist[i].id == _reportedUser && voterlist[i].E_id == _E_id
+            ) {
                 voterlist[i].reportedByUser = true;
             }
         }
+        report_count++;
+        reports[report_count].reportId = report_count;
+        reports[report_count].E_id = _E_id;
+        reports[report_count].reported_user = _reportedUser;
+        reports[report_count].reason = _reason;
     }
 
     function blacklist_by_admin(uint256 _id, uint256 _E_id) public {
@@ -201,27 +222,18 @@ contract Election {
         uint256 _id
     ) public {
         // Require that the user is not the admin
-        //require(users[1].add != msg.sender, "The User is not an Admin");
+        require(users[1].add != msg.sender, "The User is not an Admin");
 
         //Election id of candidate and voter are same
-        uint256 uflag = 0;
+        // Require to check that the voter hasn't voted before
 
         for (i = 1; i <= voter_list_count; i++) {
             if (voterlist[i].id == _id && voterlist[i].E_id == _E_id) {
-                uflag = 1;
-                break;
-            }
-        }
-        require(uflag == 1, "User is a voter for this election");
-
-        // Require to check that the voter hasn't voted before
-        for (i = 1; i < voter_list_count; i++) {
-            if ((voterlist[i].id == _id) && (voterlist[i].E_id == _E_id)) {
                 require(!voterlist[i].voted, "The voter hasn't voted before");
+                voterlist[i].voted = true;
             }
         }
 
-        uint256 flag = 0;
         // Require that the _C_id is present in the candidates list
         require(
             users[_C_id].permissions == 1,
@@ -230,13 +242,8 @@ contract Election {
 
         for (j = 0; j < candidate_count; j++) {
             if (candidates[j].C_id == _C_id) {
-                flag = 1;
-                break;
+                candidates[j].vote_count++;
             }
-        }
-        if (flag == 1) {
-            candidates[j].vote_count++;
-            voterlist[i].voted = true;
         }
 
         // trigger voted event

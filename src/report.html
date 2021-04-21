@@ -34,8 +34,30 @@
         </nav>
         <div>
             <header style="text-align: center;">
-                <h1>Candidate DashBoard</h1>
+                <h1>Report User for this Election</h1>
             </header>
+            <div class="container row">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <form onSubmit="App.Report(); return false;">
+                        <div class="form-group">
+                            <label for="candidatesSelect">Select User</label>
+                            <select class="form-control" id="UserSelect">
+                            </select>
+                            <br />
+                            <textarea id="reason" rows="10" cols="57"></textarea>
+                            <br /> <br />
+                            <button type="submit" class="btn btn-primary">Report</button>
+                            <hr />
+
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="col-lg-2"></div>
+
+            </div>
         </div>
 
 
