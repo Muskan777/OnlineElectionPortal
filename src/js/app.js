@@ -204,7 +204,32 @@ App = {
         .catch(function (error) {
           console.warn(error)
         })
+      } else if(
+        window.location.href == "http://localhost:3000/login.html" ){
+          //add front-end for campaign 
+          var electionInstance
+          var loader = $('#loader')
+          var content = $('#content')
+          
+          loader.show()
+          content.hide()
+
+          // Load account data
+          web3.eth.getCoinbase(function (err, account) {
+            if (err === null) {
+            App.account = account
+            $('#accountAddress').html('Your Account: ' + account)
+            }
+            else{
+              alert("No account connected, Connect your blockchain account first!");
+              return;
+            }
+          })
+
+          loader.hide()
+          content.show()
       }
+
   },
 
   // Listen for events emitted from the contract
@@ -284,6 +309,61 @@ App = {
       })
     })
     return App.render()
+  },
+
+  login: function(){
+    var loader = $('#loader')
+    var content = $('#content')
+          
+    loader.show()
+    content.hide()
+
+    var U_id = $('#u_id').val()
+    var pwd = $('#pwd').val()
+    App.contracts.Election.deployed()
+      .then(function (instance){
+        return instance.authenticate(U_id, pwd)
+      })
+      .then(function (result){
+        if (result == 2){
+          window.location.href = "http://localhost:3000/admin_home.html";
+        }
+        else if((result == 0) || (result == 1)){
+          window.location.href = "http://localhost:3000/voter_home.html";
+        }
+        else{
+          alert("invalid Login Credentials!!\n Please try Again.");
+        }
+      })
+      .catch(function (err) {
+        console.error(err)
+      })
+      loader.hide()
+      content.show()
+  },
+
+  register: function(){
+    var loader = $('#loader')
+    var content = $('#content')
+          
+    loader.show()
+    content.hide()
+
+    var name = $('#name').val()
+    var mail = $('#mail').val()
+    var pwd = $('#pwd').val()
+    App.contracts.Election.deployed()
+      .then(function (instance){
+        return instance.register(name, mail, pwd, { from: App.account })
+      })
+      .then(function (result){
+        alert("Congratulations! You are now registered to our Portal\n Your UserID is " + result +".\n Please use this UserID to login.");
+      })
+      .catch(function (err) {
+        console.error(err)
+      })
+      loader.hide()
+      content.show()
   }
 
 }

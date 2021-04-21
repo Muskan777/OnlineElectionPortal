@@ -13,7 +13,8 @@ contract Election {
         // string profile_path;
         string email;
         // Permissions:- 0: Voter, 1: Candidate, 2: Admin, -1: Invalid
-        uint256 permissions;
+        int256 permissions;
+        string pwd;
     }
 
     struct candidate {
@@ -104,7 +105,8 @@ contract Election {
         string memory _name,
         uint256 _e_id,
         string memory _email,
-        uint256 _permissions
+        int256 _permissions, 
+        string memory _pwd
     ) public {
         user_count++;
         users[user_count].id = user_count;
@@ -113,6 +115,7 @@ contract Election {
         users[user_count].E_id = _e_id;
         users[user_count].email = _email;
         users[user_count].permissions = _permissions;
+        users[user_count].pwd = _pwd;
     }
 
     uint256 public candidate_count = 0;
@@ -202,8 +205,22 @@ contract Election {
     //Triger the event
     emit CampaignCreated(campaign_count, _imgHash, u_id, e_id, name);
 
-  }
+    }
 
+    function authenticate(uint256 _u_id,string memory _pwd) public view returns (int256){
+        if(keccak256(abi.encodePacked(users[_u_id].pwd)) == keccak256(abi.encodePacked(_pwd))){
+            return users[_u_id].permissions;
+        }
+        else{
+            int256 re = 5;
+            return re;
+        }
+    }
+
+    function register(string memory _name, string memory _mail, string memory _pwd) public returns (uint256){
+        add_user(msg.sender, _name, 0, _mail, 0, _pwd);
+        return user_count;
+    }
     // Constructor
     constructor() public {
         // Add admin first
@@ -212,21 +229,24 @@ contract Election {
             "admin",
             0,
             "admin@coep.ac.in",
-            2
+            2,
+            "password"
         );
         add_user(
             0x42263Ea939bd28d268499f1191F2F4CAA5294553,
             "voter 1",
             1,
             "voter1@gmail.com",
-            0
+            0,
+            "password"
         );
         add_user(
             0xD85974B619F77067D9959ac4a92f9644f76C5899,
             "candidate 1",
             1,
             "voter2@gmail.com",
-            0
+            0,
+            "password"
         );
         add_candidate(3, "candidate 1");
         add_election("Gykhana", 5000, 6000, 7000);

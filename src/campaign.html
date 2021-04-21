@@ -12,9 +12,9 @@
             <p class="text-center">Loading...</p>
         </div>
         <div id="content">
-            <form onsubmit="App.uploadImage(); return false; ">
+            <form onSubmit="App.uploadImage(); return false; ">
                 <legend><h2>POST New Campaign</h2></legend>
-                <input type='file' accept=".jpg, .jpeg, .png, .bmp, .gif" onchange="App.capturefile(event)" />
+                <input type='file' accept=".jpg, .jpeg, .png, .bmp, .gif" onChange="App.capturefile(event)" />
                     <!-- <div className="form-group mr-sm-2">
                     <br></br>
                         <input id="imageDescription" type="text" ref={(input) => { this.imageDescription = input }} className="form-control" placeholder="Image description..." required />
