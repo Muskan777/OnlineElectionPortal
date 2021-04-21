@@ -105,163 +105,166 @@ App = {
       console.log(E_id)
       var Election_id_show = $('#Election_id_show')
       Election_id_show.append('Election Id : ' + E_id)
-    } else if (
-      window.location
-        .toString()
-        .includes('http://localhost:3000/admin_add_voter.html')
-    ) {
-      // Get Election ID from the previous page
-      var E_id = parseInt(window.location.hash.substr(-1))
-      var electionInstance
-      var already_registered_voters = []
-      console.log('E_id : ' + E_id)
-      setTimeout(function () {
-        App.contracts.Election.deployed()
-          .then(function (instance) {
-            electionInstance = instance
-            return electionInstance.voter_list_count()
-          })
-          .then(function (voter_list_count) {
-            var add_voter = $('#add_voter')
-            add_voter.empty()
-            window.loca
-            for (var i = 1; i <= voter_list_count.toNumber(); i++) {
-              electionInstance.voterlist(i).then(function (voter) {
-                if (E_id == voter[1].toNumber()) {
-                  already_registered_voters.push(voter[0].toNumber())
-                }
-              })
-            }
-            electionInstance.user_count().then(function (user_count) {
-              for (var j = 2; j <= user_count.toNumber(); j++) {
-                electionInstance.users(j).then(function (user) {
-                  var id = user[0].toNumber()
-                  var name = user[2]
+    } 
+    // else if (
+    //   window.location
+    //     .toString()
+    //     .includes('http://localhost:3000/admin_add_voter.html')
+    // ) {
+    //   // Get Election ID from the previous page
+    //   var E_id = parseInt(window.location.hash.substr(-1))
+    //   var electionInstance
+    //   var already_registered_voters = []
+    //   console.log('E_id : ' + E_id)
+    //   setTimeout(function () {
+    //     App.contracts.Election.deployed()
+    //       .then(function (instance) {
+    //         electionInstance = instance
+    //         return electionInstance.voter_list_count()
+    //       })
+    //       .then(function (voter_list_count) {
+    //         var add_voter = $('#add_voter')
+    //         add_voter.empty()
+    //         window.loca
+    //         for (var i = 1; i <= voter_list_count.toNumber(); i++) {
+    //           electionInstance.voterlist(i).then(function (voter) {
+    //             if (E_id == voter[1].toNumber()) {
+    //               already_registered_voters.push(voter[0].toNumber())
+    //             }
+    //           })
+    //         }
+    //         electionInstance.user_count().then(function (user_count) {
+    //           for (var j = 2; j <= user_count.toNumber(); j++) {
+    //             electionInstance.users(j).then(function (user) {
+    //               var id = user[0].toNumber()
+    //               var name = user[2]
 
-                  if (!already_registered_voters.includes(id)) {
-                    console.log('Not a registered voter for this E_id: ' + id)
-                    var add_voter_template =
-                      "<option value='" +
-                      id +
-                      "' >" +
-                      id +
-                      ': ' +
-                      name +
-                      '</ option>'
-                    add_voter.append(add_voter_template)
-                  }
-                })
-              }
-            })
-          })
+    //               if (!already_registered_voters.includes(id)) {
+    //                 console.log('Not a registered voter for this E_id: ' + id)
+    //                 var add_voter_template =
+    //                   "<option value='" +
+    //                   id +
+    //                   "' >" +
+    //                   id +
+    //                   ': ' +
+    //                   name +
+    //                   '</ option>'
+    //                 add_voter.append(add_voter_template)
+    //               }
+    //             })
+    //           }
+    //         })
+    //       })
 
-        App.contracts.Election.deployed()
-          .then(function (instance) {
-            electionInstance = instance
-            return electionInstance.voter_list_count()
-          })
-          .then(function (voter_list_count) {
-            var display_old_voters = $('#already_registered_voters')
-            display_old_voters.empty()
-            for (var j = 1; j <= voter_list_count; j++) {
-              electionInstance.voterlist(j).then(function (voter) {
-                if (E_id == voter[1].toNumber()) {
-                  var id = voter[0].toNumber()
-                  electionInstance.users(id).then(function (user) {
-                    console.log('Already Regsitered for this E_id: ' + id)
-                    var name = user[2]
-                    var display_old_voters_template =
-                      '<li> id: ' + id + ', Name: ' + name + '</li>'
-                    display_old_voters.append(display_old_voters_template)
-                  })
-                }
-              })
-            }
-          })
-      }, 40)
-    } else if (
-      window.location
-        .toString()
-        .includes('http://localhost:3000/admin_add_candidate.html')
-    ) {
-      // Get Election ID from the previous page
-      var E_id = parseInt(window.location.hash.substr(-1))
-      console.log('E_id: ' + E_id)
-      var electionInstance
-      App.contracts.Election.deployed()
-        .then(function (instance) {
-          electionInstance = instance
-          return electionInstance.candidate_count()
-        })
-        .then(function (candidate_count) {
-          var add_candidate = $('#add_candidate')
-          add_candidate.empty()
-          window.loca
-          for (var i = 0; i < candidate_count.toNumber(); i++) {
-            electionInstance.candidates(i).then(function (candidate) {
-              var C_id = candidate[0].toNumber()
-              var name = candidate[2]
-              var cand_E_id = candidate[3].toNumber()
-              //   var flag = 0;
-              electionInstance.user_count().then(function (user_count) {})
-              electionInstance.users(C_id).then(function (user) {
-                // Check that the user permissions are for voter only and
-                // he's not already a candidate or blacklisted or an admin
-                if (user[4].toNumber() == 0 && E_id == cand_E_id) {
-                  var add_candidate_template =
-                    "<option value='" +
-                    C_id +
-                    "' >" +
-                    C_id +
-                    ': ' +
-                    name +
-                    '</ option>'
-                  add_candidate.append(add_candidate_template)
-                }
-              })
-            })
-          }
-        })
+    //     App.contracts.Election.deployed()
+    //       .then(function (instance) {
+    //         electionInstance = instance
+    //         return electionInstance.voter_list_count()
+    //       })
+    //       .then(function (voter_list_count) {
+    //         var display_old_voters = $('#already_registered_voters')
+    //         display_old_voters.empty()
+    //         for (var j = 1; j <= voter_list_count; j++) {
+    //           electionInstance.voterlist(j).then(function (voter) {
+    //             if (E_id == voter[1].toNumber()) {
+    //               var id = voter[0].toNumber()
+    //               electionInstance.users(id).then(function (user) {
+    //                 console.log('Already Regsitered for this E_id: ' + id)
+    //                 var name = user[2]
+    //                 var display_old_voters_template =
+    //                   '<li> id: ' + id + ', Name: ' + name + '</li>'
+    //                 display_old_voters.append(display_old_voters_template)
+    //               })
+    //             }
+    //           })
+    //         }
+    //       })
+    //   }, 40)
+    // } 
+    //else if (
+    //   window.location
+    //     .toString()
+    //     .includes('http://localhost:3000/admin_add_candidate.html')
+    // ) {
+    //   // Get Election ID from the previous page
+    //   var E_id = parseInt(window.location.hash.substr(-1))
+    //   console.log('E_id: ' + E_id)
+    //   var electionInstance
+    //   App.contracts.Election.deployed()
+    //     .then(function (instance) {
+    //       electionInstance = instance
+    //       return electionInstance.candidate_count()
+    //     })
+    //     .then(function (candidate_count) {
+    //       var add_candidate = $('#add_candidate')
+    //       add_candidate.empty()
+    //       window.loca
+    //       for (var i = 0; i < candidate_count.toNumber(); i++) {
+    //         electionInstance.candidates(i).then(function (candidate) {
+    //           var C_id = candidate[0].toNumber()
+    //           var name = candidate[2]
+    //           var cand_E_id = candidate[3].toNumber()
+    //           //   var flag = 0;
+    //           electionInstance.user_count().then(function (user_count) {})
+    //           electionInstance.users(C_id).then(function (user) {
+    //             // Check that the user permissions are for voter only and
+    //             // he's not already a candidate or blacklisted or an admin
+    //             if (user[4].toNumber() == 0 && E_id == cand_E_id) {
+    //               var add_candidate_template =
+    //                 "<option value='" +
+    //                 C_id +
+    //                 "' >" +
+    //                 C_id +
+    //                 ': ' +
+    //                 name +
+    //                 '</ option>'
+    //               add_candidate.append(add_candidate_template)
+    //             }
+    //           })
+    //         })
+    //       }
+    //     })
 
-      App.contracts.Election.deployed()
-        .then(function (instance) {
-          electionInstance = instance
-          return electionInstance.candidate_count()
-        })
-        .then(function (candidate_count) {
-          var display_old_candidates = $('#already_registered_candidates')
-          console.log(candidate_count.toNumber())
-          for (var j = 0; j <= candidate_count.toNumber(); j++) {
-            // console.log(j)
-            electionInstance.candidates(j).then(function (candidate) {
-              console.log(
-                'Cand_id: ' +
-                  candidate[0].toNumber() +
-                  'E_id : ' +
-                  candidate[3].toNumber(),
-              )
-              if (E_id == candidate[3].toNumber()) {
-                var C_id = candidate[0].toNumber()
-                console.log('C_id: ' + C_id)
-                electionInstance.users(C_id).then(function (user) {
-                  console.log('hello')
+    //   App.contracts.Election.deployed()
+    //     .then(function (instance) {
+    //       electionInstance = instance
+    //       return electionInstance.candidate_count()
+    //     })
+    //     .then(function (candidate_count) {
+    //       var display_old_candidates = $('#already_registered_candidates')
+    //       console.log(candidate_count.toNumber())
+    //       for (var j = 0; j <= candidate_count.toNumber(); j++) {
+    //         // console.log(j)
+    //         electionInstance.candidates(j).then(function (candidate) {
+    //           console.log(
+    //             'Cand_id: ' +
+    //               candidate[0].toNumber() +
+    //               'E_id : ' +
+    //               candidate[3].toNumber(),
+    //           )
+    //           if (E_id == candidate[3].toNumber()) {
+    //             var C_id = candidate[0].toNumber()
+    //             console.log('C_id: ' + C_id)
+    //             electionInstance.users(C_id).then(function (user) {
+    //               console.log('hello')
 
-                  var id = user[0].toNumber()
-                  var name = user[2]
-                  // Check the permissions in the user struct if they are 1
-                  if (user[4].toNumber() == 1) {
-                    var display_old_candidates_template =
-                      '<li>' + id + ': ' + name + '</li>'
-                    display_old_candidates.append(
-                      display_old_candidates_template,
-                    )
-                  }
-                })
-              }
-            })
-          }
-        })
-    } else if (
+    //               var id = user[0].toNumber()
+    //               var name = user[2]
+    //               // Check the permissions in the user struct if they are 1
+    //               if (user[4].toNumber() == 1) {
+    //                 var display_old_candidates_template =
+    //                   '<li>' + id + ': ' + name + '</li>'
+    //                 display_old_candidates.append(
+    //                   display_old_candidates_template,
+    //                 )
+    //               }
+    //             })
+    //           }
+    //         })
+    //       }
+    //     })
+    // } 
+    else if (
       window.location.href === 'http://localhost:3000/voter_home.html'
     ) {
       var uid
@@ -594,6 +597,90 @@ App = {
           }
         })
     } else if (
+    window.location.toString().includes('http://localhost:3000/admin_accept_reports.html')
+    ) {
+        // Get Election ID from the previous page
+        var E_id = parseInt(window.location.hash.substr(-1));
+        var electionInstance;
+        var all_reqorts_received = [];
+        var all_reqorts_received_reasons = [];
+      App.contracts.Election.deployed()
+        .then(function (instance) {
+          electionInstance = instance
+          return electionInstance.report_count()
+        })
+        .then(function (report_count) {
+          var add_to_reported = $('#add_to_reported')
+          add_to_reported.empty()
+          window.loca
+          for (var i = 1; i <= report_count; i++) {
+            electionInstance.reports(i).then(function (report) {
+              var report_id = report[0].toNumber();
+              var id = report[2].toNumber();
+              var report_E_id = report[1].toNumber();
+              var reason = report[3].toString();
+
+              if (report_E_id == E_id) {
+                  all_reqorts_received.push(id);
+                  all_reqorts_received_reasons.push(reason);
+              }
+              })
+          }
+
+          electionInstance.voter_list_count().then(function (voter_list_count){
+          for(var j = 1; j <= voter_list_count; j++) {
+
+            electionInstance.voterlist(j).then(function (voter) {
+                var id = voter[0].toNumber()
+                // Check that the E_ids are same, also the id of the uesr whose complait is received matches the 
+                // voters id and also that the admin has not already added the voter to the blacklist
+                console.log(voter[4]);
+                if (voter[1].toNumber() == E_id && all_reqorts_received.includes(id) && voter[4] == false){
+                    var x = all_reqorts_received.indexOf(id)
+                    var reason = all_reqorts_received_reasons[x]
+                     var add_to_reported_template =
+                    "<option value='" + id + "' >" + id + ": " + reason + '</ option>';
+                    add_to_reported.append(add_to_reported_template)
+                }
+                })
+            } 
+            })
+          })
+        
+
+        App.contracts.Election.deployed()
+        .then(function (instance) {
+          electionInstance = instance
+          return electionInstance.voter_list_count()
+        })
+        .then(function (voter_list_count) {
+        var display_already_blacklisted = $('#display_already_blacklisted');
+
+            for(var j = 1; j <= voter_list_count; j++) {
+
+            electionInstance.voterlist(j).then(function (voter) {
+                var id = voter[0].toNumber()
+                if (voter[1].toNumber() == E_id && voter[4] == true) {
+                    electionInstance.users(id).then(function (user){
+                        name = user[2];
+                        var display_already_blacklisted_template =
+                        "<li>" + id + ": " + name + "</li>";
+                        display_already_blacklisted.append(display_already_blacklisted_template);
+                    })                    
+                }
+            })
+            }
+        })
+  }
+  // else if (
+  //     window.location.href.includes('http://localhost:3000/manage_election.html')
+  //   ) {
+  //     console.log("Print")
+  //     E_id = parseInt(window.location.hash.substr(-1))
+  //   }
+
+    
+    else if (
       window.location.href.includes('http://localhost:3000/report.html')
     ) {
       var electionInstance
@@ -724,8 +811,12 @@ App = {
     polling_starts = polling_starts.getTime() / 1000
     polling_ends = polling_ends.getTime() / 1000
 
+    console.log(cand_register_end)
+    console.log(polling_starts)
+    console.log(polling_ends)
+
     var current_time = new Date()
-    current_time = current_time.getTime()
+    current_time = current_time.getTime()/1000
     if (
       current_time > cand_register_end ||
       cand_register_end > polling_starts ||
@@ -736,13 +827,18 @@ App = {
     }
 
     App.contracts.Election.deployed().then(function (instance) {
-      var election_count = instance.election_count
-      instance.add_election(
-        E_name,
-        cand_register_end,
-        polling_starts,
-        polling_ends,
-      )
+      var election_count = instance.election_count;
+      var electionInstance = instance;
+      // instance.add_election(
+      //   E_name,
+      //   cand_register_end,
+      //   polling_starts,
+      //   polling_ends,
+      // )
+      return electionInstance.add_election( E_name,
+        cand_register_end, polling_starts, polling_ends, {
+          from: App.account,
+        })
     })
     window.location.href = 'http://localhost:3000/create_election.html'
   },
@@ -762,7 +858,7 @@ App = {
       // Add the user in the voterlist with the id and E_id
       instance.add_voter_by_admin(id, E_id)
     })
-    window.location.href = 'http://localhost:3000/admin_add_voter.html'
+    window.location.href = 'http://localhost:3000/admin_add_voter.html#E_id=' + E_id;
   },
 
   castVote: function () {
@@ -830,6 +926,61 @@ App = {
         from: App.account,
       })
     })
+  },
+
+  // Call to the below function will be made when the admin accepts a report 
+  // by submitting the form
+  admin_accept_report : function() {
+      // Get the Election ID from the previous page somehow
+      var E_id = parseInt(window.location.hash.substr(-1));
+
+      // Get the id of the user to be blacklisted for that election
+      var id = $("#add_to_reported").val();
+      
+      console.log(id + " " + E_id);
+
+      App.contracts.Election.deployed().then(function (instance) {
+          // Change the user permission of the uesr with C_id to 1 to show that he's 
+          // an approved candidate
+          return instance.blacklist_by_admin(id, E_id, {
+            from: App.account,
+          }
+          )
+      })
+      console.log("heelo")
+      window.location.href =
+                    'http://localhost:3000/admin_accept_reports.html#E_id=' +
+                    E_id;
+  }, 
+
+  admin_add_voter_page_event: function() {
+      // Get the Election ID from the previous page somehow
+        var E_id = parseInt(window.location.hash.substr(-1));
+
+        console.log("h")
+      window.location.href =
+                    'http://localhost:3000/admin_add_voter.html#E_id=' +
+                    E_id;
+  },
+
+  admin_add_candidate_page_event: function() {
+      // Get the Election ID from the previous page somehow
+        var E_id = parseInt(window.location.hash.substr(-1));
+
+        console.log("heel")
+      window.location.href =
+                    'http://localhost:3000/admin_add_candidate.html#E_id=' +
+                    E_id;
+  },
+
+  admin_check_reports_page_event: function() {
+      // Get the Election ID from the previous page somehow
+        var E_id = parseInt(window.location.hash.substr(-1));
+
+        console.log("heelo")
+      window.location.href =
+                    'http://localhost:3000/admin_accept_reports.html#E_id=' +
+                    E_id;
   },
 
   manage_election_for_user: function () {

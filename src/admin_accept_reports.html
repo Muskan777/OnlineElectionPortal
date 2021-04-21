@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Admin Manage Election</title>
+        <title>Admin Accept Reports</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -23,18 +23,20 @@
                 display: table;
                 clear: both;
             }
-            p {
+
+            ol {
                 float: left;
-                padding: 20px;
-                width: 40%;
-                background-color: #f1f1f1;
+                width: 50%;
                 height: 300px;
                 /* only for demonstration, should be removed */
+                background: #ccc;
+                padding: 20px;
             }
+
             form {
                 float: left;
                 padding: 20px;
-                width: 20%;
+                width: 50%;
                 background-color: #f1f1f1;
                 height: 300px;
                 /* only for demonstration, should be removed */
@@ -45,19 +47,29 @@
 
     <body>
         <header>
-            <h1>Manage Election</h1>
+            <h1>Reports</h1>
         </header>
-        <p>Election Data</p>
-        <form onSubmit="App.admin_add_voter_page_event(); return false" class="admin_add_voter_event">
-            <button type="submit">Add Voters</button>
-        </form>
-        <form onSubmit="App.admin_add_candidate_page_event(); return false" class="admin_add_candidate_page_event">
-            <button type="submit">Add Candidates</button>
-        </form>
-        <form onSubmit="App.admin_check_reports_page_event(); return false" class="admin_check_reports_page_event">
-            <button type="submit">Check Reports</button>
-        </form>
-
+        <!-- <div id="loader">
+            <p id="text-center">Loading...</p>
+        </div> -->
+        <div>
+            <section id="content">
+                <div>
+                    <ol name="display_already_blacklisted" id="display_already_blacklisted">
+            
+                    </ol>
+            
+                </div>
+                <div>
+                    <form onSubmit="App.admin_accept_report(); return false" class="admin_accept_report">
+                        <label for="add_to_reported">Choose a Report</label>
+                        <select name="add_to_reported" id="add_to_reported">
+                        <input type="submit" id="submit">
+                        </select>
+                    </form>
+                </div>
+            </section>
+        </div>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
