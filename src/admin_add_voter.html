@@ -24,9 +24,9 @@
                 clear: both;
             }
 
-            button {
+            ol {
                 float: left;
-                width: 30%;
+                width: 50%;
                 height: 300px;
                 /* only for demonstration, should be removed */
                 background: #ccc;
@@ -36,7 +36,7 @@
             form {
                 float: left;
                 padding: 20px;
-                width: 70%;
+                width: 50%;
                 background-color: #f1f1f1;
                 height: 300px;
                 /* only for demonstration, should be removed */
@@ -47,26 +47,25 @@
 
     <body>
         <header>
-            <h1>Admin Dashboard</h1>
+            <h1>Voters List</h1>
         </header>
-        <div id="loader">
+        <!-- <div id="loader">
             <p id="text-center">Loading...</p>
-        </div>
+        </div> -->
         <div>
             <section id="content">
                 <div>
-                    <button type="button" name="create_election" class="admin_create_election">
-                        <a href="/create_election.html">Create Election</a>
-                    </button>
+                    <ol name="already_registered_voters" id="already_registered_voters">
+
+                    </ol>
 
                 </div>
                 <div>
-                    <form onSubmit="App.manage_election_event(); return false;" class="admin_manage_elections">
-                        <label for="manage_elections">Choose an Election</label>
-                        <select name="manage_elections" id="manage_elections">
-
+                    <form onSubmit="App.admin_add_voter(); return false" class="admin_add_voter">
+                        <label for="add_voter">Choose a Voter</label>
+                        <select name="add_voter" id="add_voter">
+                            <input type="submit" id="submit">
                         </select>
-                        <input type="submit" id="submit">
                     </form>
                 </div>
             </section>
