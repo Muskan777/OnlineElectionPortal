@@ -254,37 +254,37 @@ contract Election {
     constructor() public {
         // Add admin first
         add_user(
-            0x22e9140a50BdB2659b9E473dAa645685C4f409E5,
+            0x508C143F9aB6B04273DEd8c182B75A7CAFA84a27,
             "admin",
             "admin@coep.ac.in",
             "admin",
             2
         );
-        add_user(
-            0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
-            "voter 1",
-            "voter1@gmail.com",
-            "voter 1 password",
-            0
-        );
-        add_user(
-            0xCD56ad160221d01ea132F05D4057665A97C6934D,
-            "candidate 1",
-            "voter2@gmail.com",
-            "candidate 1 password",
-            0
-        );
-        add_voter_by_admin(1, 2);
-        add_voter_by_admin(1, 3);
-        add_voter_by_admin(2, 3);
-        add_election("Gykhana", 5000, 1618926000, 1618940000);
-        add_election("Sec", 5000, 6000, 7000);
-        add_candidate(3, "candidate 1", 1);
-        add_candidate(2, "voter 1", 1);
-        candidate_approved_by_admin(2);
-        candidate_approved_by_admin(3);
-        report_by_user(
-            2, 1, "Fake"
-    );
+        // add_user(
+        //     0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
+        //     "voter 1",
+        //     "voter1@gmail.com",
+        //     "voter 1 password",
+        //     0
+        // );
+        // add_user(
+        //     0xCD56ad160221d01ea132F05D4057665A97C6934D,
+        //     "candidate 1",
+        //     "voter2@gmail.com",
+        //     "candidate 1 password",
+        //     0
+        // );
+    //     add_voter_by_admin(1, 2);
+    //     add_voter_by_admin(1, 3);
+    //     add_voter_by_admin(2, 3);
+    //     add_election("Gykhana", 5000, 1618926000, 1618940000);
+    //     add_election("Sec", 5000, 6000, 7000);
+    //     add_candidate(3, "candidate 1", 1);
+    //     add_candidate(2, "voter 1", 1);
+    //     candidate_approved_by_admin(2);
+    //     candidate_approved_by_admin(3);
+    //     report_by_user(
+    //         2, 1, "Fake"
+    // );
     }
 }

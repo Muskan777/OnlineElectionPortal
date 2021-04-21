@@ -62,11 +62,29 @@ App = {
   render: function () {
     web3.eth.getCoinbase(function (err, account) {
       if (err === null) {
-        App.account = account
-        $('#accountAddress').html('Your Account: ' + account)
+        
+        if(account == null){
+          alert("No account connected, Connect your blockchain account first!");
+          return;
+        }
+        else{
+          App.account = account
+          $('#accountAddress').html('Your Account: ' + account)
+        }
       }
     })
     if (window.location.href === 'http://localhost:3000') {
+      var electionInstance
+      var loader = $('#loader')
+      var content = $('#content')
+          
+      loader.show()
+      content.hide()
+
+      // Load account data
+      
+      loader.hide()
+      content.show()
     } else if (
       window.location.href === 'http://localhost:3000/admin_home.html'
     ) {
@@ -1024,6 +1042,81 @@ App = {
         })
     }, 40)
   },
+
+  login: function(){
+    var ElectionInstance
+    var loader = $('#loader')
+    var content = $('#content')
+    var paswd
+          
+    loader.show()
+    content.hide()
+
+    var U_id = $('#u_id').val()
+    var pwd = $('#pwd').val()
+    console.log(U_id, pwd)
+    App.contracts.Election.deployed()
+      .then(function (instance){
+        ElectionInstance = instance
+        return instance.users(U_id)
+      })
+      .then(function (user){
+        paswd = user[6]
+        console.log(paswd)
+        add = user[1]
+        console.log(add)
+        console.log(App.account)
+        if ((paswd == pwd) && (add == App.account)){
+          var result = user[4].toNumber()
+          console.log(result)
+          if (result == 2){
+            window.location.href = "http://localhost:3000/admin_home.html";
+          }
+          else{
+            window.location.href = "http://localhost:3000/voter_home.html";
+          }
+        }
+        else{
+          alert("invalid Login Credentials!!\n Please try Again.");
+        }
+      })
+      .catch(function (err) {
+        console.error(err)
+      })
+      loader.hide()
+      content.show()
+  },
+
+  register: function(){
+    var ElecInstance
+    var loader = $('#loader')
+    var content = $('#content')
+          
+    loader.show()
+    content.hide()
+
+    var name = $('#name').val()
+    var mail = $('#mail').val()
+    var pwd = $('#pwd').val()
+    console.log(name, mail, pwd)
+    App.contracts.Election.deployed()
+      .then(function (instance){
+        ElecInstance = instance
+        return instance.add_user(App.account, name, mail, pwd, 0, { from: App.account })
+      })
+      .then(function (){
+        return ElecInstance.user_count()
+      })
+      .then(function (result){
+        console.log(result.toNumber())
+        alert("Congratulations! You are now registered to our Portal\n Your UserID is " + result.toNumber() +".\n Please use this UserID to login.");
+      })
+      .catch(function (err) {
+        console.error(err)
+      })
+      loader.hide()
+      content.show()
+  }
 }
 
 $(function () {

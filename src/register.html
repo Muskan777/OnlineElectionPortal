@@ -24,19 +24,19 @@
         <p class="text-center">Loading...</p>
     </div>
     <div id="content">
-        <form onSubmit="App.login(); return false;  ">
-            <legend><h2>Enter User ID and password to Login</h2></legend>
-            <label for="u_id">User ID</label>
-            <input type="number" id="u_id" /><br>
+        <form onSubmit="App.register(); return false;">
+            <legend><h2>Enter Your Details to Register</h2></legend>
+            <label for="name">Name:</label>
+            <input type="text" id="name" /><br>
+            <label for="mail">E-mail:</label>
+            <input type="email" id="mail" /><br>
             <label for="pwd">Password</label>
             <input type="password" id="pwd" /><br><br>
-            <button type="submit" className="btn btn-success btn-block btn-lg">Login</button>
+            <button type="submit" className="btn btn-success btn-block btn-lg">Register</button>
         </form>
         <br><br><br>
-        <a href="./register.html">New User? Click to Register</a>
+        <a href="./index.html">Already a User? Click to Login</a>
     </div>
-    <div id="accountAddress"></div>
-
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
