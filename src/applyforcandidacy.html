@@ -26,20 +26,45 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Campaigning Portal</a>
                         </li>
+                        <li class="nav-item" id="applyforcandidacy">
+                        </li>
                         <li class="nav-item" id="report">
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <div>
-            <header style="text-align: center;">
-                <h1>Candidate DashBoard</h1>
-            </header>
+        <header style="text-align: center;">
+            <h1>Apply for candidacy</h1>
+        </header>
+        <br /> <br />
+        <div class="container row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <form onSubmit="App.applyForCandidacy(); return false;">
+                    <div class="form-group">
+                        <label for="username">User Name</label>
+                        <input type="text" id="username" required />
+                        <br /> <br />
+                        <div>
+                            <input type="checkbox" id="tnc" value="agree" required />
+                            <span>I hereby agree to all the terms and conditions and abide by the code of conduct for
+                                the
+                                election</span>
+                        </div>
+                        <br />
+                        <button type="submit" id="submit" class="btn btn-primary">Apply</button>
+                        <hr />
+
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col-lg-2"></div>
+
         </div>
-
-
-
+        </div>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->

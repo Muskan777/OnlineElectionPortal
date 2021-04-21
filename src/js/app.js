@@ -150,6 +150,11 @@ App = {
           E_id +
           '">Report</a>',
       )
+      $('#applyforcandidacy').html(
+        '<a class="nav-link" href="http://localhost:3000/applyforcandidacy.html#E_id=' +
+          E_id +
+          '">Apply for Candidacy</a>',
+      )
     } else if (
       window.location.href.includes('http://localhost:3000/candidate.html')
     ) {
@@ -328,6 +333,30 @@ App = {
             }
           })
       }, 40)
+    } else if (
+      window.location.href.includes(
+        'http://localhost:3000/applyforcandidacy.html',
+      )
+    ) {
+      var electionInstance
+      E_id = parseInt(window.location.hash.substr(-1))
+      $('#vote').html(
+        '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
+          E_id +
+          '">Vote</a>',
+      )
+
+      $('#report').html(
+        '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
+          E_id +
+          '">Report</a>',
+      )
+
+      $('#applyforcandidacy').html(
+        '<a class="nav-link" href="http://localhost:3000/applyforcandidacy.html#E_id=' +
+          E_id +
+          '">Apply for Candidacy</a>',
+      )
     }
   },
 
@@ -443,6 +472,24 @@ App = {
       })
       .catch(function (error) {
         console.log(error)
+      })
+  },
+
+  applyForCandidacy: function () {
+    var electionInstance
+    var E_id = parseInt(window.location.hash.substr(-1))
+    var username = $('#username').val()
+    App.contracts.Election.deployed()
+      .then(function (instance) {
+        electionInstance = instance
+        return electionInstance.addresses(App.account)
+      })
+      .then(function (id) {
+        uid = id.toNumber()
+        console.log(E_id, uid, username)
+        return electionInstance.add_candidate(uid, username, E_id, {
+          from: App.account,
+        })
       })
   },
 
