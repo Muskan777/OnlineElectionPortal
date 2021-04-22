@@ -31,7 +31,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">Campaigning Portal</a>
+                            <button onClick="App.admin_view_campaign_event(); return false"
+                                style="background-color: black; color: white; border-color: black;"
+                                class="admin_view_campaign_event nav-link active" type="submit">Campaigning Portal</button>
                         </li>
                         <li class="nav-item">
                             <button onClick="App.admin_view_results_event(); return false"
@@ -65,32 +67,26 @@
                 </div>
             </div>
         </nav>
-        <header style="text-align: center;">
+        <header style="color: white; text-align: center;">
             <h1>Campaigning Page</h1>
         </header>
         <br /> <br />
         <div id="loader" style="display: none;">
             <p class="text-center">Loading...</p>
         </div>
-        <div id="content" style="color: white;">
-            <!-- <div class="container row">
+        <section id="content">
+            <div class="row mt-5">
                 <div class="col-lg-2"></div>
-                <div class="col-lg-8">
-                    <!-- <form onSubmit="App.uploadCampaign(); return false; ">
-                        <legend><h2>POST New Campaign</h2></legend>
-                        <textarea id="description" rows="10" cols="50" required>Add your Campaigning Descripiton here</textarea>
-                        <button type="submit" className="btn btn-success btn-block btn-lg">POST</button>
-                    </form> -->
-                </div>  
-            </div> -->
-            <div id="display-campaign">
-                <ul id='campaign'>
-                    <li></li>
-                </ul>
-
+                <div class="col-lg-8 text-center row mt-5 bg-light mb-5 ">
+                    <div>
+                        <ul id='campaign'>
+                            <li></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-2"></div>
-        </div>
+        </section>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

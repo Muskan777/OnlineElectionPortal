@@ -1218,7 +1218,7 @@ App = {
                       '<h4>Description: ' +
                       desc +
                       '<h4></li><br><br>'
-
+                    console.log(update_campaign)
                     display_campaign.append(update_campaign)
                   })
               }
