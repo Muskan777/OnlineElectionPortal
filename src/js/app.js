@@ -779,6 +779,67 @@ App = {
         }
         })
     }
+    // New Campaigning page
+    else if (
+      window.location
+        .toString()
+        .includes('http://localhost:3000/new_campaign.html')
+    ) {
+      // Get Election ID from the previous page
+      var E_id = parseInt(window.location.hash.substr(-1))
+      console.log('E_id: ' + E_id)
+      $('#vote').html(
+        '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
+          E_id +
+          '">Vote</a>',
+      )
+
+      $('#report').html(
+        '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
+          E_id +
+          '">Report</a>',
+      )
+
+      $('#applyforcandidacy').html(
+        '<a class="nav-link" href="http://localhost:3000/applyforcandidacy.html#E_id=' +
+          E_id +
+          '">Apply for Candidacy</a>',
+      )
+      var electionInstance
+        App.contracts.Election.deployed()
+        .then(function (instance) {
+          electionInstance = instance
+          return electionInstance.candidate_count()
+        })
+        .then(function (candidate_count) {
+          var display_campaign = $('#campaign')
+          for (var j = 0; j < candidate_count.toNumber(); j++) {
+            electionInstance.candidates(j).then(function (candidate) {
+              if (E_id == candidate[3].toNumber()) {
+                var C_id = candidate[0].toNumber()
+                console.log('C_id: ' + C_id)
+                electionInstance.users(C_id).then(function (user) {
+                  var id = user[0].toNumber()
+                  var name = user[2]
+                  var email = user[3]
+                  var info = candidate[4]
+                  var desc = candidate[5]
+                  // Check the permissions in the user struct if they are 1
+                  if (user[4].toNumber() == 1) {
+                    var display_campaign_template =
+                      '<li>' + 'id: ' + id + '<br>' + 'Name: ' + name +' <br>'+ 'Email: ' + email + 
+                      '<br>' + 'Perosnal Info: ' + info + '<br>' + 'Description' + desc +'<br><br>' + '</li>'
+                    display_campaign.append(
+                      display_campaign_template,
+                    )
+                  }
+                })
+              }
+            })
+          }
+        })
+    }
+
     else if (window.location.href == 'http://localhost:3000/campaign.html') {
       //add front-end for campaign
       var electionInstance
@@ -1040,6 +1101,9 @@ App = {
     var electionInstance
     var E_id = parseInt(window.location.hash.substr(-1))
     var username = $('#username').val()
+    var info = $('#info').val()
+    var description = $('#description').val()
+
     App.contracts.Election.deployed()
       .then(function (instance) {
         electionInstance = instance
@@ -1048,7 +1112,7 @@ App = {
       .then(function (id) {
         uid = id.toNumber()
         console.log(E_id, uid, username)
-        return electionInstance.add_candidate(uid, username, E_id, {
+        return electionInstance.add_candidate(uid, username, E_id, info, description, {
           from: App.account,
         })
       })
