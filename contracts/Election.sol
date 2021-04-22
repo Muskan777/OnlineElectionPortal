@@ -120,6 +120,23 @@ contract Election {
         elections[election_count].time_polling_ends = _time_polling_ends;
     }
 
+    // Edit elections
+    // Remember election_count is same as E_id for a particular election.
+    function edit_election(
+        uint256 _E_id,
+        string memory _E_name,
+        uint256 _time_cand_register_end,
+        uint256 _time_polling_starts,
+        uint256 _time_polling_ends
+    ) public {
+        
+        // elections[election_count].E_id = election_count;
+        elections[_E_id].E_name = _E_name;
+        elections[_E_id].time_cand_register_end = _time_cand_register_end;
+        elections[_E_id].time_polling_starts = _time_polling_starts;
+        elections[_E_id].time_polling_ends = _time_polling_ends;
+    }
+
     function report_by_user(
         uint256 _reportedUser,
         uint256 _E_id,
