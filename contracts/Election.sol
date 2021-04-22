@@ -320,69 +320,69 @@ contract Election {
     // Constructor
     constructor() public {
         // Add admin first
+        // add_user(
+        //     0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
+        //     "admin",
+        //     "admin@coep.ac.in",
+        //     "123",
+        //     2
+        // );
+        // add_user(
+        //     0x2aeE3162bB87A4Ed18eE0abB27f6d2CE3F5A6720,
+        //     "voter 1",
+        //     "voter1@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x145d98eBca32EC5C25e49D76D95cEc2E4cA2852E,
+        //     "voter 2",
+        //     "voter2@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x7F5542Cd4C3f34ad08747273E42CB8855eDD23d4,
+        //     "cand 1",
+        //     "cand1@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x339531797eBa4492570C40Cc40dfee612dd9540F,
+        //     "cand 2",
+        //     "cand2@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x12a79A0f247F3912e45A8B3EdAec0fdD46C5C660,
+        //     "Reported",
+        //     "reported@gmail.com",
+        //     "123",
+        //     0
+        // );
         add_user(
-            0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
+            0x81e5135375023544526294743DB8dc77e37B3a3c,
             "admin",
             "admin@coep.ac.in",
-            "123",
+            "admin",
             2
         );
         add_user(
-            0x2aeE3162bB87A4Ed18eE0abB27f6d2CE3F5A6720,
+            0x347498952f9a102aAf611d66b4A9eb1c822AcF5A,
             "voter 1",
             "voter1@gmail.com",
             "123",
             0
         );
         add_user(
-            0x145d98eBca32EC5C25e49D76D95cEc2E4cA2852E,
-            "voter 2",
+            0x108dd6Db4E153BcE120bf8EF9E1473f32dea9248,
+            "candidate 1",
             "voter2@gmail.com",
             "123",
             0
         );
-        add_user(
-            0x7F5542Cd4C3f34ad08747273E42CB8855eDD23d4,
-            "cand 1",
-            "cand1@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0x339531797eBa4492570C40Cc40dfee612dd9540F,
-            "cand 2",
-            "cand2@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0x12a79A0f247F3912e45A8B3EdAec0fdD46C5C660,
-            "Reported",
-            "reported@gmail.com",
-            "123",
-            0
-        );
-        // add_user(
-        //     0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
-        //     "admin",
-        //     "admin@coep.ac.in",
-        //     "admin",
-        //     2
-        // );
-        // add_user(
-        //     0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
-        //     "voter 1",
-        //     "voter1@gmail.com",
-        //     "voter 1 password",
-        //     0
-        // );
-        // add_user(
-        //     0xCD56ad160221d01ea132F05D4057665A97C6934D,
-        //     "candidate 1",
-        //     "voter2@gmail.com",
-        //     "candidate 1 password",
-        //     0
-        // );
         //     add_voter_by_admin(1, 2);
         //     add_voter_by_admin(1, 3);
         //     add_voter_by_admin(2, 3);

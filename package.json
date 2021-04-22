@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "ipfs": "^0.54.4",
+    "ipfs-api": "^26.1.2",
     "ipfs-http-client": "^49.0.4"
   }
 }

@@ -1,9 +1,3 @@
-// const ipfs = window.IpfsHttpClient({
-//   host: 'ipfs.infura.io',
-//   port: 5001,
-//   protocol: 'https',
-// })
-//const ipfs = ipfsClient({})
 App = {
   web3Provider: null,
   contracts: {},
@@ -93,10 +87,22 @@ App = {
     } else if (
       window.location.href === 'http://localhost:3000/admin_home.html'
     ) {
+      // console.log(App.ifloggedin)
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
-          return electionInstance.election_count()
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
+            return electionInstance.election_count()
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            return App.render()
+          }
         })
         .then(function (election_count) {
           var manage_elections = $('#manage_elections')
@@ -1140,6 +1146,7 @@ App = {
         console.log(add)
         console.log(App.account)
         if (paswd == pwd && add == App.account) {
+          localStorage.id = U_id
           var result = user[4].toNumber()
           console.log(result)
           if (result == 2) {
@@ -1238,6 +1245,16 @@ App = {
     loader.hide()
     content.show()
     return App.render()
+  },
+
+  loggedIN: function(u_id){
+    console.log(u_id, localStorage.id)
+    if(u_id == localStorage.id){
+      return true;
+    }
+    else{
+      return false;
+    }
   },
 }
 
