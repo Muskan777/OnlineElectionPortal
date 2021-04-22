@@ -869,6 +869,11 @@ App = {
           E_id +
           '">Apply for Candidacy</a>',
       )
+      $('#campaign').html(
+        '<a class="nav-link" href="http://localhost:3000/campaign.html#E_id=' +
+          E_id +
+          '">Campaigning Portal</a>',
+      )
     }
     // For admin view results
     else if (
@@ -1697,6 +1702,13 @@ App = {
     } else {
       return false
     }
+  },
+
+  logout: function () {
+    localStorage.clear()
+    alert('You Have been Successfully Logged Out!')
+    window.location.href = 'http://localhost:3000'
+    App.render()
   },
 }
 
