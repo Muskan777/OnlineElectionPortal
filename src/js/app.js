@@ -282,6 +282,11 @@ App = {
           E_id +
           '">Report</a>',
       )
+      $('#campaign').html(
+        '<a class="nav-link" href="http://localhost:3000/campaign.html#E_id=' +
+          E_id +
+          '">Campaigning Portal</a>',
+      )
       $('#applyforcandidacy').html(
         '<a class="nav-link" href="http://localhost:3000/applyforcandidacy.html#E_id=' +
           E_id +
@@ -322,6 +327,11 @@ App = {
         '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
           E_id +
           '">Vote</a>',
+      )
+      $('#campaign').html(
+        '<a class="nav-link" href="http://localhost:3000/campaign.html#E_id=' +
+          E_id +
+          '">Campaigning Portal</a>',
       )
       $('#report').html(
         '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
@@ -364,6 +374,11 @@ App = {
         '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
           E_id +
           '">Vote</a>',
+      )
+      $('#campaign').html(
+        '<a class="nav-link" href="http://localhost:3000/campaign.html#E_id=' +
+          E_id +
+          '">Campaigning Portal</a>',
       )
       $('#report').html(
         '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
@@ -674,7 +689,6 @@ App = {
           return instance.addresses(App.account)
         })
         .then(function (u_id){
-          console.log(u_id.toNumber())
           if(App.loggedIN(u_id.toNumber())){
           return electionInstance.report_count()
           }
@@ -771,7 +785,11 @@ App = {
           E_id +
           '">Vote</a>',
       )
-
+      $('#campaign').html(
+        '<a class="nav-link" href="http://localhost:3000/campaign.html#E_id=' +
+          E_id +
+          '">Campaigning Portal</a>',
+      )
       $('#report').html(
         '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
           E_id +
@@ -996,6 +1014,11 @@ App = {
           '">Report</a>',
       )
 
+      $('#home').html(
+        '<a class="nav-link" href="http://localhost:3000/voter_home.html' +
+          '">Home</a>',
+      )
+
       $('#applyforcandidacy').html(
         '<a class="nav-link" href="http://localhost:3000/applyforcandidacy.html#E_id=' +
           E_id +
@@ -1027,15 +1050,26 @@ App = {
                 var desc = campaign[1].toString()
                 var Cand_id = campaign[2].toNumber()
                 var Cand_name = campaign[4].toString()
-
-                var update_campaign =
-                  '<li> <h2>' +
+                return electionInstance.users(Cand_id)
+                .then(function(user){
+                  return user[5].toNumber()
+                })
+                .then(function (cand_indx){
+                  return electionInstance.candidates(cand_indx)
+                })
+                .then(function (candidate){
+                  return candidate[4].toString()
+                })
+                .then(function (cand_desc) {
+                  var update_campaign =
+                  '<li> <h3>' + "ID:" +
                   Cand_id +
-                  ' ' +
+                  ' ' + "Name: " +
                   Cand_name +
-                  ':</h2><br>' + desc + '</li><br><br>'
+                  '</h3><br>' + '<h3>' + "Peronal Info: " + cand_desc + '</h3><br>' + "<h4>Description: " + desc + '<h4></li><br><br>'
 
                 display_campaign.append(update_campaign)
+                })
               }
             })
           }
@@ -1045,11 +1079,21 @@ App = {
           return electionInstance.users(id.toNumber())
         })
         .then(function (user) {
-          return electionInstance.candidates(user[5].toNumber())
+          return user[5].toNumber()
         })
-        .then(function (candidate) {
-          if (candidate[3] != E_id) {
-            $('form').hide()
+        .then(function (cand_index){
+          console.log(cand_index)
+          if(cand_index > 4999){
+            $('form').hide()  
+          }
+          else{
+            return electionInstance.candidates(cand_index)
+            .then(function (candidate){
+              console.log(candidate[3], E_id)
+              if (candidate[3] != E_id) {
+                $('form').hide()
+              }
+            })
           }
         })
         .catch(function (error) {
@@ -1205,7 +1249,7 @@ App = {
         },
       )
     })
-    window.location.href = 'http://localhost:3000/create_election.html'
+    window.location.href = 'http://localhost:3000/admin_home.html'
   },
 
   edit_election_event: function () {
