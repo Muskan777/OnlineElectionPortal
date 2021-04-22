@@ -89,7 +89,19 @@ App = {
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
-          return electionInstance.election_count()
+
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
+            return electionInstance.election_count()
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
         })
         .then(function (election_count) {
           var manage_elections = $('#manage_elections')
@@ -122,7 +134,19 @@ App = {
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
-          return electionInstance.elections(E_id)
+
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
+            return electionInstance.elections(E_id)
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
         })
         .then(function (election) {
           var E_name = election[1]
@@ -201,7 +225,18 @@ App = {
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
           return electionInstance.addresses(App.account)
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
         })
         .then(function (index) {
           return electionInstance.users(index.toNumber())
@@ -254,7 +289,19 @@ App = {
       )
       App.contracts.Election.deployed()
         .then(function (instance) {
-          return instance.elections(E_id)
+          electionInstance = instance
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
+          return electionInstance.elections(E_id)
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
         })
         .then(function (election) {
           $('#E_id').html(election[0].toNumber())
@@ -284,7 +331,19 @@ App = {
 
       App.contracts.Election.deployed()
         .then(function (instance) {
-          return instance.elections(E_id)
+          electionInstance = instance
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
+            return electionInstance.elections(E_id)
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
         })
         .then(function (election) {
           $('#E_id').html(election[0].toNumber())
@@ -328,7 +387,18 @@ App = {
         App.contracts.Election.deployed()
           .then(function (instance) {
             electionInstance = instance
+            return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
             return electionInstance.candidate_count()
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
           })
           .then(function (candidatesCount) {
             //Empty candidates List for table
@@ -429,7 +499,18 @@ App = {
         App.contracts.Election.deployed()
           .then(function (instance) {
             electionInstance = instance
+            return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
             return electionInstance.voter_list_count()
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
           })
           .then(function (voter_list_count) {
             window.loca
@@ -468,7 +549,18 @@ App = {
         App.contracts.Election.deployed()
           .then(function (instance) {
             electionInstance = instance
+            return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
             return electionInstance.voter_list_count()
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
           })
           .then(function (voter_list_count) {
             var display_old_voters = $('#already_registered_voters')
@@ -501,7 +593,18 @@ App = {
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
           return electionInstance.candidate_count()
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
         })
         .then(function (candidate_count) {
           var add_candidate = $('#add_candidate')
@@ -568,7 +671,18 @@ App = {
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
           return electionInstance.report_count()
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
         })
         .then(function (report_count) {
           window.loca
@@ -669,7 +783,18 @@ App = {
         App.contracts.Election.deployed()
           .then(function (instance) {
             electionInstance = instance
+            return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
             return electionInstance.voter_list_count()
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
           })
           .then(function (votersCount) {
             $('#UserSelect').empty()
@@ -729,7 +854,18 @@ App = {
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
           return electionInstance.candidate_count()
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
         })
         .then(function (candidate_count) {
           var display_result = $('#display_result_of_election')
@@ -770,7 +906,18 @@ App = {
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
           return electionInstance.elections(E_id)
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
         })
         .then(function (election) {
           time_polling_ends = election[3].toNumber()
@@ -858,7 +1005,18 @@ App = {
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(App.loggedIN(u_id.toNumber())){
           return electionInstance.campaign_count()
+          }
+          else{
+            alert("It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.")
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
         })
         .then(function (campaign_count) {
           var display_campaign = $('#campaign')
@@ -901,56 +1059,56 @@ App = {
       content.show()
     }
 
-    else if (window.location.href == 'http://localhost:3000/campaign.html') {
-      //add front-end for campaign
-      var electionInstance
-      var loader = $('#loader')
-      var content = $('#content')
+    // else if (window.location.href == 'http://localhost:3000/campaign.html') {
+    //   //add front-end for campaign
+    //   var electionInstance
+    //   var loader = $('#loader')
+    //   var content = $('#content')
 
-      loader.show()
-      content.hide()
+    //   loader.show()
+    //   content.hide()
 
-      App.contracts.Election.deployed()
-        .then(function (instance) {
-          electionInstance = instance
-          return electionInstance.campaign_count()
-        })
-        .then(function (campaign_count) {
-          var display_campaign = $('display-campaign')
-          display_campaign.empty()
-          for (var i = 1; i < campaign_count; i++) {
-            return electionInstance.campaigns(i).then(function (campaign) {
-              var e_id = campaign[3]
-              //require(e_id == curr_e_id)
-              var hash = campaign[1]
-              var Cand_id = campaign[2]
-              var Cand_name = campaign[4]
+    //   App.contracts.Election.deployed()
+    //     .then(function (instance) {
+    //       electionInstance = instance
+    //       return electionInstance.campaign_count()
+    //     })
+    //     .then(function (campaign_count) {
+    //       var display_campaign = $('display-campaign')
+    //       display_campaign.empty()
+    //       for (var i = 1; i < campaign_count; i++) {
+    //         return electionInstance.campaigns(i).then(function (campaign) {
+    //           var e_id = campaign[3]
+    //           //require(e_id == curr_e_id)
+    //           var hash = campaign[1]
+    //           var Cand_id = campaign[2]
+    //           var Cand_name = campaign[4]
 
-              var update_campaign =
-                '<h2>' +
-                Cand_id +
-                ' ' +
-                Cand_name +
-                '</h2><br><br><img src={`https://ipfs.infura.io/ipfs/' +
-                hash +
-                "`} style={{ maxWidth: '420px'}}/>"
+    //           var update_campaign =
+    //             '<h2>' +
+    //             Cand_id +
+    //             ' ' +
+    //             Cand_name +
+    //             '</h2><br><br><img src={`https://ipfs.infura.io/ipfs/' +
+    //             hash +
+    //             "`} style={{ maxWidth: '420px'}}/>"
 
-              display_campaign.append(update_campaign)
-            })
-          }
-          return electionInstance.voters(App.account)
-        })
-        .then(function (iscandidate) {
-          if (iscandidate == false) {
-            $('form').hide()
-          }
-          loader.hide()
-          content.show()
-        })
-        .catch(function (error) {
-          console.warn(error)
-        })
-    }
+    //           display_campaign.append(update_campaign)
+    //         })
+    //       }
+    //       return electionInstance.voters(App.account)
+    //     })
+    //     .then(function (iscandidate) {
+    //       if (iscandidate == false) {
+    //         $('form').hide()
+    //       }
+    //       loader.hide()
+    //       content.show()
+    //     })
+    //     .catch(function (error) {
+    //       console.warn(error)
+    //     })
+    // }
   },
 
   // Listen for events emitted from the contract
@@ -1125,22 +1283,22 @@ App = {
 
   // Call to the below function will be made when the admin creates a new election
   // by submitting the form
-  admin_add_voter: function () {
-    // Get the Election ID from the previous page somehow
-    var E_id = parseInt(window.location.hash.substr(-1))
+  // admin_add_voter: function () {
+  //   // Get the Election ID from the previous page somehow
+  //   var E_id = parseInt(window.location.hash.substr(-1))
 
-    // Get the id of the user to be registered as a voter for the E_id
-    var id = $('#add_voter').val()
+  //   // Get the id of the user to be registered as a voter for the E_id
+  //   var id = $('#add_voter').val()
 
-    console.log(id)
+  //   console.log(id)
 
-    App.contracts.Election.deployed().then(function (instance) {
-      // Add the user in the voterlist with the id and E_id
-      instance.add_voter_by_admin(id, E_id)
-    })
-    window.location.href =
-      'http://localhost:3000/admin_add_voter.html#E_id=' + E_id
-  },
+  //   App.contracts.Election.deployed().then(function (instance) {
+  //     // Add the user in the voterlist with the id and E_id
+  //     instance.add_voter_by_admin(id, E_id)
+  //   })
+  //   window.location.href =
+  //     'http://localhost:3000/admin_add_voter.html#E_id=' + E_id
+  // },
 
   castVote: function () {
     var C_id = $('#candidatesSelect').val()
@@ -1336,6 +1494,7 @@ App = {
         console.log(add)
         console.log(App.account)
         if (paswd == pwd && add == App.account) {
+        localStorage.id = U_id
           var result = user[4].toNumber()
           console.log(result)
           if (result == 2) {
@@ -1365,6 +1524,11 @@ App = {
     var name = $('#name').val()
     var mail = $('#mail').val()
     var pwd = $('#pwd').val()
+    var confirm_pwd = $('#confirm_pwd').val()
+    if (pwd != confirm_pwd){
+      alert("Passwords do not match");
+    }
+    else {
     console.log(name, mail, pwd)
     App.contracts.Election.deployed()
       .then(function (instance) {
@@ -1387,6 +1551,7 @@ App = {
       .catch(function (err) {
         console.error(err)
       })
+    }
     loader.hide()
     content.show()
   },
@@ -1432,6 +1597,16 @@ App = {
     loader.hide()
     content.show()
     App.render()
+  },
+
+   loggedIN: function(u_id){
+    console.log(u_id, localStorage.id)
+    if(u_id == localStorage.id){
+      return true;
+    }
+    else{
+      return false;
+    }
   },
 }
 

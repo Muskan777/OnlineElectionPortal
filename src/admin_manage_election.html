@@ -49,25 +49,25 @@
         </header>
         <form id="edit_election_form" onSubmit="App.edit_election_event(); return false">
             <label for="E_name">Election Name: </label>
-            <input type="text" id="E_name" name="E_name"><br><br>
+            <input type="text" id="E_name" name="E_name" required><br><br>
             <label for="date_cand_register_end">Date until which Candidates can register: </label>
-            <input type="date" id="date_cand_register_end" name="date_cand_register_end"><br><br>
+            <input type="date" id="date_cand_register_end" name="date_cand_register_end" required><br><br>
 
             <label for="time_cand_register_end">Time until which Candidates can register: </label>
-            <input type="time" id="time_cand_register_end" name="time_cand_register_end"><br><br>
+            <input type="time" id="time_cand_register_end" name="time_cand_register_end" required><br><br>
 
             <label for="date_polling_starts">Date when the polling will begin: </label>
-            <input type="date" id="date_polling_starts" name="date_polling_starts"><br><br>
+            <input type="date" id="date_polling_starts" name="date_polling_starts" required><br><br>
 
             <label for="time_polling_starts">Time when the polling will begin: </label>
-            <input type="time" id="time_polling_starts" name="time_polling_starts"><br><br>
+            <input type="time" id="time_polling_starts" name="time_polling_starts" required><br><br>
 
 
             <label for="date_polling_ends">Date when the polling will end: </label>
-            <input type="date" id="date_polling_ends" name="date_polling_ends"><br><br>
+            <input type="date" id="date_polling_ends" name="date_polling_ends" required><br><br>
 
             <label for="time_polling_ends">Time when the polling will end: </label>
-            <input type="time" id="time_polling_ends" name="time_polling_ends"><br><br>
+            <input type="time" id="time_polling_ends" name="time_polling_ends" required><br><br>
 
             <input type="submit" name="submit" id="submit">
         </form>

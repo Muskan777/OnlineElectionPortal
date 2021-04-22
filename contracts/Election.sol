@@ -148,6 +148,7 @@ contract Election {
             if (
                 voterlist[i].id == _reportedUser && voterlist[i].E_id == _E_id
             ) {
+                require(!voterlist[i].reportedByUser, "User is already reported");
                 voterlist[i].reportedByUser = true;
             }
         }
@@ -196,8 +197,7 @@ contract Election {
         uint256 _C_id,
         string memory _C_name,
         uint256 _E_id,
-        string memory _C_info,
-        string memory _C_desc
+        string memory _C_info
     ) public {
         // Require that the user is not an Admin
         require(users[_C_id].id != 0, "The User is not an Admin");
@@ -339,42 +339,42 @@ contract Election {
     constructor() public {
         // Add admin first
         add_user(
-            0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
+            0x22e9140a50BdB2659b9E473dAa645685C4f409E5,
             "admin",
             "admin@coep.ac.in",
             "123",
             2
         );
         add_user(
-            0x2aeE3162bB87A4Ed18eE0abB27f6d2CE3F5A6720,
+            0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
             "voter 1",
             "voter1@gmail.com",
             "123",
             0
         );
         add_user(
-            0x145d98eBca32EC5C25e49D76D95cEc2E4cA2852E,
+            0xCD56ad160221d01ea132F05D4057665A97C6934D,
             "voter 2",
             "voter2@gmail.com",
             "123",
             0
         );
         add_user(
-            0x7F5542Cd4C3f34ad08747273E42CB8855eDD23d4,
+            0x2D89b40E5C820Ee508577ac851DF5e1Bb095C037,
             "cand 1",
             "cand1@gmail.com",
             "123",
             0
         );
         add_user(
-            0x339531797eBa4492570C40Cc40dfee612dd9540F,
+            0x6f7B8dF18264EeF57c112a94ce06cc2fa705ab71,
             "cand 2",
             "cand2@gmail.com",
             "123",
             0
         );
         add_user(
-            0x12a79A0f247F3912e45A8B3EdAec0fdD46C5C660,
+            0x33fF69744215B3E8b8389D70C2A358BFB3fA16ae,
             "Reported",
             "reported@gmail.com",
             "123",
