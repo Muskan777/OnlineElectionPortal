@@ -783,11 +783,17 @@ App = {
     else if (
       window.location
         .toString()
-        .includes('http://localhost:3000/new_campaign.html')
+        .includes('http://localhost:3000/campaign.html')
     ) {
       // Get Election ID from the previous page
       var E_id = parseInt(window.location.hash.substr(-1))
       console.log('E_id: ' + E_id)
+      var electionInstance
+      var loader = $('#loader')
+      var content = $('#content')
+
+      loader.show()
+      content.hide()
       $('#vote').html(
         '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
           E_id +
@@ -805,39 +811,50 @@ App = {
           E_id +
           '">Apply for Candidacy</a>',
       )
-      var electionInstance
-        App.contracts.Election.deployed()
+      App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
-          return electionInstance.candidate_count()
+          return electionInstance.campaign_count()
         })
-        .then(function (candidate_count) {
+        .then(function (campaign_count) {
           var display_campaign = $('#campaign')
-          for (var j = 0; j < candidate_count.toNumber(); j++) {
-            electionInstance.candidates(j).then(function (candidate) {
-              if (E_id == candidate[3].toNumber()) {
-                var C_id = candidate[0].toNumber()
-                console.log('C_id: ' + C_id)
-                electionInstance.users(C_id).then(function (user) {
-                  var id = user[0].toNumber()
-                  var name = user[2]
-                  var email = user[3]
-                  var info = candidate[4]
-                  var desc = candidate[5]
-                  // Check the permissions in the user struct if they are 1
-                  if (user[4].toNumber() == 1) {
-                    var display_campaign_template =
-                      '<li>' + 'id: ' + id + '<br>' + 'Name: ' + name +' <br>'+ 'Email: ' + email + 
-                      '<br>' + 'Perosnal Info: ' + info + '<br>' + 'Description' + desc +'<br><br>' + '</li>'
-                    display_campaign.append(
-                      display_campaign_template,
-                    )
-                  }
-                })
+          display_campaign.empty()
+          for (var j = 0; j < campaign_count.toNumber(); j++) {
+            electionInstance.campaigns(j).then(function (campaign) {
+              if (E_id == campaign[3].toNumber()) {
+                var desc = campaign[1]
+                var Cand_id = campaign[2]
+                var Cand_name = campaign[4]
+
+                var update_campaign =
+                  '<li> <h2>' +
+                  Cand_id +
+                  ' ' +
+                  Cand_name +
+                  ':</h2><br>' + desc + '</li><br><br>'
+
+                display_campaign.append(update_campaign)
               }
             })
           }
+          return electionInstance.addresses(App.account)
         })
+        .then(function (id) {
+          return electionInstance.users(id.toNumber())
+        })
+        .then(function (user) {
+          return electionInstance.candidates(user[5].toNumber())
+        })
+        .then(function (candidate) {
+          if (candidate[3] != E_id) {
+            $('form').hide()
+          }
+        })
+        .catch(function (error) {
+          console.warn(error)
+        })
+      loader.hide()
+      content.show()
     }
 
     else if (window.location.href == 'http://localhost:3000/campaign.html') {
@@ -1102,7 +1119,7 @@ App = {
     var E_id = parseInt(window.location.hash.substr(-1))
     var username = $('#username').val()
     var info = $('#info').val()
-    var description = $('#description').val()
+    // var description = $('#description').val()
 
     App.contracts.Election.deployed()
       .then(function (instance) {
@@ -1112,7 +1129,7 @@ App = {
       .then(function (id) {
         uid = id.toNumber()
         console.log(E_id, uid, username)
-        return electionInstance.add_candidate(uid, username, E_id, info, description, {
+        return electionInstance.add_candidate(uid, username, E_id, info, {
           from: App.account,
         })
       })
@@ -1324,39 +1341,47 @@ App = {
     content.show()
   },
 
-  captureFile: function (event) {
-    event.preventDefault()
-    const file = event.target.files[0]
-    const reader = new window.FileReader()
-    reader.readAsArrayBuffer(file)
+  uploadCampaign: function () {
+    var ElecInstance
+    var loader = $('#loader')
+    var content = $('#content')
 
-    reader.onloadend = () => {
-      this.setState({ buffer: Buffer(reader.result) })
-      console.log('buffer', this.state.buffer)
-    }
-  },
+    loader.show()
+    content.hide()
+    // console.log('Uploading to IPFS...')
+    // const E_id = parseInt(window.location.hash.substr(-1))
 
-  uploadImage: function () {
-    console.log('Uploading to IPFS...')
+    // //Adding to IPFS
+    // ipfs.add(this.state.buffer, (error, result) => {
+    //   console.log('IPFS : ', result)
+    //   if (error) {
+    //     console.error(error)
+    //     return
+    //   }
+
+    //   this.setState({ loading: true })
+    //   this.state.Election.methods
+    //     .uploadImage(result[0].hash)
+    //     .send({ from: this.state.account })
+    //     .on('transactionHash', (hash) => {
+    //       this.setState({ loading: false })
+    //     })
+    // })
+    // return App.render()
+    var desc = $('description').val()
+    console.log(desc)
     const E_id = parseInt(window.location.hash.substr(-1))
-
-    //Adding to IPFS
-    ipfs.add(this.state.buffer, (error, result) => {
-      console.log('IPFS : ', result)
-      if (error) {
-        console.error(error)
-        return
-      }
-
-      this.setState({ loading: true })
-      this.state.Election.methods
-        .uploadImage(result[0].hash)
-        .send({ from: this.state.account })
-        .on('transactionHash', (hash) => {
-          this.setState({ loading: false })
-        })
-    })
-    return App.render()
+    App.contracts.Election.deployed()
+      .then(function (instance) {
+        ElecInstance = instance
+        return instance.uploadCampaign(desc, E_id, { from: App.account })
+      })
+      .catch(function (err) {
+        console.error(err)
+      })
+    loader.hide()
+    content.show()
+    App.render()
   },
 }
 
