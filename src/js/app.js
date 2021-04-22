@@ -1,8 +1,11 @@
+const ipfsClient = require('ipfs-http-client')
+const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 App = {
   web3Provider: null,
   contracts: {},
   account: '0x0',
   hasVoted: false,
+  buffer : {},
 
   init: function () {
     return App.initWeb3()
@@ -768,7 +771,7 @@ App = {
       )
     }
     else if(
-      window.location.href == "http://localhost:3000/campaign.html" ){
+      window.location.href == "http://localhost:3000/campaign.html#" ){
         //add front-end for campaign 
         var electionInstance
         var loader = $('#loader')
@@ -1173,28 +1176,41 @@ App = {
     reader.readAsArrayBuffer(file)
 
     reader.onloadend = () => {
-      this.setState({ buffer: Buffer(reader.result) })
-      console.log('buffer', this.state.buffer)
+      buffer = reader.result
+      // this.setState({ buffer: Buffer(reader.result) })
+      console.log('buffer', buffer)
     }
   },
 
   uploadImage: function()  {
+    var loader = $('#loader')
+    var content = $('#content')
+          
+    loader.show()
+    content.hide()
+
     console.log("Uploading to IPFS...")
     const E_id = parseInt(window.location.hash.substr(-1));
+    var hash;
 
     //Adding to IPFS
-    ipfs.add(this.state.buffer, (error, result) => {
+    ipfs.add(buffer, (error, result) => {
       console.log('IPFS : ', result)
       if(error) {
         console.error(error)
         return
       }
-      
-      this.setState({ loading: true })
-      this.state.Election.methods.uploadImage(result[0].hash).send({ from: this.state.account }).on('transactionHash', (hash) => {
-        this.setState({ loading: false })
-      })
+      hash = result[0].hash;
     })
+    App.contracts.Election.deployed()
+      .then(function (instance){    
+      return instance.uploadImage(hash, E_id, { from: App.account })
+      })
+    .catch(function (err) {
+        console.error(err)
+      })
+      loader.hide()
+      content.show()
     return App.render()
   },
 }

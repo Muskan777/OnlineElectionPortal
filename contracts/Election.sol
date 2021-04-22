@@ -275,7 +275,7 @@ contract Election {
         emit votedEvent(_C_id);
     }
 
-    function uploadImage(string memory _imgHash) public{
+    function uploadImage(string memory _imgHash, uint256 _E_id) public{
 
     // Make sure the image hash exists
     require(bytes(_imgHash).length > 0);
@@ -302,7 +302,8 @@ contract Election {
     }
 
     //that user is a candidate in the election
-    require(users[u_id].permissions == 1);
+    e_id = candidates[cnd_index].E_id;
+    require( e_id == _E_id);
 
     //Add image to contract
     //passing fifth argument 1 as of now, needs to be changed
@@ -316,7 +317,7 @@ contract Election {
     constructor() public {
         // Add admin first
         add_user(
-            0x508C143F9aB6B04273DEd8c182B75A7CAFA84a27,
+            0x81e5135375023544526294743DB8dc77e37B3a3c,
             "admin",
             "admin@coep.ac.in",
             "admin",
