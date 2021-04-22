@@ -7,15 +7,18 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Campaign Portal</title>
     </head>
+
     <body>
         <div id="loader" style="display: none;">
             <p class="text-center">Loading...</p>
         </div>
         <div id="content">
             <form onSubmit="App.uploadImage(); return false; ">
-                <legend><h2>POST New Campaign</h2></legend>
+                <legend>
+                    <h2>POST New Campaign</h2>
+                </legend>
                 <input type='file' accept=".jpg, .jpeg, .png, .bmp, .gif" onChange="App.captureFile(event)" />
-                    <!-- <div className="form-group mr-sm-2">
+                <!-- <div className="form-group mr-sm-2">
                     <br></br>
                         <input id="imageDescription" type="text" ref={(input) => { this.imageDescription = input }} className="form-control" placeholder="Image description..." required />
                     </div> -->
@@ -23,7 +26,10 @@
             </form>
             <div id="display-campaign"></div>
         </div>
-
+        <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
+        <script src="https://www.jsdelivr.com/package/npm/ipfs-http-client"
+            integrity="sha384-5bXRcW9kyxxnSMbOoHzraqa7Z0PQWIao+cgeg327zit1hz5LZCEbIMx/LWKPReuB"
+            crossorigin="anonymous"></script>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -33,4 +39,5 @@
         <!-- <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client@49.0.4/src/index.min.js"></script> -->
         <script src="js/app.js"></script>
     </body>
+
 </html>

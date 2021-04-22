@@ -1,11 +1,15 @@
-const ipfsClient = require('ipfs-http-client')
-const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
+// const ipfs = window.IpfsHttpClient({
+//   host: 'ipfs.infura.io',
+//   port: 5001,
+//   protocol: 'https',
+// })
+//const ipfs = ipfsClient({})
 App = {
   web3Provider: null,
   contracts: {},
   account: '0x0',
   hasVoted: false,
-  buffer : {},
+  buffer: {},
 
   init: function () {
     return App.initWeb3()
@@ -65,12 +69,10 @@ App = {
   render: function () {
     web3.eth.getCoinbase(function (err, account) {
       if (err === null) {
-        
-        if(account == null){
-          alert("No account connected, Connect your blockchain account first!");
-          return;
-        }
-        else{
+        if (account == null) {
+          alert('No account connected, Connect your blockchain account first!')
+          return
+        } else {
           App.account = account
           $('#accountAddress').html('Your Account: ' + account)
         }
@@ -80,12 +82,12 @@ App = {
       var electionInstance
       var loader = $('#loader')
       var content = $('#content')
-          
+
       loader.show()
       content.hide()
 
       // Load account data
-      
+
       loader.hide()
       content.show()
     } else if (
@@ -126,7 +128,7 @@ App = {
       console.log(E_id)
       var Election_id_show = $('#Election_id_show')
       Election_id_show.append('Election Id : ' + E_id)
-    } 
+    }
     // else if (
     //   window.location
     //     .toString()
@@ -201,7 +203,7 @@ App = {
     //         }
     //       })
     //   }, 40)
-    // } 
+    // }
     //else if (
     //   window.location
     //     .toString()
@@ -284,10 +286,8 @@ App = {
     //         })
     //       }
     //     })
-    // } 
-    else if (
-      window.location.href === 'http://localhost:3000/voter_home.html'
-    ) {
+    // }
+    else if (window.location.href === 'http://localhost:3000/voter_home.html') {
       var uid
 
       App.contracts.Election.deployed()
@@ -618,13 +618,15 @@ App = {
           }
         })
     } else if (
-    window.location.toString().includes('http://localhost:3000/admin_accept_reports.html')
+      window.location
+        .toString()
+        .includes('http://localhost:3000/admin_accept_reports.html')
     ) {
-        // Get Election ID from the previous page
-        var E_id = parseInt(window.location.hash.substr(-1));
-        var electionInstance;
-        var all_reqorts_received = [];
-        var all_reqorts_received_reasons = [];
+      // Get Election ID from the previous page
+      var E_id = parseInt(window.location.hash.substr(-1))
+      var electionInstance
+      var all_reqorts_received = []
+      var all_reqorts_received_reasons = []
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
@@ -636,71 +638,78 @@ App = {
           window.loca
           for (var i = 1; i <= report_count; i++) {
             electionInstance.reports(i).then(function (report) {
-              var report_id = report[0].toNumber();
-              var id = report[2].toNumber();
-              var report_E_id = report[1].toNumber();
-              var reason = report[3].toString();
+              var report_id = report[0].toNumber()
+              var id = report[2].toNumber()
+              var report_E_id = report[1].toNumber()
+              var reason = report[3].toString()
 
               if (report_E_id == E_id) {
-                  all_reqorts_received.push(id);
-                  all_reqorts_received_reasons.push(reason);
+                all_reqorts_received.push(id)
+                all_reqorts_received_reasons.push(reason)
               }
-              })
+            })
           }
 
-          electionInstance.voter_list_count().then(function (voter_list_count){
-          for(var j = 1; j <= voter_list_count; j++) {
-
-            electionInstance.voterlist(j).then(function (voter) {
+          electionInstance.voter_list_count().then(function (voter_list_count) {
+            for (var j = 1; j <= voter_list_count; j++) {
+              electionInstance.voterlist(j).then(function (voter) {
                 var id = voter[0].toNumber()
-                // Check that the E_ids are same, also the id of the uesr whose complait is received matches the 
+                // Check that the E_ids are same, also the id of the uesr whose complait is received matches the
                 // voters id and also that the admin has not already added the voter to the blacklist
-                console.log(voter[4]);
-                if (voter[1].toNumber() == E_id && all_reqorts_received.includes(id) && voter[4] == false){
-                    var x = all_reqorts_received.indexOf(id)
-                    var reason = all_reqorts_received_reasons[x]
-                     var add_to_reported_template =
-                    "<option value='" + id + "' >" + id + ": " + reason + '</ option>';
-                    add_to_reported.append(add_to_reported_template)
+                console.log(voter[4])
+                if (
+                  voter[1].toNumber() == E_id &&
+                  all_reqorts_received.includes(id) &&
+                  voter[4] == false
+                ) {
+                  var x = all_reqorts_received.indexOf(id)
+                  var reason = all_reqorts_received_reasons[x]
+                  var add_to_reported_template =
+                    "<option value='" +
+                    id +
+                    "' >" +
+                    id +
+                    ': ' +
+                    reason +
+                    '</ option>'
+                  add_to_reported.append(add_to_reported_template)
                 }
-                })
-            } 
-            })
+              })
+            }
           })
-        
+        })
 
-        App.contracts.Election.deployed()
+      App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
           return electionInstance.voter_list_count()
         })
         .then(function (voter_list_count) {
-        var display_already_blacklisted = $('#display_already_blacklisted');
+          var display_already_blacklisted = $('#display_already_blacklisted')
 
-            for(var j = 1; j <= voter_list_count; j++) {
-
+          for (var j = 1; j <= voter_list_count; j++) {
             electionInstance.voterlist(j).then(function (voter) {
-                var id = voter[0].toNumber()
-                if (voter[1].toNumber() == E_id && voter[4] == true) {
-                    electionInstance.users(id).then(function (user){
-                        name = user[2];
-                        var display_already_blacklisted_template =
-                        "<li>" + id + ": " + name + "</li>";
-                        display_already_blacklisted.append(display_already_blacklisted_template);
-                    })                    
-                }
+              var id = voter[0].toNumber()
+              if (voter[1].toNumber() == E_id && voter[4] == true) {
+                electionInstance.users(id).then(function (user) {
+                  name = user[2]
+                  var display_already_blacklisted_template =
+                    '<li>' + id + ': ' + name + '</li>'
+                  display_already_blacklisted.append(
+                    display_already_blacklisted_template,
+                  )
+                })
+              }
             })
-            }
+          }
         })
-  }
-  // else if (
-  //     window.location.href.includes('http://localhost:3000/manage_election.html')
-  //   ) {
-  //     console.log("Print")
-  //     E_id = parseInt(window.location.hash.substr(-1))
-  //   }
-
-    
+    }
+    // else if (
+    //     window.location.href.includes('http://localhost:3000/manage_election.html')
+    //   ) {
+    //     console.log("Print")
+    //     E_id = parseInt(window.location.hash.substr(-1))
+    //   }
     else if (
       window.location.href.includes('http://localhost:3000/report.html')
     ) {
@@ -769,19 +778,20 @@ App = {
           E_id +
           '">Apply for Candidacy</a>',
       )
-    }
-    else if(
-      window.location.href == "http://localhost:3000/campaign.html#" ){
-        //add front-end for campaign 
-        var electionInstance
-        var loader = $('#loader')
-        var content = $('#content')
-        
+    } else if (
+      window.location.href.includes('http://localhost:3000/campaign.html')
+    ) {
+      //add front-end for campaign
+      E_id = parseInt(window.location.hash.substr(-1))
 
-        loader.show()
-        content.hide()
-        
-        App.contracts.Election.deployed()
+      var electionInstance
+      var loader = $('#loader')
+      var content = $('#content')
+
+      loader.show()
+      content.hide()
+
+      App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
           return electionInstance.campaign_count()
@@ -789,33 +799,45 @@ App = {
         .then(function (campaign_count) {
           var display_campaign = $('display-campaign')
           display_campaign.empty()
-          window.loca
-          for(var i = 1; i < campaign_count; i++){
+          for (var i = 1; i < campaign_count; i++) {
             return electionInstance.campaigns(i).then(function (campaign) {
-              var e_id = campaign[3]
-              //require(e_id == curr_e_id)
-              var hash = campaign[1]
-              var Cand_id = campaign[2]
-              var Cand_name = campaign[4]
+              if (campaign[3] == E_id) {
+                //require(e_id == curr_e_id)
+                var hash = campaign[1]
+                var Cand_id = campaign[2]
+                var Cand_name = campaign[4]
 
-              var update_campaign = 
-                "<h2>" + Cand_id + " " + Cand_name + "</h2><br><br><img src={`https://ipfs.infura.io/ipfs/" + hash + "`} style={{ maxWidth: '420px'}}/>"
+                var update_campaign =
+                  '<h2>' +
+                  Cand_id +
+                  ' ' +
+                  Cand_name +
+                  '</h2><br><br><img src={`https://ipfs.infura.io/ipfs/' +
+                  hash +
+                  "`} style={{ maxWidth: '420px'}}/>"
 
-              display_campaign.append(update_campaign)                  
+                display_campaign.append(update_campaign)
+              }
             })
           }
-          return electionInstance.voters(App.account)
+          return electionInstance.addresses(App.account)
         })
-        .then( function (iscandidate) {
-          if(iscandidate == false){
+        .then(function (id) {
+          return electionInstance.users(id.toNumber())
+        })
+        .then(function (user) {
+          return electionInstance.candidates(user[5].toNumber())
+        })
+        .then(function (candidate) {
+          if (candidate[3] != E_id) {
             $('form').hide()
           }
-          loader.hide()
-          content.show()
         })
         .catch(function (error) {
           console.warn(error)
         })
+      loader.hide()
+      content.show()
     }
   },
 
@@ -884,7 +906,7 @@ App = {
     console.log(polling_ends)
 
     var current_time = new Date()
-    current_time = current_time.getTime()/1000
+    current_time = current_time.getTime() / 1000
     if (
       current_time > cand_register_end ||
       cand_register_end > polling_starts ||
@@ -895,18 +917,23 @@ App = {
     }
 
     App.contracts.Election.deployed().then(function (instance) {
-      var election_count = instance.election_count;
-      var electionInstance = instance;
+      var election_count = instance.election_count
+      var electionInstance = instance
       // instance.add_election(
       //   E_name,
       //   cand_register_end,
       //   polling_starts,
       //   polling_ends,
       // )
-      return electionInstance.add_election( E_name,
-        cand_register_end, polling_starts, polling_ends, {
+      return electionInstance.add_election(
+        E_name,
+        cand_register_end,
+        polling_starts,
+        polling_ends,
+        {
           from: App.account,
-        })
+        },
+      )
     })
     window.location.href = 'http://localhost:3000/create_election.html'
   },
@@ -926,7 +953,8 @@ App = {
       // Add the user in the voterlist with the id and E_id
       instance.add_voter_by_admin(id, E_id)
     })
-    window.location.href = 'http://localhost:3000/admin_add_voter.html#E_id=' + E_id;
+    window.location.href =
+      'http://localhost:3000/admin_add_voter.html#E_id=' + E_id
   },
 
   castVote: function () {
@@ -996,59 +1024,54 @@ App = {
     })
   },
 
-  // Call to the below function will be made when the admin accepts a report 
+  // Call to the below function will be made when the admin accepts a report
   // by submitting the form
-  admin_accept_report : function() {
-      // Get the Election ID from the previous page somehow
-      var E_id = parseInt(window.location.hash.substr(-1));
+  admin_accept_report: function () {
+    // Get the Election ID from the previous page somehow
+    var E_id = parseInt(window.location.hash.substr(-1))
 
-      // Get the id of the user to be blacklisted for that election
-      var id = $("#add_to_reported").val();
-      
-      console.log(id + " " + E_id);
+    // Get the id of the user to be blacklisted for that election
+    var id = $('#add_to_reported').val()
 
-      App.contracts.Election.deployed().then(function (instance) {
-          // Change the user permission of the uesr with C_id to 1 to show that he's 
-          // an approved candidate
-          return instance.blacklist_by_admin(id, E_id, {
-            from: App.account,
-          }
-          )
+    console.log(id + ' ' + E_id)
+
+    App.contracts.Election.deployed().then(function (instance) {
+      // Change the user permission of the uesr with C_id to 1 to show that he's
+      // an approved candidate
+      return instance.blacklist_by_admin(id, E_id, {
+        from: App.account,
       })
-      console.log("heelo")
-      window.location.href =
-                    'http://localhost:3000/admin_accept_reports.html#E_id=' +
-                    E_id;
-  }, 
-
-  admin_add_voter_page_event: function() {
-      // Get the Election ID from the previous page somehow
-        var E_id = parseInt(window.location.hash.substr(-1));
-
-        console.log("h")
-      window.location.href =
-                    'http://localhost:3000/admin_add_voter.html#E_id=' +
-                    E_id;
+    })
+    console.log('heelo')
+    window.location.href =
+      'http://localhost:3000/admin_accept_reports.html#E_id=' + E_id
   },
 
-  admin_add_candidate_page_event: function() {
-      // Get the Election ID from the previous page somehow
-        var E_id = parseInt(window.location.hash.substr(-1));
+  admin_add_voter_page_event: function () {
+    // Get the Election ID from the previous page somehow
+    var E_id = parseInt(window.location.hash.substr(-1))
 
-        console.log("heel")
-      window.location.href =
-                    'http://localhost:3000/admin_add_candidate.html#E_id=' +
-                    E_id;
+    console.log('h')
+    window.location.href =
+      'http://localhost:3000/admin_add_voter.html#E_id=' + E_id
   },
 
-  admin_check_reports_page_event: function() {
-      // Get the Election ID from the previous page somehow
-        var E_id = parseInt(window.location.hash.substr(-1));
+  admin_add_candidate_page_event: function () {
+    // Get the Election ID from the previous page somehow
+    var E_id = parseInt(window.location.hash.substr(-1))
 
-        console.log("heelo")
-      window.location.href =
-                    'http://localhost:3000/admin_accept_reports.html#E_id=' +
-                    E_id;
+    console.log('heel')
+    window.location.href =
+      'http://localhost:3000/admin_add_candidate.html#E_id=' + E_id
+  },
+
+  admin_check_reports_page_event: function () {
+    // Get the Election ID from the previous page somehow
+    var E_id = parseInt(window.location.hash.substr(-1))
+
+    console.log('heelo')
+    window.location.href =
+      'http://localhost:3000/admin_accept_reports.html#E_id=' + E_id
   },
 
   manage_election_for_user: function () {
@@ -1093,12 +1116,12 @@ App = {
     }, 40)
   },
 
-  login: function(){
+  login: function () {
     var ElectionInstance
     var loader = $('#loader')
     var content = $('#content')
     var paswd
-          
+
     loader.show()
     content.hide()
 
@@ -1106,42 +1129,40 @@ App = {
     var pwd = $('#pwd').val()
     console.log(U_id, pwd)
     App.contracts.Election.deployed()
-      .then(function (instance){
+      .then(function (instance) {
         ElectionInstance = instance
         return instance.users(U_id)
       })
-      .then(function (user){
+      .then(function (user) {
         paswd = user[6]
         console.log(paswd)
         add = user[1]
         console.log(add)
         console.log(App.account)
-        if ((paswd == pwd) && (add == App.account)){
+        if (paswd == pwd && add == App.account) {
           var result = user[4].toNumber()
           console.log(result)
-          if (result == 2){
-            window.location.href = "http://localhost:3000/admin_home.html";
+          if (result == 2) {
+            window.location.href = 'http://localhost:3000/admin_home.html'
+          } else {
+            window.location.href = 'http://localhost:3000/voter_home.html'
           }
-          else{
-            window.location.href = "http://localhost:3000/voter_home.html";
-          }
-        }
-        else{
-          alert("invalid Login Credentials!!\n Please try Again.");
+        } else {
+          alert('invalid Login Credentials!!\n Please try Again.')
         }
       })
       .catch(function (err) {
         console.error(err)
       })
-      loader.hide()
-      content.show()
+    loader.hide()
+    content.show()
   },
 
-  register: function(){
+  register: function () {
     var ElecInstance
     var loader = $('#loader')
     var content = $('#content')
-          
+
     loader.show()
     content.hide()
 
@@ -1150,26 +1171,31 @@ App = {
     var pwd = $('#pwd').val()
     console.log(name, mail, pwd)
     App.contracts.Election.deployed()
-      .then(function (instance){
+      .then(function (instance) {
         ElecInstance = instance
-        return instance.add_user(App.account, name, mail, pwd, 0, { from: App.account })
+        return instance.add_user(App.account, name, mail, pwd, 0, {
+          from: App.account,
+        })
       })
-      .then(function (){
+      .then(function () {
         return ElecInstance.user_count()
       })
-      .then(function (result){
+      .then(function (result) {
         console.log(result.toNumber())
-        alert("Congratulations! You are now registered to our Portal\n Your UserID is " + result.toNumber() +".\n Please use this UserID to login.");
+        alert(
+          'Congratulations! You are now registered to our Portal\n Your UserID is ' +
+            result.toNumber() +
+            '.\n Please use this UserID to login.',
+        )
       })
       .catch(function (err) {
         console.error(err)
       })
-      loader.hide()
-      content.show()
+    loader.hide()
+    content.show()
   },
 
-  captureFile: function(event) {
-
+  captureFile: function (event) {
     event.preventDefault()
     const file = event.target.files[0]
     const reader = new window.FileReader()
@@ -1182,35 +1208,35 @@ App = {
     }
   },
 
-  uploadImage: function()  {
+  uploadImage: function () {
     var loader = $('#loader')
     var content = $('#content')
-          
+
     loader.show()
     content.hide()
 
-    console.log("Uploading to IPFS...")
-    const E_id = parseInt(window.location.hash.substr(-1));
-    var hash;
+    console.log('Uploading to IPFS...')
+    const E_id = parseInt(window.location.hash.substr(-1))
+    var hash
 
     //Adding to IPFS
     ipfs.add(buffer, (error, result) => {
       console.log('IPFS : ', result)
-      if(error) {
+      if (error) {
         console.error(error)
         return
       }
-      hash = result[0].hash;
+      hash = result[0].hash
     })
     App.contracts.Election.deployed()
-      .then(function (instance){    
-      return instance.uploadImage(hash, E_id, { from: App.account })
+      .then(function (instance) {
+        return instance.uploadImage(hash, E_id, { from: App.account })
       })
-    .catch(function (err) {
+      .catch(function (err) {
         console.error(err)
       })
-      loader.hide()
-      content.show()
+    loader.hide()
+    content.show()
     return App.render()
   },
 }
