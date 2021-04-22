@@ -24,8 +24,6 @@ contract Election {
         uint256 E_id;
         // C_info: Achievements, clubs etc.
         string C_info;
-        // C_desc: Campaigning description for that election
-        string C_desc;
     }
 
     struct election {
@@ -56,21 +54,21 @@ contract Election {
 
     struct campaign {
         uint256 id;
-        string hash;
+        string description;
         // string description;
         uint256 c_id;
         uint256 E_id;
         string name;
     }
 
-    event CampaignCreated(
-        uint256 id,
-        string hash,
-        // string description,
-        uint256 c_id,
-        uint256 E_id,
-        string name
-    );
+    // event CampaignCreated(
+    //     uint256 id,
+    //     string hash,
+    //     // string description,
+    //     uint256 c_id,
+    //     uint256 E_id,
+    //     string name
+    // );
 
     //Fetch Campaign Data
     mapping(uint256 => campaign) public campaigns;
@@ -237,8 +235,7 @@ contract Election {
                 vote_count: 0,
                 C_name: _C_name,
                 E_id: _E_id,
-                C_info: _C_info,
-                C_desc: _C_desc
+                C_info: _C_info
             })
         );
         candidate_count++;
@@ -299,9 +296,9 @@ contract Election {
         emit votedEvent(_C_id);
     }
 
-    function uploadImage(string memory _imgHash) public {
+    function uploadCampaign(string memory _desc, uint256 _E_id) public {
         // Make sure the image hash exists
-        require(bytes(_imgHash).length > 0);
+        require(bytes(_desc).length > 0);
         // Make sure image description exists
         //require(bytes(_description).length > 0);
         // Make sure uploader address exists
@@ -324,20 +321,18 @@ contract Election {
         }
 
         //that user is a candidate in the election
-        require(users[u_id].permissions == 1);
-
+        e_id = candidates[cnd_index].E_id;
+        require(e_id == _E_id);
+        
         //Add image to contract
         //passing fifth argument 1 as of now, needs to be changed
         campaigns[campaign_count] = campaign(
             campaign_count,
-            _imgHash,
+            _desc,
             u_id,
             e_id,
             name
         );
-
-        //Triger the event
-        emit CampaignCreated(campaign_count, _imgHash, u_id, e_id, name);
     }
 
     // Constructor
