@@ -11,7 +11,7 @@
             }
 
             header {
-                background-color: #666;
+                background-color: #000;
                 padding: 30px;
                 text-align: center;
                 font-size: 35px;
@@ -36,16 +36,19 @@
         </style>
     </head>
 
-    <body>
-        <div>
+    <body class="bg-dark container-fluid m-0">
+        <div class="min-vh-100">
             <header style="text-align: center;">
                 <h1>User Dashboard</h1>
             </header>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="card" style="width: 18rem;">
+            <div class="row pt-5">
+                <div class="col-lg-6 text-center row">
+                    <div class="col-lg-2"></div>
+                    <div class="card col-lg-8">
                         <div class="card-body">
-                            <h5 class="card-title">Profile</h5>
+                            <h5 class="card-title">Your Profile</h5>
+                            <div class="m-b-25"> <img src="//img.icons8.com/fluent/96/000000/test-account.png"
+                                    class="img-radius" alt="User-Profile-Image"> </div>
                             <div>
                                 <label for="id"><b>User ID:</b></label>
                                 <span class="card-text" id="id"></span>
@@ -64,19 +67,32 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <form onSubmit="App.manage_election_for_user();return false;" class="admin_manage_elections">
-                        <div>
-                            <label for="getElectionList">Choose an Election</label>
-                            <select name="manage_elections" id="getElectionList">
-                                
-                            </select>
-                        </div>
-                        <hr />
+                    <div class="col-lg-2"></div>
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                <div class="col-lg-6 row">
+                    <div class="col-lg-2"></div>
+                    <form onSubmit="App.manage_election_for_user();return false;"
+                        class="admin_manage_elections col-lg-8" style="align-self: center;">
+                        <div class="text-center">
+                            <h5 class="card-title">Active Elections</h5>
+                            <div class="m-b-25"> <img width="90px" height="90px"
+                                    src="https://images.unsplash.com/photo-1602906530215-1bf5f4925279?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjZ8fGVsZWN0aW9ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                                    class="img-radius"> </div><br />
+                            <label for="getElectionList">
+                                Choose an Election
+                            </label>
+                            <select name="manage_elections" id="getElectionList">
+
+                            </select>
+                            <hr />
+
+                            <button type="submit" class="btn btn-primary">Proceed</button>
+                        </div>
+
                     </form>
+                    <div class="col-lg-2"></div>
+
                 </div>
             </div>
         </div>

@@ -50,29 +50,29 @@ contract Election {
         bool blacklisted_by_admin;
     }
 
-    struct campaign{
+    struct campaign {
         uint256 id;
         string hash;
         // string description;
-        uint256 c_id; 
+        uint256 c_id;
         uint256 E_id;
         string name;
     }
 
     event CampaignCreated(
-        uint id,
+        uint256 id,
         string hash,
         // string description,
         uint256 c_id,
         uint256 E_id,
         string name
     );
-    
+
     //Fetch Campaign Data
     mapping(uint256 => campaign) public campaigns;
 
     // Store Campaign Count
-    uint256 public campaign_count = 0;  
+    uint256 public campaign_count = 0;
 
     // Fetch Users
     mapping(uint256 => user) public users;
@@ -249,21 +249,21 @@ contract Election {
         // Require that the user is not the admin
         require(users[1].add != msg.sender, "The User is not an Admin");
 
-        //Election id of candidate and voter are same
-        // Require to check that the voter hasn't voted before
-
-        for (i = 1; i <= voter_list_count; i++) {
-            if (voterlist[i].id == _id && voterlist[i].E_id == _E_id) {
-                require(!voterlist[i].voted, "The voter hasn't voted before");
-                voterlist[i].voted = true;
-            }
-        }
-
         // Require that the _C_id is present in the candidates list
         require(
             users[_C_id].permissions == 1,
             "Candidate is a part of candidate list"
         );
+
+        //Election id of candidate and voter are same
+        // Require to check that the voter hasn't voted before
+        for (i = 1; i <= voter_list_count; i++) {
+            if (voterlist[i].id == _id && voterlist[i].E_id == _E_id) {
+                require(!voterlist[i].voted, "The voter hasn't voted before");
+                voterlist[i].voted = true;
+                break;
+            }
+        }
 
         for (j = 0; j < candidate_count; j++) {
             if (candidates[j].C_id == _C_id) {
@@ -275,78 +275,101 @@ contract Election {
         emit votedEvent(_C_id);
     }
 
-    function uploadImage(string memory _imgHash) public{
+    function uploadImage(string memory _imgHash) public {
+        // Make sure the image hash exists
+        require(bytes(_imgHash).length > 0);
+        // Make sure image description exists
+        //require(bytes(_description).length > 0);
+        // Make sure uploader address exists
+        require(msg.sender != address(0));
 
-    // Make sure the image hash exists
-    require(bytes(_imgHash).length > 0);
-    // Make sure image description exists
-    //require(bytes(_description).length > 0);
-    // Make sure uploader address exists
-    require(msg.sender!=address(0));
-
-
-    //Increment campaign count
-    campaign_count++;
-    uint256 i = 0;
-    uint256 u_id;
-    uint256 e_id;
-    string memory name;
-    uint256 cnd_index;
-    for (i = 2; i <= user_count; i++) {
-        if (users[i].add == msg.sender) {
-            u_id = users[i].id;
-            name = users[i].name;
-            cnd_index = users[i].cand_index;
-            break;    
+        //Increment campaign count
+        campaign_count++;
+        uint256 i = 0;
+        uint256 u_id;
+        uint256 e_id;
+        string memory name;
+        uint256 cnd_index;
+        for (i = 2; i <= user_count; i++) {
+            if (users[i].add == msg.sender) {
+                u_id = users[i].id;
+                name = users[i].name;
+                cnd_index = users[i].cand_index;
+                break;
+            }
         }
+
+        //that user is a candidate in the election
+        require(users[u_id].permissions == 1);
+
+        //Add image to contract
+        //passing fifth argument 1 as of now, needs to be changed
+        campaigns[campaign_count] = campaign(
+            campaign_count,
+            _imgHash,
+            u_id,
+            e_id,
+            name
+        );
+
+        //Triger the event
+        emit CampaignCreated(campaign_count, _imgHash, u_id, e_id, name);
     }
 
-    //that user is a candidate in the election
-    require(users[u_id].permissions == 1);
-
-    //Add image to contract
-    //passing fifth argument 1 as of now, needs to be changed
-    campaigns[campaign_count] = campaign(campaign_count,_imgHash, u_id, e_id, name); 
-
-    //Triger the event
-    emit CampaignCreated(campaign_count, _imgHash, u_id, e_id, name);
-
-    }
     // Constructor
     constructor() public {
         // Add admin first
         add_user(
-            0x508C143F9aB6B04273DEd8c182B75A7CAFA84a27,
+            0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
             "admin",
             "admin@coep.ac.in",
-            "admin",
+            "123",
             2
         );
-        // add_user(
-        //     0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
-        //     "voter 1",
-        //     "voter1@gmail.com",
-        //     "voter 1 password",
-        //     0
-        // );
-        // add_user(
-        //     0xCD56ad160221d01ea132F05D4057665A97C6934D,
-        //     "candidate 1",
-        //     "voter2@gmail.com",
-        //     "candidate 1 password",
-        //     0
-        // );
-    //     add_voter_by_admin(1, 2);
-    //     add_voter_by_admin(1, 3);
-    //     add_voter_by_admin(2, 3);
-    //     add_election("Gykhana", 5000, 1618926000, 1618940000);
-    //     add_election("Sec", 5000, 6000, 7000);
-    //     add_candidate(3, "candidate 1", 1);
-    //     add_candidate(2, "voter 1", 1);
-    //     candidate_approved_by_admin(2);
-    //     candidate_approved_by_admin(3);
-    //     report_by_user(
-    //         2, 1, "Fake"
-    // );
+        add_user(
+            0x2aeE3162bB87A4Ed18eE0abB27f6d2CE3F5A6720,
+            "voter 1",
+            "voter1@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x145d98eBca32EC5C25e49D76D95cEc2E4cA2852E,
+            "voter 2",
+            "voter2@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x7F5542Cd4C3f34ad08747273E42CB8855eDD23d4,
+            "cand 1",
+            "cand1@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x339531797eBa4492570C40Cc40dfee612dd9540F,
+            "cand 2",
+            "cand2@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x12a79A0f247F3912e45A8B3EdAec0fdD46C5C660,
+            "Reported",
+            "reported@gmail.com",
+            "123",
+            0
+        );
+        // add_voter_by_admin(1, 2);
+        // add_voter_by_admin(1, 3);
+        // add_voter_by_admin(2, 3);
+        // add_election("Gykhana", 5000, 1618926000, 1618940000);
+        // add_election("Sec", 5000, 6000, 7000);
+        // add_candidate(3, "candidate 1", 1);
+        // add_candidate(2, "voter 1", 1);
+        // candidate_approved_by_admin(2);
+        // candidate_approved_by_admin(3);
+        // report_by_user(2, 1, "Fake");
     }
 }
