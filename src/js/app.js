@@ -113,85 +113,87 @@ App = {
         .toString()
         .includes('http://localhost:3000/admin_manage_election.html')
     ) {
-      var E_id = parseInt(window.location.hash.substr(-1));
-      console.log(E_id);
-      var Election_id_show = $('#Election_id_show');
-      Election_id_show.append('Election Id : ' + E_id);
-      var ElecInstance;
+      var E_id = parseInt(window.location.hash.substr(-1))
+      console.log(E_id)
+      var Election_id_show = $('#Election_id_show')
+      Election_id_show.append('Election Id : ' + E_id)
+      var ElecInstance
 
       App.contracts.Election.deployed()
-          .then(function (instance) {
-            electionInstance = instance
-            return electionInstance.elections(E_id)
-          })
-          .then(function (election) {
-            var E_name = election[1];
-            // The time we get here is in seconds, convert it to date and time format
-            // to use as value in the form  
-            var time_cand_register_end = election[2].toNumber();
-            var time_polling_starts = election[3].toNumber();
-            var time_polling_ends = election[4].toNumber();
-
-            // Added 19800 secs to the time for the IST offset, as toISOString 
-            // converts time to UTC
-            time_cand_register_end = new Date((time_cand_register_end + 19800)*1000);
-            time_polling_starts = new Date((time_polling_starts + 19800)*1000);
-            time_polling_ends = new Date((time_polling_ends + 19800)*1000);
-
-            console.log(time_cand_register_end);
-            console.log(time_polling_starts);
-            console.log(time_polling_ends);
-
-            time_cand_register_end = time_cand_register_end.toISOString().split("T");
-            time_polling_starts = time_polling_starts.toISOString().split("T");
-            time_polling_ends = time_polling_ends.toISOString().split("T");
-
-            date_cand_register_end = time_cand_register_end[0];
-            time_cand_register_end = time_cand_register_end[1].split(".000Z")[0];
-            date_polling_starts = time_polling_starts[0];
-            time_polling_starts = time_polling_starts[1].split(".000Z")[0];
-            date_polling_ends = time_polling_ends[0];
-            time_polling_ends = time_polling_ends[1].split(".000Z")[0];
-
-            // console.log(E_name)
-            // console.log(date_cand_register_end)
-            // console.log(date_polling_starts)
-            // console.log(date_polling_ends)
-            // console.log(time_cand_register_end)
-            // console.log(time_polling_starts)
-            // console.log(time_polling_ends)
-
-            var _E_name = $('#E_name')
-            _E_name.empty()
-            _E_name.val(E_name);
-
-            var _date_cand_register_end = $('#date_cand_register_end')
-            _date_cand_register_end.empty()
-            _date_cand_register_end.val(date_cand_register_end);
-
-            var _date_polling_starts = $('#date_polling_starts')
-            _date_polling_starts.empty()
-            _date_polling_starts.val(date_polling_starts);
-
-            var _date_polling_ends = $('#date_polling_ends')
-            _date_polling_ends.empty()
-            _date_polling_ends.val(date_polling_ends);
-
-            var _time_cand_register_end = $('#time_cand_register_end')
-            _time_cand_register_end.empty()
-            _time_cand_register_end.val(time_cand_register_end);
-
-            var _time_polling_starts = $('#time_polling_starts')
-            _time_polling_starts.empty()
-            _time_polling_starts.val(time_polling_starts);
-
-            var _time_polling_ends = $('#time_polling_ends')
-            _time_polling_ends.empty()
-            _time_polling_ends.val(time_polling_ends);
-
+        .then(function (instance) {
+          electionInstance = instance
+          return electionInstance.elections(E_id)
         })
-    }
-    else if (
+        .then(function (election) {
+          var E_name = election[1]
+          // The time we get here is in seconds, convert it to date and time format
+          // to use as value in the form
+          var time_cand_register_end = election[2].toNumber()
+          var time_polling_starts = election[3].toNumber()
+          var time_polling_ends = election[4].toNumber()
+
+          // Added 19800 secs to the time for the IST offset, as toISOString
+          // converts time to UTC
+          time_cand_register_end = new Date(
+            (time_cand_register_end + 19800) * 1000,
+          )
+          time_polling_starts = new Date((time_polling_starts + 19800) * 1000)
+          time_polling_ends = new Date((time_polling_ends + 19800) * 1000)
+
+          console.log(time_cand_register_end)
+          console.log(time_polling_starts)
+          console.log(time_polling_ends)
+
+          time_cand_register_end = time_cand_register_end
+            .toISOString()
+            .split('T')
+          time_polling_starts = time_polling_starts.toISOString().split('T')
+          time_polling_ends = time_polling_ends.toISOString().split('T')
+
+          date_cand_register_end = time_cand_register_end[0]
+          time_cand_register_end = time_cand_register_end[1].split('.000Z')[0]
+          date_polling_starts = time_polling_starts[0]
+          time_polling_starts = time_polling_starts[1].split('.000Z')[0]
+          date_polling_ends = time_polling_ends[0]
+          time_polling_ends = time_polling_ends[1].split('.000Z')[0]
+
+          // console.log(E_name)
+          // console.log(date_cand_register_end)
+          // console.log(date_polling_starts)
+          // console.log(date_polling_ends)
+          // console.log(time_cand_register_end)
+          // console.log(time_polling_starts)
+          // console.log(time_polling_ends)
+
+          var _E_name = $('#E_name')
+          _E_name.empty()
+          _E_name.val(E_name)
+
+          var _date_cand_register_end = $('#date_cand_register_end')
+          _date_cand_register_end.empty()
+          _date_cand_register_end.val(date_cand_register_end)
+
+          var _date_polling_starts = $('#date_polling_starts')
+          _date_polling_starts.empty()
+          _date_polling_starts.val(date_polling_starts)
+
+          var _date_polling_ends = $('#date_polling_ends')
+          _date_polling_ends.empty()
+          _date_polling_ends.val(date_polling_ends)
+
+          var _time_cand_register_end = $('#time_cand_register_end')
+          _time_cand_register_end.empty()
+          _time_cand_register_end.val(time_cand_register_end)
+
+          var _time_polling_starts = $('#time_polling_starts')
+          _time_polling_starts.empty()
+          _time_polling_starts.val(time_polling_starts)
+
+          var _time_polling_ends = $('#time_polling_ends')
+          _time_polling_ends.empty()
+          _time_polling_ends.val(time_polling_ends)
+        })
+    } else if (
       window.location.href === 'http://localhost:3000/voter_home.html'
     ) {
       var uid
@@ -250,6 +252,21 @@ App = {
           E_id +
           '">Apply for Candidacy</a>',
       )
+      App.contracts.Election.deployed()
+        .then(function (instance) {
+          return instance.elections(E_id)
+        })
+        .then(function (election) {
+          $('#E_id').html(election[0].toNumber())
+          $('#E_name').html(election[1])
+          $('#time_cand_register_end').html(
+            new Date(election[2].toNumber() * 1000),
+          )
+          $('#time_polling_starts').html(
+            new Date(election[3].toNumber() * 1000),
+          )
+          $('#time_polling_ends').html(new Date(election[4].toNumber() * 1000))
+        })
     } else if (
       window.location.href.includes('http://localhost:3000/candidate.html')
     ) {
@@ -264,6 +281,22 @@ App = {
           E_id +
           '">Report</a>',
       )
+
+      App.contracts.Election.deployed()
+        .then(function (instance) {
+          return instance.elections(E_id)
+        })
+        .then(function (election) {
+          $('#E_id').html(election[0].toNumber())
+          $('#E_name').html(election[1])
+          $('#time_cand_register_end').html(
+            new Date(election[2].toNumber() * 1000),
+          )
+          $('#time_polling_starts').html(
+            new Date(election[3].toNumber() * 1000),
+          )
+          $('#time_polling_ends').html(new Date(election[4].toNumber() * 1000))
+        })
     } else if (
       window.location.href.includes('http://localhost:3000/voting.html')
     ) {
@@ -278,6 +311,7 @@ App = {
           E_id +
           '">Report</a>',
       )
+
       var electionInstance
       var loader = $('#loader')
       var currUid
@@ -693,90 +727,99 @@ App = {
       var E_id = parseInt(window.location.hash.substr(-1))
       var electionInstance
       App.contracts.Election.deployed()
-          .then(function (instance) {
-            electionInstance = instance
-            return electionInstance.candidate_count()
-          })
-          .then(function (candidate_count) {
-              
-            var display_result = $('#display_result_of_election')
-            display_result.empty()
-            for (var j = 0; j < candidate_count; j++) {
-              electionInstance.candidates(j).then(function (candidate) {
-                if (E_id == candidate[3].toNumber()) {
-                  var C_id = candidate[0].toNumber();
-                  var vote_count = candidate[1].toNumber();
-                  electionInstance.users(C_id).then(function (user) {
-                    // console.log('Already Regsitered for this E_id: ' + id)
-                    var name = user[2]
-                    var permissions = user[4].toNumber()
-                    if (permissions == 1){
-                        var display_result_template =
-                      '<li> C_id: ' + C_id + ', Name: ' + name + '   ' + 'Voter Count: ' + vote_count + '</li>'
+        .then(function (instance) {
+          electionInstance = instance
+          return electionInstance.candidate_count()
+        })
+        .then(function (candidate_count) {
+          var display_result = $('#display_result_of_election')
+          display_result.empty()
+          for (var j = 0; j < candidate_count; j++) {
+            electionInstance.candidates(j).then(function (candidate) {
+              if (E_id == candidate[3].toNumber()) {
+                var C_id = candidate[0].toNumber()
+                var vote_count = candidate[1].toNumber()
+                electionInstance.users(C_id).then(function (user) {
+                  // console.log('Already Regsitered for this E_id: ' + id)
+                  var name = user[2]
+                  var permissions = user[4].toNumber()
+                  if (permissions == 1) {
+                    var display_result_template =
+                      '<li> C_id: ' +
+                      C_id +
+                      ', Name: ' +
+                      name +
+                      '   ' +
+                      'Voter Count: ' +
+                      vote_count +
+                      '</li>'
                     display_result.append(display_result_template)
-                    }
-                    
-                  })
-                }
-              })
-            }
-          })
-        } 
-    else if (
-      window.location
-        .toString()
-        .includes('http://localhost:3000/result.html')
+                  }
+                })
+              }
+            })
+          }
+        })
+    } else if (
+      window.location.toString().includes('http://localhost:3000/result.html')
     ) {
-        
       // Get Election ID from the previous page
       var E_id = parseInt(window.location.hash.substr(-1))
-      console.log(E_id);
+      console.log(E_id)
       var electionInstance
       App.contracts.Election.deployed()
-          .then(function (instance) {
-            electionInstance = instance
-            return electionInstance.elections(E_id)
-          })
-          .then(function (election) {
-              time_polling_ends = election[3].toNumber();
-              var current_time = Date.now()/1000;
-              // Check that the voting period is over before 
-              // displaying result
-              console.log(time_polling_ends + ' ' + current_time);
-              if (current_time > time_polling_ends) {
-                  electionInstance.candidate_count().then(function (candidate_count) {
-                    console.log("candidate_count "+ candidate_count)
-            var display_result = $('#display_result_of_election')
-            display_result.empty()
-            for (var j = 0; j < candidate_count; j++) {
-              console.log("J= " + j)
-              electionInstance.candidates(j).then(function (candidate) {
-                console.log(candidate)
+        .then(function (instance) {
+          electionInstance = instance
+          return electionInstance.elections(E_id)
+        })
+        .then(function (election) {
+          time_polling_ends = election[3].toNumber()
+          var current_time = Date.now() / 1000
+          // Check that the voting period is over before
+          // displaying result
+          console.log(time_polling_ends + ' ' + current_time)
+          if (current_time > time_polling_ends) {
+            electionInstance.candidate_count().then(function (candidate_count) {
+              console.log('candidate_count ' + candidate_count)
+              var display_result = $('#display_result_of_election')
+              display_result.empty()
+              for (var j = 0; j < candidate_count; j++) {
+                console.log('J= ' + j)
+                electionInstance.candidates(j).then(function (candidate) {
+                  console.log(candidate)
 
-                if (E_id == candidate[3].toNumber()) {
-                  var C_id = candidate[0].toNumber();
-                  var vote_count = candidate[1].toNumber();
-                  console.log(C_id + " " + vote_count);
-                  electionInstance.users(C_id).then(function (user) {
-                    console.log('Already Regsitered for this E_id: ' + C_id)
-                    var name = user[2]
-                    var permissions = user[4].toNumber()
-                    console.log("permissions =" + permissions)
-                    if (permissions == 1){
-                      console.log("HI")
+                  if (E_id == candidate[3].toNumber()) {
+                    var C_id = candidate[0].toNumber()
+                    var vote_count = candidate[1].toNumber()
+                    console.log(C_id + ' ' + vote_count)
+                    electionInstance.users(C_id).then(function (user) {
+                      console.log('Already Regsitered for this E_id: ' + C_id)
+                      var name = user[2]
+                      var permissions = user[4].toNumber()
+                      console.log('permissions =' + permissions)
+                      if (permissions == 1) {
+                        console.log('HI')
                         var display_result_template =
-                      '<li> C_id: ' + C_id + ', Name: ' + name + '   ' + 'Voter Count: ' + vote_count + '</li>'
-                    display_result.append(display_result_template)
-                    }
-                    
-                  })
-                }
-              })
-            }
-          })
-        } else {
-            window.alert("Voting hasn't ended yet. Can't diplay the result yet.");
-        }
+                          '<li> C_id: ' +
+                          C_id +
+                          ', Name: ' +
+                          name +
+                          '   ' +
+                          'Voter Count: ' +
+                          vote_count +
+                          '</li>'
+                        display_result.append(display_result_template)
+                      }
+                    })
+                  }
+                })
+              }
+            })
+          } else {
+            window.alert(
+              "Voting hasn't ended yet. Can't diplay the result yet.",
+            )
+          }
         })
     }
     // New Campaigning page
@@ -806,7 +849,7 @@ App = {
           '">Apply for Candidacy</a>',
       )
       var electionInstance
-        App.contracts.Election.deployed()
+      App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
           return electionInstance.candidate_count()
@@ -827,20 +870,31 @@ App = {
                   // Check the permissions in the user struct if they are 1
                   if (user[4].toNumber() == 1) {
                     var display_campaign_template =
-                      '<li>' + 'id: ' + id + '<br>' + 'Name: ' + name +' <br>'+ 'Email: ' + email + 
-                      '<br>' + 'Perosnal Info: ' + info + '<br>' + 'Description' + desc +'<br><br>' + '</li>'
-                    display_campaign.append(
-                      display_campaign_template,
-                    )
+                      '<li>' +
+                      'id: ' +
+                      id +
+                      '<br>' +
+                      'Name: ' +
+                      name +
+                      ' <br>' +
+                      'Email: ' +
+                      email +
+                      '<br>' +
+                      'Perosnal Info: ' +
+                      info +
+                      '<br>' +
+                      'Description' +
+                      desc +
+                      '<br><br>' +
+                      '</li>'
+                    display_campaign.append(display_campaign_template)
                   }
                 })
               }
             })
           }
         })
-    }
-
-    else if (window.location.href == 'http://localhost:3000/campaign.html') {
+    } else if (window.location.href == 'http://localhost:3000/campaign.html') {
       //add front-end for campaign
       var electionInstance
       var loader = $('#loader')
@@ -1028,7 +1082,7 @@ App = {
     console.log(polling_ends)
 
     var current_time = new Date()
-    current_time = current_time.getTime()/1000
+    current_time = current_time.getTime() / 1000
     if (
       current_time > cand_register_end ||
       cand_register_end > polling_starts ||
@@ -1039,20 +1093,27 @@ App = {
     }
 
     App.contracts.Election.deployed().then(function (instance) {
-      var election_count = instance.election_count;
-      var electionInstance = instance;
+      var election_count = instance.election_count
+      var electionInstance = instance
       // instance.add_election(
       //   E_name,
       //   cand_register_end,
       //   polling_starts,
       //   polling_ends,
       // )
-      return electionInstance.edit_election(E_id, E_name,
-        cand_register_end, polling_starts, polling_ends, {
+      return electionInstance.edit_election(
+        E_id,
+        E_name,
+        cand_register_end,
+        polling_starts,
+        polling_ends,
+        {
           from: App.account,
-        })
+        },
+      )
     })
-    window.location.href = 'http://localhost:3000/admin_manage_election.html#E_id=' + E_id;
+    window.location.href =
+      'http://localhost:3000/admin_manage_election.html#E_id=' + E_id
   },
 
   // Call to the below function will be made when the admin creates a new election
@@ -1112,9 +1173,16 @@ App = {
       .then(function (id) {
         uid = id.toNumber()
         console.log(E_id, uid, username)
-        return electionInstance.add_candidate(uid, username, E_id, info, description, {
-          from: App.account,
-        })
+        return electionInstance.add_candidate(
+          uid,
+          username,
+          E_id,
+          info,
+          description,
+          {
+            from: App.account,
+          },
+        )
       })
   },
 
@@ -1193,7 +1261,7 @@ App = {
     window.location.href =
       'http://localhost:3000/admin_accept_reports.html#E_id=' + E_id
   },
-   admin_view_results_event: function () {
+  admin_view_results_event: function () {
     // Get the Election ID from the previous page somehow
     var E_id = parseInt(window.location.hash.substr(-1))
 
@@ -1201,7 +1269,6 @@ App = {
     window.location.href =
       'http://localhost:3000/admin_view_results.html#E_id=' + E_id
   },
-
 
   manage_election_for_user: function () {
     var ElectionIDForVoter = $('#getElectionList').val()

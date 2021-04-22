@@ -16,7 +16,7 @@
     <body class="bg-dark container-fluid m-0">
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
             <div class="container-fluid">
-                <a class="navbar-brand" href="http://localhost:3000">Online Election Portal</a>
+                <a class="navbar-brand" href="http://localhost:3000/voter_home.html">Online Election Portal</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -24,7 +24,8 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="http://localhost:3000">Home</a>
+                            <a class="nav-link active" aria-current="page"
+                                href="http://localhost:3000/voter_home.html">Home</a>
                         </li>
                         <li class="nav-item" id="vote">
                         </li>
@@ -47,20 +48,24 @@
                             <div class="m-b-25"> <img src="//img.icons8.com/fluent/96/000000/test-account.png"
                                     class="img-radius" alt="User-Profile-Image"> </div>
                             <div>
-                                <label for="id"><b>User ID:</b></label>
-                                <span class="card-text" id="id"></span>
+                                <label for="E_name"><b>Election Name:</b></label>
+                                <span class="card-text" id="E_name"></span>
                             </div>
                             <div>
-                                <label for="name"><b>User Name:</b></label>
-                                <span class="card-text" id="name"></span>
+                                <label for="E_id"><b>Election ID:</b></label>
+                                <span class="card-text" id="E_id"></span>
                             </div>
                             <div>
-                                <label for="email"><b>Email:</b></label>
-                                <span class="card-text" id="email"></span>
+                                <label for="time_cand_register_end"><b>Candidate Registration Deadline:</b></label>
+                                <span class="card-text" id="time_cand_register_end"></span>
                             </div>
                             <div>
-                                <label for="address"><b>Account:</b></label>
-                                <span class="card-text" id="address"></span>
+                                <label for="time_polling_starts"><b>Polling Start Time:</b></label>
+                                <span class="card-text" id="time_polling_starts"></span>
+                            </div>
+                            <div>
+                                <label for="time_polling_ends"><b>Polling End Time:</b></label>
+                                <span class="card-text" id="time_polling_ends"></span>
                             </div>
                         </div>
                     </div>
