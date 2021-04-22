@@ -323,7 +323,7 @@ contract Election {
         //that user is a candidate in the election
         e_id = candidates[cnd_index].E_id;
         require(e_id == _E_id);
-        
+
         //Add image to contract
         //passing fifth argument 1 as of now, needs to be changed
         campaigns[campaign_count] = campaign(
@@ -338,45 +338,84 @@ contract Election {
     // Constructor
     constructor() public {
         // Add admin first
+
+        //Rhugaved
+        // add_user(
+        //     0x22e9140a50BdB2659b9E473dAa645685C4f409E5,
+        //     "admin",
+        //     "admin@coep.ac.in",
+        //     "123",
+        //     2
+        // );
+        // add_user(
+        //     0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
+        //     "voter 1",
+        //     "voter1@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0xCD56ad160221d01ea132F05D4057665A97C6934D,
+        //     "voter 2",
+        //     "voter2@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x2D89b40E5C820Ee508577ac851DF5e1Bb095C037,
+        //     "cand 1",
+        //     "cand1@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x6f7B8dF18264EeF57c112a94ce06cc2fa705ab71,
+        //     "cand 2",
+        //     "cand2@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x33fF69744215B3E8b8389D70C2A358BFB3fA16ae,
+        //     "Reported",
+        //     "reported@gmail.com",
+        //     "123",
+        //     0
+        // );
+
+        //himansh
         add_user(
-            0x22e9140a50BdB2659b9E473dAa645685C4f409E5,
+            0x81e5135375023544526294743DB8dc77e37B3a3c,
             "admin",
             "admin@coep.ac.in",
             "123",
             2
         );
         add_user(
-            0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
+            0x347498952f9a102aAf611d66b4A9eb1c822AcF5A,
             "voter 1",
             "voter1@gmail.com",
             "123",
             0
         );
         add_user(
-            0xCD56ad160221d01ea132F05D4057665A97C6934D,
+            0x108dd6Db4E153BcE120bf8EF9E1473f32dea9248,
             "voter 2",
             "voter2@gmail.com",
             "123",
             0
         );
         add_user(
-            0x2D89b40E5C820Ee508577ac851DF5e1Bb095C037,
+            0x43e25608d87fE3faA8686Ac89A4Fe98d57A4b3cb,
             "cand 1",
             "cand1@gmail.com",
             "123",
             0
         );
         add_user(
-            0x6f7B8dF18264EeF57c112a94ce06cc2fa705ab71,
+            0x2c2E70D6c73B51D84B0eD7BF52994A6C74Fe74aB,
             "cand 2",
             "cand2@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0x33fF69744215B3E8b8389D70C2A358BFB3fA16ae,
-            "Reported",
-            "reported@gmail.com",
             "123",
             0
         );

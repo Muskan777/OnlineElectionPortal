@@ -1021,12 +1021,12 @@ App = {
         .then(function (campaign_count) {
           var display_campaign = $('#campaign')
           display_campaign.empty()
-          for (var j = 0; j < campaign_count.toNumber(); j++) {
+          for (var j = 1; j <= campaign_count.toNumber(); j++) {
             electionInstance.campaigns(j).then(function (campaign) {
               if (E_id == campaign[3].toNumber()) {
-                var desc = campaign[1]
-                var Cand_id = campaign[2]
-                var Cand_name = campaign[4]
+                var desc = campaign[1].toString()
+                var Cand_id = campaign[2].toNumber()
+                var Cand_name = campaign[4].toString()
 
                 var update_campaign =
                   '<li> <h2>' +
@@ -1583,9 +1583,10 @@ App = {
     //     })
     // })
     // return App.render()
-    var desc = $('description').val()
+    var desc = $('#description').val()
     console.log(desc)
     const E_id = parseInt(window.location.hash.substr(-1))
+    console.log(E_id)
     App.contracts.Election.deployed()
       .then(function (instance) {
         ElecInstance = instance
