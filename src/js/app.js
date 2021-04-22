@@ -119,11 +119,84 @@ App = {
         .toString()
         .includes('http://localhost:3000/admin_manage_election.html')
     ) {
-      var E_id = parseInt(window.location.hash.substr(-1))
-      console.log(E_id)
-      var Election_id_show = $('#Election_id_show')
-      Election_id_show.append('Election Id : ' + E_id)
-    } 
+      var E_id = parseInt(window.location.hash.substr(-1));
+      console.log(E_id);
+      var Election_id_show = $('#Election_id_show');
+      Election_id_show.append('Election Id : ' + E_id);
+      var ElecInstance;
+
+      App.contracts.Election.deployed()
+          .then(function (instance) {
+            electionInstance = instance
+            return electionInstance.elections(E_id)
+          })
+          .then(function (election) {
+            var E_name = election[1];
+            // The time we get here is in seconds, convert it to date and time format
+            // to use as value in the form  
+            var time_cand_register_end = election[2].toNumber();
+            var time_polling_starts = election[3].toNumber();
+            var time_polling_ends = election[4].toNumber();
+
+            // Added 19800 secs to the time for the IST offset, as toISOString 
+            // converts time to UTC
+            time_cand_register_end = new Date((time_cand_register_end + 19800)*1000);
+            time_polling_starts = new Date((time_polling_starts + 19800)*1000);
+            time_polling_ends = new Date((time_polling_ends + 19800)*1000);
+
+            console.log(time_cand_register_end);
+            console.log(time_polling_starts);
+            console.log(time_polling_ends);
+
+            time_cand_register_end = time_cand_register_end.toISOString().split("T");
+            time_polling_starts = time_polling_starts.toISOString().split("T");
+            time_polling_ends = time_polling_ends.toISOString().split("T");
+
+            date_cand_register_end = time_cand_register_end[0];
+            time_cand_register_end = time_cand_register_end[1].split(".000Z")[0];
+            date_polling_starts = time_polling_starts[0];
+            time_polling_starts = time_polling_starts[1].split(".000Z")[0];
+            date_polling_ends = time_polling_ends[0];
+            time_polling_ends = time_polling_ends[1].split(".000Z")[0];
+
+            // console.log(E_name)
+            // console.log(date_cand_register_end)
+            // console.log(date_polling_starts)
+            // console.log(date_polling_ends)
+            // console.log(time_cand_register_end)
+            // console.log(time_polling_starts)
+            // console.log(time_polling_ends)
+
+            var _E_name = $('#E_name')
+            _E_name.empty()
+            _E_name.val(E_name);
+
+            var _date_cand_register_end = $('#date_cand_register_end')
+            _date_cand_register_end.empty()
+            _date_cand_register_end.val(date_cand_register_end);
+
+            var _date_polling_starts = $('#date_polling_starts')
+            _date_polling_starts.empty()
+            _date_polling_starts.val(date_polling_starts);
+
+            var _date_polling_ends = $('#date_polling_ends')
+            _date_polling_ends.empty()
+            _date_polling_ends.val(date_polling_ends);
+
+            var _time_cand_register_end = $('#time_cand_register_end')
+            _time_cand_register_end.empty()
+            _time_cand_register_end.val(time_cand_register_end);
+
+            var _time_polling_starts = $('#time_polling_starts')
+            _time_polling_starts.empty()
+            _time_polling_starts.val(time_polling_starts);
+
+            var _time_polling_ends = $('#time_polling_ends')
+            _time_polling_ends.empty()
+            _time_polling_ends.val(time_polling_ends);
+
+        })
+    }
     // else if (
     //   window.location
     //     .toString()
@@ -908,6 +981,72 @@ App = {
     window.location.href = 'http://localhost:3000/create_election.html'
   },
 
+  edit_election_event: function () {
+    var E_id = parseInt(window.location.hash.substr(-1))
+    var E_name = $('#E_name').val()
+    var date_cand_register_end = $('#date_cand_register_end').val()
+    var date_polling_starts = $('#date_polling_starts').val()
+    var date_polling_ends = $('#date_polling_ends').val()
+    var time_cand_register_end = $('#time_cand_register_end').val()
+    var time_polling_starts = $('#time_polling_starts').val()
+    var time_polling_ends = $('#time_polling_ends').val()
+
+    console.log(E_name)
+    console.log(date_cand_register_end)
+    console.log(date_polling_starts)
+    console.log(date_polling_ends)
+    console.log(time_cand_register_end)
+    console.log(time_polling_starts)
+    console.log(time_polling_ends)
+
+    // Make a string of the form: "yyyy-MM-ddTHH:mm:ss" and then use new Date(resultDateString) to convert to date
+    // and use date.getTime()/1000 to convert to time since Epoch in seconds.
+    var cand_register_end =
+      date_cand_register_end + 'T' + time_cand_register_end
+    var polling_starts = date_polling_starts + 'T' + time_polling_starts
+    var polling_ends = date_polling_ends + 'T' + time_polling_ends
+
+    cand_register_end = new Date(cand_register_end)
+    polling_starts = new Date(polling_starts)
+    polling_ends = new Date(polling_ends)
+
+    // Use getTime() to get epoch time in milliseconds, dividing by 1000 to get seconds;
+    cand_register_end = cand_register_end.getTime() / 1000
+    polling_starts = polling_starts.getTime() / 1000
+    polling_ends = polling_ends.getTime() / 1000
+
+    console.log(cand_register_end)
+    console.log(polling_starts)
+    console.log(polling_ends)
+
+    var current_time = new Date()
+    current_time = current_time.getTime()/1000
+    if (
+      current_time > cand_register_end ||
+      cand_register_end > polling_starts ||
+      polling_starts > polling_ends
+    ) {
+      window.alert('Incorrect Time/Date entered')
+      throw new Error()
+    }
+
+    App.contracts.Election.deployed().then(function (instance) {
+      var election_count = instance.election_count;
+      var electionInstance = instance;
+      // instance.add_election(
+      //   E_name,
+      //   cand_register_end,
+      //   polling_starts,
+      //   polling_ends,
+      // )
+      return electionInstance.edit_election(E_id, E_name,
+        cand_register_end, polling_starts, polling_ends, {
+          from: App.account,
+        })
+    })
+    window.location.href = 'http://localhost:3000/admin_manage_election.html#E_id=' + E_id;
+  },
+
   // Call to the below function will be made when the admin creates a new election
   // by submitting the form
   admin_add_voter: function () {
@@ -1204,11 +1343,3 @@ $(function () {
     App.init()
   })
 })
-
-function sleep(milliseconds) {
-  const date = Date.now()
-  let currentDate = null
-  do {
-    currentDate = Date.now()
-  } while (currentDate - date < milliseconds)
-}
