@@ -682,7 +682,104 @@ App = {
           E_id +
           '">Apply for Candidacy</a>',
       )
-    } else if (window.location.href == 'http://localhost:3000/campaign.html') {
+    }
+    // For admin view results
+    else if (
+      window.location
+        .toString()
+        .includes('http://localhost:3000/admin_view_results.html')
+    ) {
+      // Get Election ID from the previous page
+      var E_id = parseInt(window.location.hash.substr(-1))
+      var electionInstance
+      App.contracts.Election.deployed()
+          .then(function (instance) {
+            electionInstance = instance
+            return electionInstance.candidate_count()
+          })
+          .then(function (candidate_count) {
+              
+            var display_result = $('#display_result_of_election')
+            display_result.empty()
+            for (var j = 0; j < candidate_count; j++) {
+              electionInstance.candidates(j).then(function (candidate) {
+                if (E_id == candidate[3].toNumber()) {
+                  var C_id = candidate[0].toNumber();
+                  var vote_count = candidate[1].toNumber();
+                  electionInstance.users(C_id).then(function (user) {
+                    // console.log('Already Regsitered for this E_id: ' + id)
+                    var name = user[2]
+                    var permissions = user[4].toNumber()
+                    if (permissions == 1){
+                        var display_result_template =
+                      '<li> C_id: ' + C_id + ', Name: ' + name + '   ' + 'Voter Count: ' + vote_count + '</li>'
+                    display_result.append(display_result_template)
+                    }
+                    
+                  })
+                }
+              })
+            }
+          })
+        } 
+    else if (
+      window.location
+        .toString()
+        .includes('http://localhost:3000/result.html')
+    ) {
+        
+      // Get Election ID from the previous page
+      var E_id = parseInt(window.location.hash.substr(-1))
+      console.log(E_id);
+      var electionInstance
+      App.contracts.Election.deployed()
+          .then(function (instance) {
+            electionInstance = instance
+            return electionInstance.elections(E_id)
+          })
+          .then(function (election) {
+              time_polling_ends = election[3].toNumber();
+              var current_time = Date.now()/1000;
+              // Check that the voting period is over before 
+              // displaying result
+              console.log(time_polling_ends + ' ' + current_time);
+              if (current_time > time_polling_ends) {
+                  electionInstance.candidate_count().then(function (candidate_count) {
+                    console.log("candidate_count "+ candidate_count)
+            var display_result = $('#display_result_of_election')
+            display_result.empty()
+            for (var j = 0; j < candidate_count; j++) {
+              console.log("J= " + j)
+              electionInstance.candidates(j).then(function (candidate) {
+                console.log(candidate)
+
+                if (E_id == candidate[3].toNumber()) {
+                  var C_id = candidate[0].toNumber();
+                  var vote_count = candidate[1].toNumber();
+                  console.log(C_id + " " + vote_count);
+                  electionInstance.users(C_id).then(function (user) {
+                    console.log('Already Regsitered for this E_id: ' + C_id)
+                    var name = user[2]
+                    var permissions = user[4].toNumber()
+                    console.log("permissions =" + permissions)
+                    if (permissions == 1){
+                      console.log("HI")
+                        var display_result_template =
+                      '<li> C_id: ' + C_id + ', Name: ' + name + '   ' + 'Voter Count: ' + vote_count + '</li>'
+                    display_result.append(display_result_template)
+                    }
+                    
+                  })
+                }
+              })
+            }
+          })
+        } else {
+            window.alert("Voting hasn't ended yet. Can't diplay the result yet.");
+        }
+        })
+    }
+    else if (window.location.href == 'http://localhost:3000/campaign.html') {
       //add front-end for campaign
       var electionInstance
       var loader = $('#loader')
@@ -1032,6 +1129,15 @@ App = {
     window.location.href =
       'http://localhost:3000/admin_accept_reports.html#E_id=' + E_id
   },
+   admin_view_results_event: function () {
+    // Get the Election ID from the previous page somehow
+    var E_id = parseInt(window.location.hash.substr(-1))
+
+    console.log('hlo')
+    window.location.href =
+      'http://localhost:3000/admin_view_results.html#E_id=' + E_id
+  },
+
 
   manage_election_for_user: function () {
     var ElectionIDForVoter = $('#getElectionList').val()

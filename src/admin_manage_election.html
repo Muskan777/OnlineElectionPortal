@@ -34,7 +34,7 @@
             form {
                 float: left;
                 padding: 20px;
-                width: 25%;
+                width: 20%;
                 background-color: #f1f1f1;
                 height: 400px;
                 /* only for demonstration, should be removed */
@@ -79,6 +79,9 @@
         </form>
         <form onSubmit="App.admin_check_reports_page_event(); return false" class="admin_check_reports_page_event">
             <button type="submit">Check Reports</button>
+        </form>
+        <form onSubmit="App.admin_view_results_event(); return false" class="admin_view_results_event">
+            <button type="submit">View Live Results</button>
         </form>
 
 
