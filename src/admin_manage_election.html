@@ -5,89 +5,105 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin Manage Election</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
         <style>
-            * {
-                box-sizing: border-box;
-            }
-
-            header {
-                background-color: #666;
-                padding: 30px;
-                text-align: center;
-                font-size: 35px;
-                color: white;
-            }
-
-            section::after {
-                content: "";
-                display: table;
-                clear: both;
-            }
-            p {
-                float: left;
-                padding: 20px;
-                width: 40%;
-                background-color: #f1f1f1;
-                height: 300px;
-                /* only for demonstration, should be removed */
-            }
-            form {
-                float: left;
-                padding: 20px;
-                width: 20%;
-                background-color: #f1f1f1;
-                height: 400px;
-                /* only for demonstration, should be removed */
+            .navbar-custom {
+                background-color: black;
             }
 
         </style>
     </head>
 
-    <body>
-        <header>
-            <h1>Manage Election</h1>
-        </header>
-        <form id="edit_election_form" onSubmit="App.edit_election_event(); return false">
-            <label for="E_name">Election Name: </label>
-            <input type="text" id="E_name" name="E_name" required><br><br>
-            <label for="date_cand_register_end">Date until which Candidates can register: </label>
-            <input type="date" id="date_cand_register_end" name="date_cand_register_end" required><br><br>
+    <body class="bg-dark container-fluid m-0">
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="http://localhost:3000/admin_home.html">Online Election Portal</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page"
+                                href="http://localhost:3000/admin_home.html">Home</a>
+                        </li>
 
-            <label for="time_cand_register_end">Time until which Candidates can register: </label>
-            <input type="time" id="time_cand_register_end" name="time_cand_register_end" required><br><br>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Campaigning
+                                Portal</a>
+                        </li>
+                        <li class="nav-item">
+                            <button onClick="App.admin_view_results_event(); return false"
+                                style="background-color: black; color: white; border-color: black;"
+                                class="admin_view_results_event nav-link active" type="submit">View Live
+                                Results</button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="submit" class="admin_check_reports_page_event nav-link active"
+                                style="background-color: black; color: white; border-color: black;"
+                                onClick="App.admin_check_reports_page_event(); return false">Check
+                                Reports</button>
+                        </li>
+                        <li class="nav-item">
+                            <button onClick="App.admin_add_voter_page_event(); return false"
+                                class="admin_add_voter_event nav-link active"
+                                style="background-color: black; color: white; border-color: black;" type="submit">Add
+                                Voters</button>
+                        </li>
+                        <li class="nav-item">
+                            <button onClick="App.admin_add_candidate_page_event(); return false"
+                                style="background-color: black; color: white; border-color: black;"
+                                class="admin_add_candidate_page_event nav-link active" type="submit">Add
+                                Candidates</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8 text-center row mt-5 bg-light mb-5 ">
+                <header class="mt-5">
+                    <h1>Edit Election</h1>
+                </header>
+                <form id="edit_election_form" style="height: fit-content;"
+                    onSubmit="App.edit_election_event(); return false">
+                    <label for="E_name">Election Name: </label>
+                    <input type="text" id="E_name" name="E_name"><br><br>
+                    <label for="date_cand_register_end">Date until which Candidates can register: </label>
+                    <input type="date" id="date_cand_register_end" name="date_cand_register_end"><br><br>
 
-            <label for="date_polling_starts">Date when the polling will begin: </label>
-            <input type="date" id="date_polling_starts" name="date_polling_starts" required><br><br>
+                    <label for="time_cand_register_end">Time until which Candidates can register: </label>
+                    <input type="time" id="time_cand_register_end" name="time_cand_register_end"><br><br>
 
-            <label for="time_polling_starts">Time when the polling will begin: </label>
-            <input type="time" id="time_polling_starts" name="time_polling_starts" required><br><br>
+                    <label for="date_polling_starts">Date when the polling will begin: </label>
+                    <input type="date" id="date_polling_starts" name="date_polling_starts"><br><br>
 
-
-            <label for="date_polling_ends">Date when the polling will end: </label>
-            <input type="date" id="date_polling_ends" name="date_polling_ends" required><br><br>
-
-            <label for="time_polling_ends">Time when the polling will end: </label>
-            <input type="time" id="time_polling_ends" name="time_polling_ends" required><br><br>
-
-            <input type="submit" name="submit" id="submit">
-        </form>
-        <form onSubmit="App.admin_add_voter_page_event(); return false" class="admin_add_voter_event">
-            <button type="submit">Add Voters</button>
-        </form>
-        <form onSubmit="App.admin_add_candidate_page_event(); return false" class="admin_add_candidate_page_event">
-            <button type="submit">Add Candidates</button>
-        </form>
-        <form onSubmit="App.admin_check_reports_page_event(); return false" class="admin_check_reports_page_event">
-            <button type="submit">Check Reports</button>
-        </form>
-        <form onSubmit="App.admin_view_results_event(); return false" class="admin_view_results_event">
-            <button type="submit">View Live Results</button>
-        </form>
+                    <label for="time_polling_starts">Time when the polling will begin: </label>
+                    <input type="time" id="time_polling_starts" name="time_polling_starts"><br><br>
 
 
+                    <label for="date_polling_ends">Date when the polling will end: </label>
+                    <input type="date" id="date_polling_ends" name="date_polling_ends"><br><br>
+
+                    <label for="time_polling_ends">Time when the polling will end: </label>
+                    <input type="time" id="time_polling_ends" name="time_polling_ends"><br><br>
+
+                    <input type="submit" name="submit" id="submit" class="btn btn-primary">
+                </form>
+
+            </div>
+            <div class="col-lg-2"></div>
+        </div>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+            crossorigin="anonymous"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/web3.min.js"></script>
         <script src="js/truffle-contract.js"></script>

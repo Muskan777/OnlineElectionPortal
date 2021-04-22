@@ -148,8 +148,14 @@ contract Election {
             if (
                 voterlist[i].id == _reportedUser && voterlist[i].E_id == _E_id
             ) {
-                require(!voterlist[i].reportedByUser, "User is already reported");
-                require(!voterlist[i].reportedByUser, "User wasn't reported earlier");
+                require(
+                    !voterlist[i].reportedByUser,
+                    "User is already reported"
+                );
+                require(
+                    !voterlist[i].reportedByUser,
+                    "User wasn't reported earlier"
+                );
                 voterlist[i].reportedByUser = true;
             }
         }
@@ -341,48 +347,48 @@ contract Election {
         // Add admin first
 
         //Rhugaved
-        add_user(
-            0x22e9140a50BdB2659b9E473dAa645685C4f409E5,
-            "admin",
-            "admin@coep.ac.in",
-            "123",
-            2
-        );
-        add_user(
-            0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
-            "voter 1",
-            "voter1@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0xCD56ad160221d01ea132F05D4057665A97C6934D,
-            "voter 2",
-            "voter2@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0x2D89b40E5C820Ee508577ac851DF5e1Bb095C037,
-            "cand 1",
-            "cand1@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0x6f7B8dF18264EeF57c112a94ce06cc2fa705ab71,
-            "cand 2",
-            "cand2@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0x33fF69744215B3E8b8389D70C2A358BFB3fA16ae,
-            "Reported",
-            "reported@gmail.com",
-            "123",
-            0
-        );
+        // add_user(
+        //     0x22e9140a50BdB2659b9E473dAa645685C4f409E5,
+        //     "admin",
+        //     "admin@coep.ac.in",
+        //     "123",
+        //     2
+        // );
+        // add_user(
+        //     0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
+        //     "voter 1",
+        //     "voter1@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0xCD56ad160221d01ea132F05D4057665A97C6934D,
+        //     "voter 2",
+        //     "voter2@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x2D89b40E5C820Ee508577ac851DF5e1Bb095C037,
+        //     "cand 1",
+        //     "cand1@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x6f7B8dF18264EeF57c112a94ce06cc2fa705ab71,
+        //     "cand 2",
+        //     "cand2@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x33fF69744215B3E8b8389D70C2A358BFB3fA16ae,
+        //     "Reported",
+        //     "reported@gmail.com",
+        //     "123",
+        //     0
+        // );
 
         //himansh
         // add_user(
@@ -420,6 +426,50 @@ contract Election {
         //     "123",
         //     0
         // );
+
+        //muskan
+        add_user(
+            0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
+            "admin",
+            "admin@coep.ac.in",
+            "123",
+            2
+        );
+        add_user(
+            0x2aeE3162bB87A4Ed18eE0abB27f6d2CE3F5A6720,
+            "voter 1",
+            "voter1@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x145d98eBca32EC5C25e49D76D95cEc2E4cA2852E,
+            "voter 2",
+            "voter2@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x7F5542Cd4C3f34ad08747273E42CB8855eDD23d4,
+            "cand 1",
+            "cand1@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x339531797eBa4492570C40Cc40dfee612dd9540F,
+            "cand 2",
+            "cand2@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x12a79A0f247F3912e45A8B3EdAec0fdD46C5C660,
+            "Reported",
+            "reported@gmail.com",
+            "123",
+            0
+        );
         // add_voter_by_admin(1, 2);
         // add_voter_by_admin(1, 3);
         // add_voter_by_admin(2, 3);

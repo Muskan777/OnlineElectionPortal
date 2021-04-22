@@ -107,7 +107,6 @@ App = {
           var manage_elections = $('#manage_elections')
           manage_elections.empty()
           for (var i = 1; i <= election_count; i++) {
-            console.log(i)
             electionInstance.elections(i).then(function (election) {
               var id = election[0].toNumber()
               var name = election[1]
@@ -913,6 +912,12 @@ App = {
               }
             })
           }
+          console.log(display_result.val())
+          if (display_result.val() == '') {
+            $('#content').hide()
+          } else {
+            $('#done').hide()
+          }
         })
     } else if (
       window.location.toString().includes('http://localhost:3000/result.html')
@@ -989,9 +994,7 @@ App = {
     }
     // New Campaigning page
     else if (
-      window.location
-        .toString()
-        .includes('http://localhost:3000/campaign.html')
+      window.location.toString().includes('http://localhost:3000/campaign.html')
     ) {
       // Get Election ID from the previous page
       var E_id = parseInt(window.location.hash.substr(-1))
