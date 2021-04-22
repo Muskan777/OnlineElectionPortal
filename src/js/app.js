@@ -1154,7 +1154,83 @@ App = {
       loader.hide()
       content.show()
     }
+    else if(window.location.toString().includes('http://localhost:3000/admin_view_campaign.html')){
+      // Get Election ID from the previous page
+      var E_id = parseInt(window.location.hash.substr(-1))
+      console.log('E_id: ' + E_id)
+      var electionInstance
+      var loader = $('#loader')
+      var content = $('#content')
 
+      loader.show()
+      content.hide()
+      var electionInstance
+      App.contracts.Election.deployed()
+        .then(function (instance) {
+          electionInstance = instance
+          return instance.addresses(App.account)
+        })
+        .then(function (u_id) {
+          console.log(u_id.toNumber())
+          if (App.loggedIN(u_id.toNumber())) {
+            return electionInstance.campaign_count()
+          } else {
+            alert(
+              'It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.',
+            )
+            window.location.href = 'http://localhost:3000'
+            App.render()
+          }
+        })
+        .then(function (campaign_count) {
+          var display_campaign = $('#campaign')
+          display_campaign.empty()
+          for (var j = 1; j <= campaign_count.toNumber(); j++) {
+            electionInstance.campaigns(j).then(function (campaign) {
+              if (E_id == campaign[3].toNumber()) {
+                var desc = campaign[1].toString()
+                var Cand_id = campaign[2].toNumber()
+                var Cand_name = campaign[4].toString()
+                return electionInstance
+                  .users(Cand_id)
+                  .then(function (user) {
+                    return user[5].toNumber()
+                  })
+                  .then(function (cand_indx) {
+                    return electionInstance.candidates(cand_indx)
+                  })
+                  .then(function (candidate) {
+                    return candidate[4].toString()
+                  })
+                  .then(function (cand_desc) {
+                    var update_campaign =
+                      '<li> <h3>' +
+                      'ID:' +
+                      Cand_id +
+                      ' ' +
+                      'Name: ' +
+                      Cand_name +
+                      '</h3><br>' +
+                      '<h3>' +
+                      'Peronal Info: ' +
+                      cand_desc +
+                      '</h3><br>' +
+                      '<h4>Description: ' +
+                      desc +
+                      '<h4></li><br><br>'
+
+                    display_campaign.append(update_campaign)
+                  })
+              }
+            })
+          }
+        })
+        .catch(function (error) {
+          console.warn(error)
+        })
+      loader.hide()
+      content.show()
+    }
     // else if (window.location.href == 'http://localhost:3000/campaign.html') {
     //   //add front-end for campaign
     //   var electionInstance
@@ -1524,6 +1600,14 @@ App = {
       'http://localhost:3000/admin_view_results.html#E_id=' + E_id
   },
 
+  admin_view_campaign_event: function(){
+    // Get the Election ID from the previous page somehow
+    var E_id = parseInt(window.location.hash.substr(-1))
+
+    window.location.href =
+      'http://localhost:3000/admin_view_campaign.html#E_id=' + E_id
+    
+  }, 
   manage_election_for_user: function () {
     var ElectionIDForVoter = $('#getElectionList').val()
     var candidatesCount
