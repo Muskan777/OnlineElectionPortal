@@ -31,7 +31,7 @@ App = {
       // Connect provider to interact with contract
       App.contracts.Election.setProvider(App.web3Provider)
 
-      App.listenForEvents()
+      // App.listenForEvents()
 
       return App.render()
     })
@@ -279,6 +279,11 @@ App = {
           E_id +
           '">Vote</a>',
       )
+      $('#result').html(
+        '<a class="nav-link" href="http://localhost:3000/result.html#E_id=' +
+          E_id +
+          '">View Results</a>',
+      )
       $('#report').html(
         '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
           E_id +
@@ -336,6 +341,11 @@ App = {
           E_id +
           '">Campaigning Portal</a>',
       )
+      $('#result').html(
+        '<a class="nav-link" href="http://localhost:3000/result.html#E_id=' +
+          E_id +
+          '">View Results</a>',
+      )
       $('#report').html(
         '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
           E_id +
@@ -383,6 +393,11 @@ App = {
         '<a class="nav-link" href="http://localhost:3000/campaign.html#E_id=' +
           E_id +
           '">Campaigning Portal</a>',
+      )
+      $('#result').html(
+        '<a class="nav-link" href="http://localhost:3000/result.html#E_id=' +
+          E_id +
+          '">View Results</a>',
       )
       $('#report').html(
         '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
@@ -637,6 +652,7 @@ App = {
               var C_id = candidate[0].toNumber()
               var name = candidate[2]
               var cand_E_id = candidate[3].toNumber()
+              console.log(C_id + " " + name)
               //   var flag = 0;
               electionInstance.users(C_id).then(function (user) {
                 // Check that the user permissions are for voter only and
@@ -648,7 +664,7 @@ App = {
                     "' >" +
                     C_id +
                     ': ' +
-                    name +
+                    user[2] +
                     '</ option>'
                   add_candidate.append(add_candidate_template)
                 }
@@ -799,6 +815,11 @@ App = {
           E_id +
           '">Campaigning Portal</a>',
       )
+      $('#result').html(
+        '<a class="nav-link" href="http://localhost:3000/result.html#E_id=' +
+          E_id +
+          '">View Results</a>',
+      )
       $('#report').html(
         '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
           E_id +
@@ -858,6 +879,12 @@ App = {
           '">Vote</a>',
       )
 
+      $('#result').html(
+        '<a class="nav-link" href="http://localhost:3000/result.html#E_id=' +
+          E_id +
+          '">View Results</a>',
+      )
+
       $('#report').html(
         '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
           E_id +
@@ -910,31 +937,32 @@ App = {
                 var C_id = candidate[0].toNumber()
                 var vote_count = candidate[1].toNumber()
                 electionInstance.users(C_id).then(function (user) {
-                  // console.log('Already Regsitered for this E_id: ' + id)
+                  console.log('Already Regsitered for this E_id: ' + C_id)
                   var name = user[2]
                   var permissions = user[4].toNumber()
                   if (permissions == 1) {
+                    
                     var display_result_template =
-                      '<li> C_id: ' +
-                      C_id +
-                      ', Name: ' +
-                      name +
-                      '   ' +
-                      'Voter Count: ' +
-                      vote_count +
-                      '</li>'
+                          '<tr><td>' +
+                          C_id +
+                          '</td><td>' +
+                          name +
+                          '</td><td>' +
+                          vote_count +
+                          '</td></tr'
                     display_result.append(display_result_template)
+                  }
+                  
+                  console.log(display_result)
+                  if (display_result == []) {
+                    $('#content').hide()
+                  } else {
+                    $('#done').hide()
                   }
                 })
               }
             })
-          }
-          console.log(display_result.val())
-          if (display_result.val() == '') {
-            $('#content').hide()
-          } else {
-            $('#done').hide()
-          }
+          }          
         })
     } else if (
       window.location.toString().includes('http://localhost:3000/result.html')
@@ -945,11 +973,6 @@ App = {
         '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
           E_id +
           '">Vote</a>',
-      )
-      $('#report').html(
-        '<a class="nav-link" href="http://localhost:3000/report.html#E_id=' +
-          E_id +
-          '">Report</a>',
       )
       $('#campaign').html(
         '<a class="nav-link" href="http://localhost:3000/campaign.html#E_id=' +
@@ -1008,14 +1031,13 @@ App = {
                       if (permissions == 1) {
                         console.log('HI')
                         var display_result_template =
-                          '<li> C_id: ' +
+                          '<tr><td>' +
                           C_id +
-                          ', Name: ' +
+                          '</td><td>' +
                           name +
-                          '   ' +
-                          'Voter Count: ' +
+                          '</td><td>' +
                           vote_count +
-                          '</li>'
+                          '</td></tr>'
                         display_result.append(display_result_template)
                       }
                     })
@@ -1047,6 +1069,12 @@ App = {
         '<a class="nav-link" href="http://localhost:3000/voting.html#E_id=' +
           E_id +
           '">Vote</a>',
+      )
+
+      $('#result').html(
+        '<a class="nav-link" href="http://localhost:3000/result.html#E_id=' +
+          E_id +
+          '">View Results</a>',
       )
 
       $('#report').html(
@@ -1106,17 +1134,16 @@ App = {
                   .then(function (cand_desc) {
                     var update_campaign =
                       '<li> <h3>' +
-                      'ID:' +
+                      '<b>ID: &nbsp;</b>' +
                       Cand_id +
                       ' ' +
-                      'Name: ' +
+                      '&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; <b>Name: &nbsp;</b>' +
                       Cand_name +
                       '</h3><br>' +
-                      '<h3>' +
-                      'Peronal Info: ' +
+                      '<h4><b>Personal Info: &nbsp;</b>' +
                       cand_desc +
-                      '</h3><br>' +
-                      '<h4>Description: ' +
+                      '</h4><br>' +
+                      '<h4><b>Campaign Desc: &nbsp;</b>' +
                       desc +
                       '<h4></li><br><br>'
 

@@ -12,6 +12,13 @@
             .navbar-custom {
                 background-color: black;
             }
+            th, tr, td{
+                border: 1px solid black; 
+                border-collapse: collapse; 
+                text-align: center;
+                border-spacing: 5px;
+                padding: 10px;
+            }
 
         </style>
     </head>
@@ -73,16 +80,35 @@
         </header>
         <section id="content">
             <div class="row mt-5">
-                <div class="col-lg-2"></div>
-                <div class="col-lg-8 text-center row mt-5 bg-light mb-5 ">
-                    <div>
-                        <ol name="display_result_of_election" id="display_result_of_election">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6 text-center row mt-5 bg-light mb-5 ">
+                    <div style="padding: 30px; margin-left: 250px">
+                        <!-- <ol name="display_result_of_election" id="display_result_of_election">
 
-                        </ol>
+                        </ol> -->
+                        <table name="display_result_of_election" style="border: 1px solid black; border-collapse: collapse; text-align: center;">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            Candidate ID
+                                        </th>
+                                        <th>
+                                            Candidate Name
+                                        </th>
+                                        <th>
+                                            Vote Count
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="display_result_of_election">
+
+                                </tbody>
+                                    
+                                </table>
 
                     </div>
                 </div>
-                <div class="col-lg-2"></div>
+                <div class="col-lg-3"></div>
             </div>
         </section>
 
