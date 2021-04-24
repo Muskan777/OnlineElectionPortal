@@ -35,6 +35,7 @@ contract Election {
         uint256 time_cand_register_end;
         uint256 time_polling_starts;
         uint256 time_polling_ends;
+        bool created;
     }
 
     struct report {
@@ -60,6 +61,9 @@ contract Election {
         uint256 E_id;
         string name;
     }
+
+    event trigger_event(
+    );
 
     // event CampaignCreated(
     //     uint256 id,
@@ -120,6 +124,9 @@ contract Election {
             .time_cand_register_end = _time_cand_register_end;
         elections[election_count].time_polling_starts = _time_polling_starts;
         elections[election_count].time_polling_ends = _time_polling_ends;
+
+        // Call the event
+        emit trigger_event();
     }
 
     // Edit elections
@@ -136,6 +143,9 @@ contract Election {
         elections[_E_id].time_cand_register_end = _time_cand_register_end;
         elections[_E_id].time_polling_starts = _time_polling_starts;
         elections[_E_id].time_polling_ends = _time_polling_ends;
+
+        // Call the event
+        emit trigger_event();
     }
 
     function report_by_user(
@@ -164,6 +174,9 @@ contract Election {
         reports[report_count].E_id = _E_id;
         reports[report_count].reported_user = _reportedUser;
         reports[report_count].reason = _reason;
+
+        // Call the event
+        emit trigger_event();
     }
 
     function blacklist_by_admin(uint256 _id, uint256 _E_id) public {
@@ -173,6 +186,8 @@ contract Election {
                 voterlist[i].blacklisted_by_admin = true;
             }
         }
+        // Call the event
+        emit trigger_event();
     }
 
     // Add users(Voters), but first add Admin
@@ -193,6 +208,9 @@ contract Election {
         users[user_count].permissions = _permissions;
         addresses[_add] = user_count;
         users[user_count].pwd = _pwd;
+
+        // Call the event
+        emit trigger_event();
     }
 
     uint256 public candidate_count = 0;
@@ -246,6 +264,9 @@ contract Election {
             })
         );
         candidate_count++;
+
+        // Call the event
+        emit trigger_event();
     }
 
     //approves candidature after candidate applies for the election
@@ -258,6 +279,9 @@ contract Election {
                 break;
             }
         }
+
+        // Call the event
+        emit trigger_event();
     }
 
     function add_voter_by_admin(uint256 _E_id, uint256 _id) public {
@@ -267,6 +291,9 @@ contract Election {
         voterlist[voter_list_count].voted = false;
         voterlist[voter_list_count].reportedByUser = false;
         voterlist[voter_list_count].blacklisted_by_admin = false;
+
+        // Call the event
+        emit trigger_event();
     }
 
     function vote(
@@ -301,6 +328,9 @@ contract Election {
 
         // trigger voted event
         emit votedEvent(_C_id);
+
+        // Call the event
+        emit trigger_event();
     }
 
     function uploadCampaign(string memory _desc, uint256 _E_id) public {
@@ -340,6 +370,9 @@ contract Election {
             e_id,
             name
         );
+
+        // Call the event
+        emit trigger_event();
     }
 
     // Constructor
