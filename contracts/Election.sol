@@ -11,7 +11,7 @@ contract Election {
         // string C_pwd;
         // string profile_path;
         string email;
-        // Permissions:- 0: Voter, 1: Candidate, 2: Admin, -1: Invalid
+        // Permissions:- 0: Voter, 1: Candidate, 2: Admin
         int256 permissions;
         uint256 cand_index;
         string pwd;
@@ -24,6 +24,7 @@ contract Election {
         uint256 E_id;
         // C_info: Achievements, clubs etc.
         string C_info;
+        bool deleted;
     }
 
     struct election {
@@ -35,7 +36,7 @@ contract Election {
         uint256 time_cand_register_end;
         uint256 time_polling_starts;
         uint256 time_polling_ends;
-        bool created;
+        bool deleted;
     }
 
     struct report {
@@ -51,6 +52,7 @@ contract Election {
         bool voted;
         bool reportedByUser;
         bool blacklisted_by_admin;
+        bool deleted;
     }
 
     struct campaign {
@@ -60,6 +62,7 @@ contract Election {
         uint256 c_id;
         uint256 E_id;
         string name;
+        // bool deleted;
     }
 
     event trigger_event(
@@ -97,7 +100,7 @@ contract Election {
     candidate[] public candidates;
 
     // voted event
-    event votedEvent(uint256 indexed _C_id);
+    // event votedEvent(uint256 indexed _C_id);
 
     // Store Candidates Count
     uint256 public user_count = 0;
@@ -225,7 +228,12 @@ contract Election {
         string memory _C_info
     ) public {
         // Require that the user is not an Admin
-        require(users[_C_id].id != 0, "The User is not an Admin");
+        require(users[_C_id].id != 2, "The User is not an Admin");
+
+        require(
+            users[_C_id].id != 1,
+            "Require the candidate was not an approved candidate previously"
+        );
 
         uint256 cflag = 0;
         //Require that user was voter for that particular election as well
@@ -241,16 +249,16 @@ contract Election {
         );
 
         cflag = 0;
-        //check if the candidate was not a candidate previously
+        //check if the candidate has not applied previously for this election;
         for (i = 0; i < candidate_count; i++) {
-            if (candidates[i].C_id == _C_id) {
+            if (candidates[i].C_id == _C_id && candidates[i].E_id == _E_id) {
                 cflag = 1;
             }
         }
 
         require(
-            cflag != 1,
-            "Require the candidate was not a candidate previously"
+            cflag == 0,
+            "Candidate should not have applied previously for this election"
         );
 
         // Check if we can change the user struct value
@@ -260,7 +268,8 @@ contract Election {
                 vote_count: 0,
                 C_name: _C_name,
                 E_id: _E_id,
-                C_info: _C_info
+                C_info: _C_info,
+                deleted: false
             })
         );
         candidate_count++;
@@ -271,6 +280,10 @@ contract Election {
 
     //approves candidature after candidate applies for the election
     function candidate_approved_by_admin(uint256 _C_id) public {
+        require(
+            users[_C_id].permissions == 0,
+            "Require the candidate was not an approved candidate previously"
+        );
         users[_C_id].permissions = 1;
         uint256 i = 0;
         for (; i < candidate_count; i++) {
@@ -295,6 +308,52 @@ contract Election {
         // Call the event
         emit trigger_event();
     }
+
+    // JS will always call delete, and delete depending on the 
+    // type of delete
+    // type 0: Eletion, 1: Voter, 2: Candidate
+    // For Delete eletion, id will be 0
+    function admin_delete(uint256 _id, uint256 _E_id, uint256 _type) public {
+        uint256 i;
+
+        require(_E_id > 0, "Eletion IDs are always positive");
+        require(_E_id <= election_count, "Eletion IDs are always less than or equal to election_count");
+
+        // Delete Election
+        if (_type == 0){
+            elections[_E_id].deleted = true;
+        }
+        // Delete Voter
+        else if (_type == 1){
+            require(_id > 1, "User ID should be greater than 1(admin)");
+            require(_id <= user_count, "User ID should be less than or equal to user_count");
+
+            for(i = 1; i <= voter_list_count; i++){
+                if(voterlist[i].E_id == _E_id && voterlist[i].id == _id){
+                    voterlist[i].deleted = true;
+                }
+            }
+        }
+        // Delete Candidate
+        else if (_type == 2){
+            require(_id > 1, "User ID should be greater than 1(admin)");
+            require(_id <= user_count, "User ID should be less than or equal to user_count");
+
+            uint _cand_index = users[_id].cand_index;
+            require(_cand_index < 5000, "The user should be an already registerd candidate");
+            candidates[_cand_index].deleted = true;
+        }
+        
+        // Call the event
+        emit trigger_event();
+    }
+
+    // function delete_voter_by_admin(uint256 _voter_index)  public{
+    //     voterlist[_voter_index].deleted = true;
+
+    //     // Call the event
+    //     emit trigger_event()
+    // }
 
     function vote(
         uint256 _C_id,
@@ -327,7 +386,7 @@ contract Election {
         }
 
         // trigger voted event
-        emit votedEvent(_C_id);
+        // emit votedEvent(_C_id);
 
         // Call the event
         emit trigger_event();

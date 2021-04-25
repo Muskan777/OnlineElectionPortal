@@ -68,7 +68,7 @@
                 </div>
             </div>
         </nav>
-        <header style="color: white; text-align: center;">
+        <header style="color: white; text-align: center; padding: 30px;">
             <h1>Candidates List</h1>
         </header>
         <section id="content">
@@ -102,8 +102,36 @@
                     <div class="col-lg-2"></div>
                 </div>
             </div>
-        </section>
 
+            <div class="row">
+                <div class="col text-center row mt-5">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-8 bg-light">
+                        <h3>Deleted Candidates</h3>
+                        <ul name="already_deleted_candidates" id="already_deleted_candidates">
+
+                        </ul>
+
+                    </div>
+                    <div class="col-lg-2"></div>
+                </div>
+                <div class="col text-center row mt-5">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-8 bg-light">
+                        <h3>Delete Candidates</h3>
+                        <form onSubmit="App.admin_delete_candidate()" class="admin_delete_candidate_event">
+                            <label for="delete_candidate">
+                                <h6>Choose a candidate</h6>
+                            </label>
+                            <select name="delete_candidate" id="delete_candidate" required> 
+                            </select><br /><br />
+                            <input type="submit" class="btn btn-primary" name="submit" id="submit"><br /><br />
+                        </form>
+                    </div>
+                    <div class="col-lg-2"></div>
+                </div>
+            </div>
+        </section>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
