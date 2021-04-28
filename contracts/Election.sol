@@ -65,8 +65,7 @@ contract Election {
         // bool deleted;
     }
 
-    event trigger_event(
-    );
+    event trigger_event();
 
     // event CampaignCreated(
     //     uint256 id,
@@ -228,10 +227,10 @@ contract Election {
         string memory _C_info
     ) public {
         // Require that the user is not an Admin
-        require(users[_C_id].id != 2, "The User is not an Admin");
+        require(users[_C_id].id != 1, "The User is not an Admin");
 
         require(
-            users[_C_id].id != 1,
+            users[_C_id].cand_index == 5000,
             "Require the candidate was not an approved candidate previously"
         );
 
@@ -247,6 +246,20 @@ contract Election {
             cflag == 1,
             "require that user is voter in same election initially"
         );
+
+        cflag = 0;
+        for (i = 1; i <= voter_list_count; i++) {
+            if (
+                (voterlist[i].id == _C_id) &&
+                (voterlist[i].E_id == _E_id) &&
+                (voterlist[i].blacklisted_by_admin != true)
+            ) {
+                cflag = 1;
+                break;
+            }
+        }
+
+        require(cflag == 1, "require that user not reported for this election");
 
         cflag = 0;
         //check if the candidate has not applied previously for this election;
@@ -309,41 +322,57 @@ contract Election {
         emit trigger_event();
     }
 
-    // JS will always call delete, and delete depending on the 
+    // JS will always call delete, and delete depending on the
     // type of delete
     // type 0: Eletion, 1: Voter, 2: Candidate
     // For Delete eletion, id will be 0
-    function admin_delete(uint256 _id, uint256 _E_id, uint256 _type) public {
+    function admin_delete(
+        uint256 _id,
+        uint256 _E_id,
+        uint256 _type
+    ) public {
         uint256 i;
 
         require(_E_id > 0, "Eletion IDs are always positive");
-        require(_E_id <= election_count, "Eletion IDs are always less than or equal to election_count");
+        require(
+            _E_id <= election_count,
+            "Eletion IDs are always less than or equal to election_count"
+        );
 
         // Delete Election
-        if (_type == 0){
+        if (_type == 0) {
             elections[_E_id].deleted = true;
         }
         // Delete Voter
-        else if (_type == 1){
+        else if (_type == 1) {
             require(_id > 1, "User ID should be greater than 1(admin)");
-            require(_id <= user_count, "User ID should be less than or equal to user_count");
+            require(
+                _id <= user_count,
+                "User ID should be less than or equal to user_count"
+            );
 
-            for(i = 1; i <= voter_list_count; i++){
-                if(voterlist[i].E_id == _E_id && voterlist[i].id == _id){
+            for (i = 1; i <= voter_list_count; i++) {
+                if (voterlist[i].E_id == _E_id && voterlist[i].id == _id) {
                     voterlist[i].deleted = true;
                 }
             }
         }
         // Delete Candidate
-        else if (_type == 2){
+        else if (_type == 2) {
             require(_id > 1, "User ID should be greater than 1(admin)");
-            require(_id <= user_count, "User ID should be less than or equal to user_count");
+            require(
+                _id <= user_count,
+                "User ID should be less than or equal to user_count"
+            );
 
-            uint _cand_index = users[_id].cand_index;
-            require(_cand_index < 5000, "The user should be an already registerd candidate");
+            uint256 _cand_index = users[_id].cand_index;
+            require(
+                _cand_index < 5000,
+                "The user should be an already registerd candidate"
+            );
             candidates[_cand_index].deleted = true;
         }
-        
+
         // Call the event
         emit trigger_event();
     }
@@ -439,48 +468,48 @@ contract Election {
         // Add admin first
 
         //Rhugaved
-        add_user(
-            0x22e9140a50BdB2659b9E473dAa645685C4f409E5,
-            "admin",
-            "admin@coep.ac.in",
-            "123",
-            2
-        );
-        add_user(
-            0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
-            "voter 1",
-            "voter1@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0xCD56ad160221d01ea132F05D4057665A97C6934D,
-            "voter 2",
-            "voter2@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0x2D89b40E5C820Ee508577ac851DF5e1Bb095C037,
-            "cand 1",
-            "cand1@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0x6f7B8dF18264EeF57c112a94ce06cc2fa705ab71,
-            "cand 2",
-            "cand2@gmail.com",
-            "123",
-            0
-        );
-        add_user(
-            0x33fF69744215B3E8b8389D70C2A358BFB3fA16ae,
-            "Reported",
-            "reported@gmail.com",
-            "123",
-            0
-        );
+        // add_user(
+        //     0x22e9140a50BdB2659b9E473dAa645685C4f409E5,
+        //     "admin",
+        //     "admin@coep.ac.in",
+        //     "123",
+        //     2
+        // );
+        // add_user(
+        //     0x1BFf1D5FF4234912Efc5fE4FE6Fe8038366A30E1,
+        //     "voter 1",
+        //     "voter1@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0xCD56ad160221d01ea132F05D4057665A97C6934D,
+        //     "voter 2",
+        //     "voter2@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x2D89b40E5C820Ee508577ac851DF5e1Bb095C037,
+        //     "cand 1",
+        //     "cand1@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x6f7B8dF18264EeF57c112a94ce06cc2fa705ab71,
+        //     "cand 2",
+        //     "cand2@gmail.com",
+        //     "123",
+        //     0
+        // );
+        // add_user(
+        //     0x33fF69744215B3E8b8389D70C2A358BFB3fA16ae,
+        //     "Reported",
+        //     "reported@gmail.com",
+        //     "123",
+        //     0
+        // );
 
         //himansh
         // add_user(
@@ -520,48 +549,48 @@ contract Election {
         // );
 
         //muskan
-        // add_user(
-        //     0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
-        //     "admin",
-        //     "admin@coep.ac.in",
-        //     "123",
-        //     2
-        // );
-        // add_user(
-        //     0x2aeE3162bB87A4Ed18eE0abB27f6d2CE3F5A6720,
-        //     "voter 1",
-        //     "voter1@gmail.com",
-        //     "123",
-        //     0
-        // );
-        // add_user(
-        //     0x145d98eBca32EC5C25e49D76D95cEc2E4cA2852E,
-        //     "voter 2",
-        //     "voter2@gmail.com",
-        //     "123",
-        //     0
-        // );
-        // add_user(
-        //     0x7F5542Cd4C3f34ad08747273E42CB8855eDD23d4,
-        //     "cand 1",
-        //     "cand1@gmail.com",
-        //     "123",
-        //     0
-        // );
-        // add_user(
-        //     0x339531797eBa4492570C40Cc40dfee612dd9540F,
-        //     "cand 2",
-        //     "cand2@gmail.com",
-        //     "123",
-        //     0
-        // );
-        // add_user(
-        //     0x12a79A0f247F3912e45A8B3EdAec0fdD46C5C660,
-        //     "Reported",
-        //     "reported@gmail.com",
-        //     "123",
-        //     0
-        // );
+        add_user(
+            0x7D8d4E73350E695e351E80705B8B6F30bAcF00CC,
+            "admin",
+            "admin@coep.ac.in",
+            "123",
+            2
+        );
+        add_user(
+            0x2aeE3162bB87A4Ed18eE0abB27f6d2CE3F5A6720,
+            "voter 1",
+            "voter1@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x145d98eBca32EC5C25e49D76D95cEc2E4cA2852E,
+            "voter 2",
+            "voter2@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x7F5542Cd4C3f34ad08747273E42CB8855eDD23d4,
+            "cand 1",
+            "cand1@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x339531797eBa4492570C40Cc40dfee612dd9540F,
+            "cand 2",
+            "cand2@gmail.com",
+            "123",
+            0
+        );
+        add_user(
+            0x12a79A0f247F3912e45A8B3EdAec0fdD46C5C660,
+            "Reported",
+            "reported@gmail.com",
+            "123",
+            0
+        );
         // add_voter_by_admin(1, 2);
         // add_voter_by_admin(1, 3);
         // add_voter_by_admin(2, 3);

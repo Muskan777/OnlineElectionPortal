@@ -41,31 +41,26 @@ App = {
   // Listen for events emitted from the contract
   listenForEvents: function () {
     App.contracts.Election.deployed().then(function (instance) {
-      var temp = 0;
+      var temp = 0
       // Restart Chrome if you are unable to receive this event
       // This is a known issue with Metamask
       // https://github.com/MetaMask/metamask-extension/issues/2393
-      instance
-        .trigger_event(
-          {},
-          {},
-        )
-        .watch(function (error, event) {
-          // console.log('event triggered', event)
-          // Reload when a new vote is recorded
-          temp = 1;
-          console.log("Inside Event" + event)
-          console.log("Inside Error" + error)
+      instance.trigger_event({}, {}).watch(function (error, event) {
+        // console.log('event triggered', event)
+        // Reload when a new vote is recorded
+        temp = 1
+        console.log('Inside Event' + event)
+        console.log('Inside Error' + error)
 
-          App.render()
-        })
-        // if(!temp){
-        //   console.log("Outside Event")
-        //   App.render()
-        // }
+        App.render()
+      })
+      // if(!temp){
+      //   console.log("Outside Event")
+      //   App.render()
+      // }
     })
   },
-  first_call_me: function() {
+  first_call_me: function () {
     web3.eth.getCoinbase(function (err, account) {
       if (err === null) {
         if (account == null) {
@@ -73,7 +68,7 @@ App = {
           return
         } else {
           App.account = account
-          console.log("App.account: " + App.account)
+          console.log('App.account: ' + App.account)
           $('#accountAddress').html('Your Account: ' + account)
         }
       }
@@ -81,7 +76,6 @@ App = {
   },
 
   render: function () {
-    
     if (window.location.href === 'http://localhost:3000') {
       var electionInstance
       var loader = $('#loader')
@@ -97,8 +91,8 @@ App = {
     } else if (
       window.location.href === 'http://localhost:3000/admin_home.html'
     ) {
-      var loader = $("#loader");
-      var content = $("#content");
+      var loader = $('#loader')
+      var content = $('#content')
       // loader.show();
       // content.hide();
       App.contracts.Election.deployed()
@@ -108,11 +102,11 @@ App = {
           return electionInstance.addresses(App.account)
         })
         .then(function (u_id) {
-          console.log("Logged In user ID: " + u_id.toNumber())
+          console.log('Logged In user ID: ' + u_id.toNumber())
           if (App.loggedIN(u_id.toNumber())) {
             return electionInstance.election_count()
           } else {
-          console.log("Logged OUT user ID: " + u_id.toNumber())
+            console.log('Logged OUT user ID: ' + u_id.toNumber())
 
             alert(
               'It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.',
@@ -123,28 +117,28 @@ App = {
         })
         .then(function (election_count) {
           election_count = election_count.toNumber()
-          console.log("Election_count: " + election_count)
-              // var p = $("#pill");
-              // p.empty()
-              // p.html("")
-                   
-              var manage_elections = $('#manage_elections')
-              manage_elections.empty()
-              manage_elections.html("")  
+          console.log('Election_count: ' + election_count)
+          // var p = $("#pill");
+          // p.empty()
+          // p.html("")
+
+          var manage_elections = $('#manage_elections')
+          manage_elections.empty()
+          manage_elections.html('')
           for (var i = 1; i <= election_count; i++) {
-              // console.log("Iiii: " + i)
-              // if(i == 1){
-              //   var k = 1;
-              //   console.log("K: " + k)
-              // }
-              
+            // console.log("Iiii: " + i)
+            // if(i == 1){
+            //   var k = 1;
+            //   console.log("K: " + k)
+            // }
+
             electionInstance.elections(i).then(function (election) {
               // if(k == 1){
               //   // p.empty()
               //   manage_elections.empty()
               //   k++;
               // }
-              // p.append("hT")   
+              // p.append("hT")
               // console.log("I: " + i)
               // console.log(election)
               var id = election[0].toNumber()
@@ -152,26 +146,25 @@ App = {
               var manage_elections_template =
                 "<option value='" + id + "' >" + id + ': ' + name + '</ option>'
 
-              console.log("In IF: " + manage_elections_template)
+              console.log('In IF: ' + manage_elections_template)
 
               manage_elections.append(manage_elections_template)
             })
           }
-          return electionInstance.elections(App.global_election_count);
-        // }).then(function(election){
-        //   console.log(App.global_election_count)
-        //   var election_created = election[5]
-        //   if (election_created || App.global_election_count == 0) {
-        //     loader.hide()
-        //     content.show()
-        //   }
+          return electionInstance.elections(App.global_election_count)
+          // }).then(function(election){
+          //   console.log(App.global_election_count)
+          //   var election_created = election[5]
+          //   if (election_created || App.global_election_count == 0) {
+          //     loader.hide()
+          //     content.show()
+          //   }
         })
-    }
-    else if (
+    } else if (
       window.location.href === 'http://localhost:3000/admin_home.html'
     ) {
-      var loader = $("#loader");
-      var content = $("#content");
+      var loader = $('#loader')
+      var content = $('#content')
       // loader.show();
       // content.hide();
       App.contracts.Election.deployed()
@@ -181,11 +174,11 @@ App = {
           return electionInstance.addresses(App.account)
         })
         .then(function (u_id) {
-          console.log("Logged In user ID: " + u_id.toNumber())
+          console.log('Logged In user ID: ' + u_id.toNumber())
           if (App.loggedIN(u_id.toNumber())) {
-            return 
+            return
           } else {
-          console.log("Logged OUT user ID: " + u_id.toNumber())
+            console.log('Logged OUT user ID: ' + u_id.toNumber())
 
             alert(
               'It looks like some error has occured. You have been logged out!!!\n Please LogIN again to continue.',
@@ -194,10 +187,9 @@ App = {
             App.render()
           }
         })
-        // .then(function (election_count) {
-        // })
-    }
-    else if (
+      // .then(function (election_count) {
+      // })
+    } else if (
       window.location
         .toString()
         .includes('http://localhost:3000/admin_manage_election.html')
@@ -654,13 +646,14 @@ App = {
                   if (!already_registered_voters.includes(id)) {
                     console.log('Not a registered voter for this E_id: ' + id)
                     var add_voter_template =
-                    "<option value='" +
-                    id +
-                    "' >" +
-                    "ID: " + id +
-                    '&emsp; Name: ' +
-                    name +
-                    '</ option>'
+                      "<option value='" +
+                      id +
+                      "' >" +
+                      'ID: ' +
+                      id +
+                      '&emsp; Name: ' +
+                      name +
+                      '</ option>'
                     add_voter.append(add_voter_template)
                   }
                 })
@@ -697,31 +690,43 @@ App = {
                 if (E_id == voter[1].toNumber()) {
                   var id = voter[0].toNumber()
                   electionInstance.users(id).then(function (user) {
-                    if(!voter[5]){
+                    if (!voter[5]) {
                       console.log('Already Regsitered for this E_id: ' + id)
                       var name = user[2]
                       var display_old_voters_template =
-                      '<li>' + "<b>ID: </b>" + id + '<b>&emsp; Name: </b>' + name + '</li>'
+                        '<li>' +
+                        '<b>ID: </b>' +
+                        id +
+                        '<b>&emsp; Name: </b>' +
+                        name +
+                        '</li>'
 
                       var add_voter_template =
-                      "<option value='" +
-                      id +
-                      "' >" +
-                      "ID: " + id +
-                      '&emsp; Name: ' +
-                      name +
-                      '</ option>'
+                        "<option value='" +
+                        id +
+                        "' >" +
+                        'ID: ' +
+                        id +
+                        '&emsp; Name: ' +
+                        name +
+                        '</ option>'
                       display_voters_to_delete.append(add_voter_template)
-                        // '<li> id: ' + id + ', Name: ' + name + '</li>'
+                      // '<li> id: ' + id + ', Name: ' + name + '</li>'
                       display_old_voters.append(display_old_voters_template)
-                    }
-                    else if(voter[5]){
+                    } else if (voter[5]) {
                       console.log('Already Deleted for this E_id: ' + id)
                       var name = user[2]
                       var display_deleted_voters_template =
-                      '<li>' + "<b>ID: </b>" + id + '<b>&emsp; Name: </b>' + name + '</li>'
+                        '<li>' +
+                        '<b>ID: </b>' +
+                        id +
+                        '<b>&emsp; Name: </b>' +
+                        name +
+                        '</li>'
 
-                      display_deleted_voters.append(display_deleted_voters_template)
+                      display_deleted_voters.append(
+                        display_deleted_voters_template,
+                      )
                     }
                   })
                 }
@@ -763,7 +768,7 @@ App = {
               var C_id = candidate[0].toNumber()
               var name = candidate[2]
               var cand_E_id = candidate[3].toNumber()
-              console.log(C_id + " " + name)
+              console.log(C_id + ' ' + name)
               //   var flag = 0;
               electionInstance.users(C_id).then(function (user) {
                 // Check that the user permissions are for voter only and
@@ -773,7 +778,8 @@ App = {
                     "<option value='" +
                     C_id +
                     "' >" +
-                    "ID: " + C_id +
+                    'ID: ' +
+                    C_id +
                     '&emsp; Name: ' +
                     user[2] +
                     '</ option>'
@@ -801,30 +807,46 @@ App = {
                   var name = user[2]
                   // Check the permissions in the user struct if they are 1
                   if (user[4].toNumber() == 1) {
-                    if(!candidate[5]){
+                    if (!candidate[5]) {
                       var display_old_candidates_template =
                         // '<li>' + id + ': ' + name + '</li>'
-                      '<li>' + "<b>ID: </b>" + id + '<b>&emsp; Name: </b>' + name + '</li>'
+                        '<li>' +
+                        '<b>ID: </b>' +
+                        id +
+                        '<b>&emsp; Name: </b>' +
+                        name +
+                        '</li>'
 
                       var add_candidate_template =
-                      "<option value='" +
-                      id +
-                      "' >" +
-                      "ID: " + id +
-                      '&emsp; Name: ' +
-                      name +
-                      '</ option>'
+                        "<option value='" +
+                        id +
+                        "' >" +
+                        'ID: ' +
+                        id +
+                        '&emsp; Name: ' +
+                        name +
+                        '</ option>'
 
-                      display_candidates_to_delete.append(add_candidate_template)
-                      display_old_candidates.append(display_old_candidates_template)
-                    }
-                     else if(candidate[5]){
+                      display_candidates_to_delete.append(
+                        add_candidate_template,
+                      )
+                      display_old_candidates.append(
+                        display_old_candidates_template,
+                      )
+                    } else if (candidate[5]) {
                       console.log('Already Deleted for this E_id: ' + id)
                       // var name = user[2]
                       var display_deleted_candidates_template =
-                      '<li>' + "<b>ID: </b>" + id + '<b>&emsp; Name: </b>' + name + '</li>'
+                        '<li>' +
+                        '<b>ID: </b>' +
+                        id +
+                        '<b>&emsp; Name: </b>' +
+                        name +
+                        '</li>'
 
-                      display_deleted_candidates.append(display_deleted_candidates_template)
+                      display_deleted_candidates.append(
+                        display_deleted_candidates_template,
+                      )
                     }
                   }
                 })
@@ -859,7 +881,7 @@ App = {
           }
         })
         .then(function (report_count) {
-          console.log("REPORT Count: " + report_count)
+          console.log('REPORT Count: ' + report_count)
           for (var i = 1; i <= report_count; i++) {
             electionInstance.reports(i).then(function (report) {
               var report_id = report[0].toNumber()
@@ -877,9 +899,9 @@ App = {
           electionInstance.voter_list_count().then(function (voter_list_count) {
             var add_to_reported = $('#add_to_reported')
             add_to_reported.empty()
-            console.log("Voter List Count: " + voter_list_count)
+            console.log('Voter List Count: ' + voter_list_count)
             for (var j = 1; j <= voter_list_count; j++) {
-              console.log("J" + j)
+              console.log('J' + j)
               electionInstance.voterlist(j).then(function (voter) {
                 var id = voter[0].toNumber()
                 // console.log("J and ID: " + j + " " + id)
@@ -891,7 +913,7 @@ App = {
                   voter[4] == false &&
                   voter[5] == false
                 ) {
-                  console.log("UID: " + id)
+                  console.log('UID: ' + id)
 
                   var x = all_reqorts_received.indexOf(id)
                   var reason = all_reqorts_received_reasons[x]
@@ -899,7 +921,8 @@ App = {
                     "<option value='" +
                     id +
                     "' >" +
-                    "ID: " + id +
+                    'ID: ' +
+                    id +
                     ', &emsp; Reason: ' +
                     reason +
                     '</ option>'
@@ -925,7 +948,12 @@ App = {
                 electionInstance.users(id).then(function (user) {
                   name = user[2]
                   var display_already_blacklisted_template =
-                    '<li>' + "<b>ID: </b>" + id + '<b>&emsp; Name: </b>' + name + '</li>'
+                    '<li>' +
+                    '<b>ID: </b>' +
+                    id +
+                    '<b>&emsp; Name: </b>' +
+                    name +
+                    '</li>'
                   display_already_blacklisted.append(
                     display_already_blacklisted_template,
                   )
@@ -982,7 +1010,7 @@ App = {
           })
           .then(function (u_id) {
             id = u_id.toNumber()
-            console.log("ID: " + id)
+            console.log('ID: ' + id)
             if (App.loggedIN(u_id.toNumber())) {
               return electionInstance.voter_list_count()
             } else {
@@ -997,16 +1025,26 @@ App = {
             $('#UserSelect').empty()
             for (var i = 1; i <= votersCount.toNumber(); i++) {
               electionInstance.voterlist(i).then(function (voter) {
-                if (!voter[3] && voter[1].toNumber() == E_id && voter[0].toNumber() != id && !voter[5]) {
-                  console.log("U_id and Voter ID: " + id + " " + voter[0].toNumber())
+                if (
+                  !voter[3] &&
+                  voter[1].toNumber() == E_id &&
+                  voter[0].toNumber() != id &&
+                  !voter[5]
+                ) {
+                  console.log(
+                    'U_id and Voter ID: ' + id + ' ' + voter[0].toNumber(),
+                  )
                   electionInstance
                     .users(voter[0].toNumber())
                     .then(function (user) {
                       var voterOption =
                         "<option value='" +
                         user[0].toNumber() +
-                        "' >" + "ID: " + user[0].toNumber() +
-                        "&emsp; Name: " + user[2] +
+                        "' >" +
+                        'ID: ' +
+                        user[0].toNumber() +
+                        '&emsp; Name: ' +
+                        user[2] +
                         '</ option>'
                       $('#UserSelect').append(voterOption)
                     })
@@ -1051,7 +1089,7 @@ App = {
           '">Campaigning Portal</a>',
       )
 
-    // Get Election ID from the previous page
+      // Get Election ID from the previous page
       var E_id = parseInt(window.location.hash.substr(-1))
       var electionInstance
       var id
@@ -1074,24 +1112,30 @@ App = {
           }
         })
         .then(function (candidate_count) {
-          console.log("candidate_count: " + candidate_count)
+          console.log('candidate_count: ' + candidate_count)
 
           electionInstance.users(id).then(function (user) {
-            if (user[5].toNumber() < 5000){
+            if (user[5].toNumber() < 5000) {
               $('form').hide()
-              window.alert("You are already a candidate in some election");
-            }
-            else {
-              for(j = 0; j < candidate_count.toNumber(); j++){
-              electionInstance.candidates(j).then(function (candidate){
-                if (candidate[0].toNumber() == id && candidate[3].toNumber() == E_id){
-                  $('form').hide()
-                  window.alert("You have already applied for candidacy in this election");
+              window.alert('You are already a candidate in some election')
+            } else {
+              for (j = 0; j < candidate_count.toNumber(); j++) {
+                electionInstance.candidates(j).then(function (candidate) {
+                  if (
+                    candidate[0].toNumber() == id &&
+                    candidate[3].toNumber() == E_id
+                  ) {
+                    $('form').hide()
+                    // window.alert(
+                    //   'You have already applied for candidacy in this election',
+                    // )
+                  } else {
+                    $('#done').hide()
                   }
                 })
               }
             }
-          })  
+          })
         })
     }
     // For admin view results
@@ -1133,28 +1177,27 @@ App = {
                   var name = user[2]
                   var permissions = user[4].toNumber()
                   if (permissions == 1) {
-                    
                     var display_result_template =
-                          '<tr><td>' +
-                          C_id +
-                          '</td><td>' +
-                          name +
-                          '</td><td>' +
-                          vote_count +
-                          '</td></tr'
+                      '<tr><td>' +
+                      C_id +
+                      '</td><td>' +
+                      name +
+                      '</td><td>' +
+                      vote_count +
+                      '</td></tr'
                     display_result.append(display_result_template)
                   }
-                  
+
                   console.log(display_result)
-                  if (display_result == []) {
-                    $('#content').hide()
-                  } else {
-                    $('#done').hide()
-                  }
                 })
               }
             })
-          }          
+          }
+          if (display_result.val()) {
+            $('#done').hide()
+          } else {
+            $('#content').hide()
+          }
         })
     } else if (
       window.location.toString().includes('http://localhost:3000/result.html')
@@ -1212,6 +1255,7 @@ App = {
           // displaying result
           console.log(time_polling_ends + ' ' + current_time)
           if (current_time > time_polling_ends) {
+            $('#done').hide()
             electionInstance.candidate_count().then(function (candidate_count) {
               console.log('candidate_count ' + candidate_count)
               var display_result = $('#display_result_of_election')
@@ -1221,7 +1265,7 @@ App = {
                 electionInstance.candidates(j).then(function (candidate) {
                   console.log(candidate)
 
-                  if (E_id == candidate[3].toNumber()  && !candidate[5]) {
+                  if (E_id == candidate[3].toNumber() && !candidate[5]) {
                     var C_id = candidate[0].toNumber()
                     var vote_count = candidate[1].toNumber()
                     console.log(C_id + ' ' + vote_count)
@@ -1248,9 +1292,7 @@ App = {
               }
             })
           } else {
-            window.alert(
-              "Voting hasn't ended yet. Can't diplay the result yet.",
-            )
+            $('#content').hide()
           }
         })
     }
@@ -1320,7 +1362,7 @@ App = {
                 var desc = campaign[1].toString()
                 var Cand_id = campaign[2].toNumber()
                 var Cand_name = campaign[4].toString()
-                var cand_desc;
+                var cand_desc
                 return electionInstance
                   .users(Cand_id)
                   .then(function (user) {
@@ -1336,83 +1378,93 @@ App = {
                     cand_desc = cand_desc
                     return electionInstance.voter_list_count()
                   })
-                  .then(function (voter_list_count){
-                    for(var k = 1; k <= voter_list_count.toNumber(); k++){
-                      electionInstance.voterlist(k).then(function (voter){
-                        if (voter[0].toNumber() == Cand_id && voter[1].toNumber() == E_id && !voter[4]){
+                  .then(function (voter_list_count) {
+                    for (var k = 1; k <= voter_list_count.toNumber(); k++) {
+                      electionInstance.voterlist(k).then(function (voter) {
+                        if (
+                          voter[0].toNumber() == Cand_id &&
+                          voter[1].toNumber() == E_id &&
+                          !voter[4]
+                        ) {
                           var update_campaign =
-                          '<li> <h3>' +
-                          '<b>ID: &nbsp;</b>' +
-                          Cand_id +
-                          ' ' +
-                          '&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; <b>Name: &nbsp;</b>' +
-                          Cand_name +
-                          '</h3><br>' +
-                          '<h4><b>Personal Info: &nbsp;</b>' +
-                          cand_desc +
-                          '</h4><br>' +
-                          '<h4><b>Campaign Desc: &nbsp;</b>' +
-                          desc +
-                          '<h4></li><br><br>'
+                            '<li> <h3>' +
+                            '<b>ID: &nbsp;</b>' +
+                            Cand_id +
+                            ' ' +
+                            '&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; <b>Name: &nbsp;</b>' +
+                            Cand_name +
+                            '</h3><br>' +
+                            '<h4><b>Personal Info: &nbsp;</b>' +
+                            cand_desc +
+                            '</h4><br>' +
+                            '<h4><b>Campaign Desc: &nbsp;</b>' +
+                            desc +
+                            '<h4></li><br><br>'
                           display_campaign.append(update_campaign)
                         }
                       })
                     }
                   })
-                }
-                })
               }
-            // })
-          
+            })
+          }
+          // })
+
           return electionInstance.addresses(App.account)
         })
         .then(function (id) {
-          Cand_id = id;
-          console.log("Cand_id : " + Cand_id)
+          Cand_id = id
+          console.log('Cand_id : ' + Cand_id)
           return electionInstance.users(id.toNumber())
         })
         .then(function (user) {
           return user[5].toNumber()
         })
         .then(function (cand_index) {
-          console.log("cand_index" + cand_index)
+          console.log('cand_index' + cand_index)
           if (cand_index > 4999) {
             $('form').hide()
           } else {
-            return electionInstance.candidates(cand_index)
+            return electionInstance
+              .candidates(cand_index)
               .then(function (cand) {
                 candidate = cand
 
                 return electionInstance.voter_list_count()
-                  })
-                  .then(function (voter_list_count){
-                    for(var k = 1; k <= voter_list_count.toNumber(); k++){
-                      electionInstance.voterlist(k).then(function (voter){
-                        if ((voter[0].toNumber() == Cand_id && voter[1].toNumber() == E_id && voter[4]) || candidate[5]){
-                          console.log("HIDE ME")
-                          $('form').hide()
-                        }
-                      })
+              })
+              .then(function (voter_list_count) {
+                for (var k = 1; k <= voter_list_count.toNumber(); k++) {
+                  electionInstance.voterlist(k).then(function (voter) {
+                    if (
+                      (voter[0].toNumber() == Cand_id &&
+                        voter[1].toNumber() == E_id &&
+                        voter[4]) ||
+                      candidate[5]
+                    ) {
+                      console.log('HIDE ME')
+                      $('form').hide()
                     }
                   })
-
-
-
-
-                // console.log(candidate[3], E_id)
-                // if (candidate[3] != E_id ) {
-                //   $('form').hide()
                 }
               })
-          // }
+
+            // console.log(candidate[3], E_id)
+            // if (candidate[3] != E_id ) {
+            //   $('form').hide()
+          }
+        })
+        // }
         // })
         .catch(function (error) {
           console.warn(error)
         })
       loader.hide()
       content.show()
-    }
-    else if(window.location.toString().includes('http://localhost:3000/admin_view_campaign.html')){
+    } else if (
+      window.location
+        .toString()
+        .includes('http://localhost:3000/admin_view_campaign.html')
+    ) {
       // Get Election ID from the previous page
       var E_id = parseInt(window.location.hash.substr(-1))
       console.log('E_id: ' + E_id)
@@ -1624,10 +1676,7 @@ App = {
       //   polling_starts,
       //   polling_ends,
       // )
-      console.log(E_name,
-        cand_register_end,
-        polling_starts,
-        polling_ends)
+      console.log(E_name, cand_register_end, polling_starts, polling_ends)
       return electionInstance.add_election(
         E_name,
         cand_register_end,
@@ -1638,7 +1687,7 @@ App = {
         },
       )
     })
-    App.global_election_count++;
+    App.global_election_count++
     window.location.href = 'http://localhost:3000/admin_home.html'
   },
 
@@ -1886,14 +1935,13 @@ App = {
       'http://localhost:3000/admin_view_results.html#E_id=' + E_id
   },
 
-  admin_view_campaign_event: function(){
+  admin_view_campaign_event: function () {
     // Get the Election ID from the previous page somehow
     var E_id = parseInt(window.location.hash.substr(-1))
 
     window.location.href =
       'http://localhost:3000/admin_view_campaign.html#E_id=' + E_id
-    
-  }, 
+  },
   manage_election_for_user: function () {
     var ElectionIDForVoter = $('#getElectionList').val()
     var candidatesCount
@@ -1993,6 +2041,8 @@ App = {
     var confirm_pwd = $('#confirm_pwd').val()
     if (pwd != confirm_pwd) {
       alert('Passwords do not match')
+    } else if (8 > name.length || name.length > 15) {
+      alert('Name Length should be between 8-15')
     } else {
       console.log(name, mail, pwd)
       App.contracts.Election.deployed()

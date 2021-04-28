@@ -38,8 +38,10 @@
                         </li>
                         <li class="nav-item" id="report">
                         </li>
-                        <li class="nav-item" id="logout" style="float: right; text-align: right;"><button onclick="App.logout(); return false;" style="background-color: black; color:gray; border-color: black;"
-                            class="admin_view_results_event nav-link active" type="submit">Logout</button></li>
+                        <li class="nav-item" id="logout" style="float: right; text-align: right;"><button
+                                onclick="App.logout(); return false;"
+                                style="background-color: black; color:gray; border-color: black;"
+                                class="admin_view_results_event nav-link active" type="submit">Logout</button></li>
                     </ul>
                 </div>
             </div>
@@ -51,7 +53,7 @@
                     <h1>Apply for candidacy</h1>
                 </header>
                 <br /> <br /> <br />
-                <div class="container row">
+                <div class="container row" id="content">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-8" style="text-align: left;">
                         <form onSubmit="App.applyForCandidacy(); return false;">
@@ -83,6 +85,15 @@
                 </div>
             </div>
             <div class="col-lg-2"></div>
+            <div id="done" class="row">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8 bg-light">
+                    <br />
+                    <p class="text-center">You have already applied for this election or you are candidate in some other
+                        election</p><br />
+                </div>
+                <div class="col-lg-2"></div>
+            </div>
 
         </div>
 

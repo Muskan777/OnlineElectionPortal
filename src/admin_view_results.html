@@ -12,9 +12,12 @@
             .navbar-custom {
                 background-color: black;
             }
-            th, tr, td{
-                border: 1px solid black; 
-                border-collapse: collapse; 
+
+            th,
+            tr,
+            td {
+                border: 1px solid black;
+                border-collapse: collapse;
                 text-align: center;
                 border-spacing: 5px;
                 padding: 10px;
@@ -41,7 +44,8 @@
                         <li class="nav-item">
                             <button onClick="App.admin_view_campaign_event(); return false"
                                 style="background-color: black; color: white; border-color: black;"
-                                class="admin_view_campaign_event nav-link active" type="submit">Campaigning Portal</button>
+                                class="admin_view_campaign_event nav-link active" type="submit">Campaigning
+                                Portal</button>
                         </li>
                         <li class="nav-item">
                             <button onClick="App.admin_view_results_event(); return false"
@@ -68,8 +72,9 @@
                                 Candidates</button>
                         </li>
                         <li class="nav-item">
-                            <button onclick="App.logout(); return false;" style="background-color:black; color:white; border-color: black;"
-                            class="admin_view_results_event nav-link active" type="submit">Logout</button>
+                            <button onclick="App.logout(); return false;"
+                                style="background-color:black; color:white; border-color: black;"
+                                class="admin_view_results_event nav-link active" type="submit">Logout</button>
                         </li>
                     </ul>
                 </div>
@@ -81,32 +86,28 @@
         <section id="content">
             <div class="row mt-5">
                 <div class="col-lg-3"></div>
-                <div class="col-lg-6 text-center row mt-5 bg-light mb-5 ">
-                    <div style="padding: 30px; margin-left: 250px">
-                        <!-- <ol name="display_result_of_election" id="display_result_of_election">
+                <div class="col-lg-6 text-center row bg-light mb-5 pb-5 pt-5">
+                    <table name="display_result_of_election" class="bg-light"
+                        style="border: 1px solid black; border-collapse: collapse; text-align: center;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Candidate ID
+                                </th>
+                                <th>
+                                    Candidate Name
+                                </th>
+                                <th>
+                                    Vote Count
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="display_result_of_election">
 
-                        </ol> -->
-                        <table name="display_result_of_election" style="border: 1px solid black; border-collapse: collapse; text-align: center;">
-                                    <thead>
-                                    <tr>
-                                        <th>
-                                            Candidate ID
-                                        </th>
-                                        <th>
-                                            Candidate Name
-                                        </th>
-                                        <th>
-                                            Vote Count
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="display_result_of_election">
+                        </tbody>
 
-                                </tbody>
-                                    
-                                </table>
+                    </table>
 
-                    </div>
                 </div>
                 <div class="col-lg-3"></div>
             </div>
