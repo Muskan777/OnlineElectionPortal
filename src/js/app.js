@@ -2043,25 +2043,37 @@ App = {
       alert('Passwords do not match')
     } else if (8 > name.length || name.length > 15) {
       alert('Name Length should be between 8-15')
-    } else {
+    } else if (8 > pwd.length || pwd.length > 15){
+      alert('Password Length should be between 8-15')
+    }else {
       console.log(name, mail, pwd)
       App.contracts.Election.deployed()
         .then(function (instance) {
           electionInstance = instance
-          return instance.add_user(App.account, name, mail, pwd, 0, {
-            from: App.account,
+          return instance.addresses(App.account)
+        })  
+        .then(function (u_id){
+          console.log(u_id.toNumber())
+          if(u_id == 0){
+            return electionInstance.add_user(App.account, name, mail, pwd, 0, { from: App.account, })
+          .then(function () {
+            return electionInstance.user_count()
           })
-        })
-        .then(function () {
-          return electionInstance.user_count()
-        })
-        .then(function (result) {
-          console.log(result.toNumber())
-          alert(
-            'Congratulations! You are now registered to our Portal\n Your UserID is ' +
-              result.toNumber() +
-              '.\n Please use this UserID to login.',
-          )
+          .then(function (result) {
+            console.log(result.toNumber())
+            alert(
+              'Congratulations! You are now registered to our Portal\n Your UserID is ' +
+                result.toNumber() +
+                '.\n Please use this UserID to login.',
+            )
+          })
+          }
+          else{
+            electionInstance.users(u_id.toNumber()).then(function (user){
+              alert("An account with your public address already exits having USER ID " + user[0])
+          })
+            
+          }
         })
         .catch(function (err) {
           console.error(err)
