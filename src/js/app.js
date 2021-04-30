@@ -1809,7 +1809,7 @@ App = {
   applyForCandidacy: function () {
     var electionInstance
     var E_id = parseInt(window.location.hash.substr(-1))
-    var username = $('#username').val()
+    var id = $('#u_id').val()
     var info = $('#info').val()
     // var description = $('#description').val()
 
@@ -1818,12 +1818,17 @@ App = {
         electionInstance = instance
         return electionInstance.addresses(App.account)
       })
-      .then(function (id) {
-        uid = id.toNumber()
-        console.log(E_id, uid, username)
-        return electionInstance.add_candidate(uid, username, E_id, info, {
-          from: App.account,
-        })
+      .then(function (u_id) {
+        uid = u_id.toNumber()
+        if(uid == id){
+          console.log(E_id, uid, username)
+          return electionInstance.add_candidate(uid, username, E_id, info, {
+            from: App.account,
+          })
+        }
+        else{
+          alert("Enter Correct User_ID")
+        }
       })
   },
 
